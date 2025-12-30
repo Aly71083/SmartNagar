@@ -1,0 +1,166 @@
+﻿@{
+    ViewData["Title"] = "Smart Nagar";
+}
+
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #e8f5f2; /* Light Fresh Green background */
+        color: #000; /* Black text */
+    }
+
+    /* Navbar */
+    .navbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background-color: #0077b6; /* Smart Civic Blue */
+        padding: 15px 30px;
+        color: #000;
+    }
+
+        .navbar h2 {
+            color: #fff; /* Logo in white */
+            margin: 0;
+        }
+
+        .navbar a {
+            color: #000; /* Black text */
+            text-decoration: none;
+            margin-left: 20px;
+            font-weight: bold;
+        }
+
+            .navbar a:hover {
+                color: #90be6d; /* Fresh Green hover */
+                text-decoration: underline;
+            }
+
+    /* Hero Section */
+    .hero {
+        background: linear-gradient(rgba(0, 119, 182, 0.7), rgba(144, 190, 109, 0.7)), url('/images/city-bg.jpg') center/cover no-repeat;
+        height: 350px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        color: #000; /* Black text */
+    }
+
+        .hero h1 {
+            font-size: 2.8rem;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+        }
+
+    /* Cards Section */
+    .cards-container {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 25px;
+        padding: 50px 20px;
+    }
+
+    .card {
+        background-color: #fff;
+        border-radius: 12px;
+        width: 300px; /* Slightly bigger */
+        height: 220px; /* Slightly bigger */
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+        transition: transform 0.3s, box-shadow 0.3s;
+        cursor: pointer;
+        text-decoration: none;
+        color: #000; /* Black text */
+        padding: 15px;
+    }
+
+        .card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+        }
+
+        .card i {
+            font-size: 3.5rem;
+            color: #0077b6; /* Blue icon */
+            margin-bottom: 15px;
+        }
+
+        .card h3 {
+            font-size: 1.3rem;
+            font-weight: bold;
+        }
+
+    /* Footer */
+    footer {
+        background-color: #0077b6; /* Smart Civic Blue */
+        color: #ffffff; /* White text for visibility */
+        text-align: center;
+        padding: 20px;
+    }
+
+        footer a {
+            color: #90be6d; /* Fresh Green links */
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+            footer a:hover {
+                text-decoration: underline;
+            }
+</style>
+
+<!-- Navbar -->
+<div class="navbar">
+    <div class="logo">
+        <h2>SmartNagar</h2>
+    </div>
+</div>
+
+<!-- Hero Section -->
+<div class="hero">
+    <h1>Welcome to SmartNagar</h1>
+    <p>Connect with your city and report civic issues easily</p>
+</div>
+
+<!-- Cards Section -->
+<div class="cards-container">
+    <a class="card" asp-action="ReportIssue" asp-controller="Issues">
+        <i class="fas fa-map-marker-alt"></i>
+        <h3>Report Issue</h3>
+    </a>
+    <a class="card" asp-action="TrackStatus" asp-controller="Issues">
+        <i class="fas fa-tasks"></i>
+        <h3>Track Status</h3>
+    </a>
+    <a class="card" asp-action="About" asp-controller="Home">
+        <i class="fas fa-info-circle"></i>
+        <h3>About</h3>
+    </a>
+    <a class="card" asp-action="Contact" asp-controller="Home">
+        <i class="fas fa-envelope"></i>
+        <h3>Contact</h3>
+    </a>
+</div>
+
+<!-- Footer -->
+<footer>
+    &copy; 2025 SmartNagar. All rights reserved.
+</footer>
+
+@section Scripts {
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+}

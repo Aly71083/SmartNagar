@@ -1,0 +1,54 @@
+﻿@{
+    ViewData["Title"] = "Report Complaint";
+}
+
+<style>
+    .form-container {
+        max-width: 600px;
+        margin: 40px auto;
+        background: white;
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    }
+
+    h2 {
+        text-align: center;
+        margin-bottom: 20px;
+        color: #2563EB;
+    }
+</style>
+
+<div class="form-container">
+    <h2>🚨 Report a Complaint</h2>
+
+    <form method="post" enctype="multipart/form-data">
+        <div class="mb-3">
+            <label>Issue Category</label>
+            <select class="form-control">
+                <option>Pothole</option>
+                <option>Street Light</option>
+                <option>Garbage</option>
+                <option>Water Supply</option>
+                <option>Other</option>
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label>Description</label>
+            <textarea class="form-control" rows="4"></textarea>
+        </div>
+
+        <div class="mb-3">
+            <label>Location</label>
+            <input class="form-control" placeholder="Ward / Area name" />
+        </div>
+
+        <div class="mb-3">
+            <label>Upload Image </label>
+            <input type="file" class="form-control" />
+        </div>
+
+        <button class="btn btn-primary w-100">Submit Complaint</button>
+    </form>
+</div>

@@ -1,0 +1,103 @@
+﻿@model SmartNagar.Models.ViewModels.RegisterViewModel
+
+@{
+    ViewData["Title"] = "Register";
+}
+
+<style>
+    body {
+        background: hsla(9, 100%, 64%, 0.5);
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: Arial, sans-serif;
+    }
+
+    .auth-card {
+        background: #fff;
+        padding: 35px;
+        border-radius: 10px;
+        width: 100%;
+        max-width: 450px;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+    }
+
+        .auth-card h2 {
+            text-align: center;
+            margin-bottom: 25px;
+            color: #333;
+        }
+
+    .form-group {
+        margin-bottom: 15px;
+    }
+
+    .btn-success {
+        width: 100%;
+        padding: 10px;
+    }
+
+    .auth-links {
+        text-align: center;
+        margin-top: 15px;
+    }
+</style>
+
+<div class="auth-card">
+    <h2>Register</h2>
+
+    <form asp-action="Register" method="post">
+        @Html.AntiForgeryToken()
+
+        <div asp-validation-summary="All" class="text-danger mb-3"></div>
+
+        <div class="form-group">
+            <label asp-for="FullName"></label>
+            <input asp-for="FullName" class="form-control" />
+            <span asp-validation-for="FullName" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="UserName"></label>
+            <input asp-for="UserName" class="form-control" />
+            <span asp-validation-for="UserName" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Email"></label>
+            <input asp-for="Email" class="form-control" />
+            <span asp-validation-for="Email" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="PhoneNumber"></label>
+            <input asp-for="PhoneNumber" class="form-control" />
+            <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Password"></label>
+            <input asp-for="Password" class="form-control" />
+            <span asp-validation-for="Password" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="ConfirmPassword"></label>
+            <input asp-for="ConfirmPassword" class="form-control" />
+            <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+        </div>
+
+        <button type="submit" class="btn btn-success">
+            Register
+        </button>
+
+        <div class="auth-links">
+            <a asp-action="Login">Already have an account? Login</a>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

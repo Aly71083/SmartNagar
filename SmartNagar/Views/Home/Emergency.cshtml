@@ -1,0 +1,52 @@
+﻿@{
+    ViewData["Title"] = "Emergency Services";
+}
+
+<style>
+    .emergency-container {
+        max-width: 900px;
+        margin: 40px auto;
+        padding: 20px;
+    }
+
+    .emergency-card {
+        background: white;
+        padding: 25px;
+        border-radius: 10px;
+        box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+        text-align: center;
+    }
+
+    h2 {
+        text-align: center;
+        color: #DC2626;
+        margin-bottom: 30px;
+    }
+</style>
+
+<div class="emergency-container">
+    <h2>🚑 Emergency Services</h2>
+
+    <div class="row g-4">
+        <div class="col-md-4">
+            <div class="emergency-card">
+                <h4>🚓 Police</h4>
+                <p>Dial: <strong>100</strong></p>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="emergency-card">
+                <h4>🚑 Ambulance</h4>
+                <p>Dial: <strong>102</strong></p>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="emergency-card">
+                <h4>🔥 Fire Brigade</h4>
+                <p>Dial: <strong>101</strong></p>
+            </div>
+        </div>
+    </div>
+</div>
