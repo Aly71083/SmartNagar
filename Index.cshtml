@@ -1,0 +1,644 @@
+﻿@model SmartNagar.ViewModels.HomeVM
+@{
+    Layout = null;
+
+    var isLoggedIn = User?.Identity?.IsAuthenticated ?? false;
+    var isAdmin = User.IsInRole("Admin");
+    var isOfficer = User.IsInRole("MunicipalOfficer");
+    var isCitizen = User.IsInRole("Citizen");
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Smart Nagar</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: "Segoe UI",system-ui,Arial;
+            background: #f6f8fb;
+            color: #0b1220;
+        }
+
+        /* HERO BACKGROUND (same feel as your UI) */
+        .heroBg {
+            min-height: 75vh;
+            background: linear-gradient(135deg, #1ea4c8, #31b87b);
+            position: relative;
+            overflow: hidden;
+        }
+
+            .heroBg:before {
+                content: "";
+                position: absolute;
+                inset: 0;
+                background: linear-gradient(to right, rgba(255,255,255,0.10) 1px, transparent 1px), linear-gradient(to bottom, rgba(255,255,255,0.10) 1px, transparent 1px);
+                background-size: 52px 52px;
+                opacity: .35;
+                pointer-events: none;
+            }
+
+        /* TOP NAVBAR */
+        .topbar {
+            position: relative;
+            padding: 18px 28px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 14px;
+            color: #fff;
+        }
+
+        .brand {
+            font-weight: 1000;
+            font-size: 22px;
+            letter-spacing: .2px;
+        }
+
+        .nav {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+            .nav a {
+                text-decoration: none;
+                font-weight: 900;
+                color: #fff;
+                padding: 10px 14px;
+                border-radius: 12px;
+                border: 1px solid rgba(255,255,255,.35);
+                background: rgba(255,255,255,.12);
+            }
+
+                .nav a:hover {
+                    background: rgba(255,255,255,.18);
+                }
+
+        /* HERO CONTENT */
+        .heroWrap {
+            position: relative;
+            width: min(1200px, 94%);
+            margin: 0 auto;
+            padding: 28px 0 40px;
+            display: grid;
+            grid-template-columns: 1.25fr .75fr;
+            gap: 22px;
+            align-items: center;
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 14px;
+            border-radius: 999px;
+            border: 1px solid rgba(255,255,255,.35);
+            background: rgba(255,255,255,.14);
+            font-weight: 900;
+            font-size: 13px;
+            color: #fff;
+            width: max-content;
+        }
+
+        h1 {
+            margin: 16px 0 0;
+            font-size: 56px;
+            line-height: 1.05;
+            color: #fff;
+            font-weight: 1000;
+            letter-spacing: -.7px;
+        }
+
+        .sub {
+            margin-top: 14px;
+            color: rgba(255,255,255,.92);
+            font-size: 16px;
+            line-height: 1.7;
+            font-weight: 650;
+            max-width: 660px;
+        }
+
+        .actions {
+            margin-top: 22px;
+            display: flex;
+            gap: 14px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 14px 18px;
+            border-radius: 14px;
+            font-weight: 1000;
+            text-decoration: none;
+            border: 2px solid rgba(255,255,255,.35);
+            color: #fff;
+            background: rgba(255,255,255,.10);
+            min-width: 170px;
+            font-size: 15px;
+        }
+
+        .btnPrimary {
+            background: #0b5cff;
+            border-color: #0b5cff;
+            box-shadow: 0 20px 50px rgba(11,92,255,.35);
+        }
+
+        /* STATS CARD */
+        .sideCard {
+            background: #fff;
+            border-radius: 18px;
+            padding: 18px;
+            box-shadow: 0 25px 70px rgba(0,0,0,.25);
+        }
+
+        .sideTitle {
+            font-weight: 1000;
+            font-size: 18px;
+            margin-bottom: 12px;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .stat {
+            border: 1px solid #eef2f7;
+            border-radius: 14px;
+            padding: 14px;
+            text-align: center;
+        }
+
+        .num {
+            font-size: 24px;
+            font-weight: 1000;
+            color: #0b5cff;
+        }
+
+        .lbl {
+            font-size: 12px;
+            letter-spacing: .6px;
+            text-transform: uppercase;
+            color: #6a768a;
+            margin-top: 6px;
+            font-weight: 900;
+        }
+
+        /* PAGE BODY */
+        .page {
+            width: min(1200px, 94%);
+            margin: 0 auto;
+            padding: 24px 0 70px;
+        }
+
+        .sectionTitle {
+            font-size: 30px;
+            font-weight: 1000;
+            margin: 18px 0 6px;
+        }
+
+        .sectionSub {
+            color: #6a768a;
+            font-weight: 700;
+            margin: 0 0 16px;
+        }
+
+        /* BIG KEY SERVICES CARDS (toggle) */
+        .svcGrid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+        }
+
+        .svcCard {
+            background: #fff;
+            border: 1px solid #eef2f7;
+            border-radius: 18px;
+            padding: 18px;
+            box-shadow: 0 10px 25px rgba(0,0,0,.06);
+            cursor: pointer;
+            transition: transform .12s ease, box-shadow .12s ease;
+            min-height: 150px; /* bigger */
+        }
+
+            .svcCard:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 18px 40px rgba(0,0,0,.10);
+            }
+
+        .svcTop {
+            display: flex;
+            gap: 14px;
+            align-items: flex-start;
+        }
+
+        .svcIcon {
+            width: 54px;
+            height: 54px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            font-weight: 1000;
+        }
+
+        .svcCard h3 {
+            margin: 2px 0 6px;
+            font-size: 17px;
+            font-weight: 1000;
+        }
+
+        .svcShort {
+            margin: 0;
+            color: #6a768a;
+            font-weight: 700;
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        .svcBody {
+            display: none;
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid #eef2f7;
+            color: #44566d;
+            font-weight: 650;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        .svcCard.open .svcBody {
+            display: block;
+        }
+
+        /* SCROLL DOWN EXTRA SECTION */
+        .extra {
+            margin-top: 26px;
+            display: grid;
+            grid-template-columns: 1.2fr .8fr;
+            gap: 16px;
+        }
+
+        .box {
+            background: #fff;
+            border: 1px solid #eef2f7;
+            border-radius: 18px;
+            padding: 18px;
+            box-shadow: 0 10px 25px rgba(0,0,0,.06);
+        }
+
+            .box h4 {
+                margin: 0 0 8px;
+                font-size: 16px;
+                font-weight: 1000;
+            }
+
+            .box p {
+                margin: 0;
+                color: #6a768a;
+                font-weight: 650;
+                line-height: 1.7;
+                font-size: 13px;
+            }
+
+        /* FOOTER (like your screenshot) */
+        .footer {
+            background: #083d8b;
+            color: #eaf1ff;
+            margin-top: 36px;
+            padding: 32px 0 26px;
+        }
+
+        .footerWrap {
+            width: min(1200px,94%);
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1.2fr 1fr 1fr 1fr;
+            gap: 18px;
+        }
+
+        .footer h5 {
+            margin: 0 0 10px;
+            font-size: 14px;
+            font-weight: 1000;
+        }
+
+        .footer a {
+            display: block;
+            color: #eaf1ff;
+            text-decoration: none;
+            font-weight: 650;
+            font-size: 13px;
+            margin: 8px 0;
+            opacity: .95;
+        }
+
+            .footer a:hover {
+                text-decoration: underline;
+            }
+
+        .copy {
+            width: min(1200px,94%);
+            margin: 18px auto 0;
+            padding-top: 14px;
+            border-top: 1px solid rgba(255,255,255,.18);
+            font-size: 12px;
+            color: #dbe7ff;
+            font-weight: 700;
+            text-align: center;
+        }
+
+        /* RESPONSIVE */
+        @@media(max - width:1100px) {
+            .heroWrap
+
+        {
+            grid-template-columns: 1fr;
+        }
+
+        h1 {
+            font-size: 46px;
+        }
+
+        .svcGrid {
+            grid-template-columns: 1fr 1fr;
+        }
+
+        .extra {
+            grid-template-columns: 1fr;
+        }
+
+        .footerWrap {
+            grid-template-columns: 1fr 1fr;
+        }
+
+        }
+        @@media(max - width:650px) {
+            h1
+
+        {
+            font-size: 38px;
+        }
+
+        .stats {
+            grid-template-columns: 1fr;
+        }
+
+        .svcGrid {
+            grid-template-columns: 1fr;
+        }
+
+        .btn {
+            width: 100%;
+        }
+
+        .footerWrap {
+            grid-template-columns: 1fr;
+        }
+
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- HERO -->
+    <div class="heroBg">
+        <div class="topbar">
+            <div class="brand">Smart Nagar</div>
+
+            <div class="nav">
+                <a href="/">Home</a>
+
+                @if (isAdmin)
+                {
+                    <a href="/Admin/Dashboard">Dashboard</a>
+                    <a href="/Admin/ManageUsers">Manage Users</a>
+                    <a href="/Admin/SystemOverview">System Overview</a>
+                    <a href="/Admin/PublishNotice">Publish Notice</a>
+                }
+
+                @if (!isLoggedIn)
+                {
+                    <a href="/Account/Register">Register</a>
+                    <a href="/Account/Login">Login</a>
+                }
+                else
+                {
+                    <a href="/Account/Logout">Logout</a>
+                }
+            </div>
+        </div>
+
+        <div class="heroWrap">
+            <div>
+                <div class="badge">● Trusted by @Model.ActiveCitizens Citizens</div>
+
+                <h1>Smart Nagar<br />Digital Municipal Services</h1>
+
+                <div class="sub">
+                    Transform the way you interact with your city. Submit complaints, track requests,
+                    and access civic services — all from one unified platform.
+                </div>
+
+                @if (!isLoggedIn)
+                {
+                    <div class="actions">
+                        <a class="btn btnPrimary" href="/Account/Register">👤 Register Now</a>
+                        <a class="btn" href="/Account/Login">↳ Login</a>
+                    </div>
+                }
+            </div>
+
+            <div class="sideCard">
+                <div class="sideTitle">Live Metrics</div>
+                <div class="stats">
+                    <div class="stat">
+                        <div class="num">@Model.ActiveCitizens</div>
+                        <div class="lbl">Active Citizens</div>
+                    </div>
+                    <div class="stat">
+                        <div class="num">@Model.ResolvedComplaints</div>
+                        <div class="lbl">Resolved Complaints</div>
+                    </div>
+                    <div class="stat">
+                        <div class="num">@Model.SatisfactionRate%</div>
+                        <div class="lbl">Satisfaction Rate</div>
+                    </div>
+                    <div class="stat">
+                        <div class="num">@Model.ServiceAvailability</div>
+                        <div class="lbl">Service Availability</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- PAGE BODY -->
+    <div class="page">
+        <div class="sectionTitle">Key Services</div>
+        
+
+        <div class="svcGrid">
+            <div class="svcCard" onclick="toggleSvc(this)">
+                <div class="svcTop">
+                    <div class="svcIcon" style="background:#eaf0ff;color:#0b5cff;">💧</div>
+                    <div>
+                        <h3>Water & Sanitation</h3>
+                        <p class="svcShort">Report water supply issues, leakages, and sanitation complaints.</p>
+                        <div class="svcBody">
+                            Submit water-related complaints and track progress. You can add location and notes
+                            for faster municipal response.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="svcCard" onclick="toggleSvc(this)">
+                <div class="svcTop">
+                    <div class="svcIcon" style="background:#e9fff2;color:#2aa44f;">🛣️</div>
+                    <div>
+                        <h3>Roads & Infrastructure</h3>
+                        <p class="svcShort">Submit pothole, damage, and infrastructure concerns.</p>
+                        <div class="svcBody">
+                            Report potholes, broken road sections, street maintenance, construction hazards,
+                            and infrastructure issues with optional image upload (later).
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="svcCard" onclick="toggleSvc(this)">
+                <div class="svcTop">
+                    <div class="svcIcon" style="background:#fff5e7;color:#b45309;">🗑️</div>
+                    <div>
+                        <h3>Waste Management</h3>
+                        <p class="svcShort">Request garbage collection and report sanitation issues.</p>
+                        <div class="svcBody">
+                            Request collection, report overflow, illegal dumping, and cleanliness concerns.
+                            Track action status from pending to resolved.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="svcCard" onclick="toggleSvc(this)">
+                <div class="svcTop">
+                    <div class="svcIcon" style="background:#f1f5ff;color:#475569;">💡</div>
+                    <div>
+                        <h3>Street Lights</h3>
+                        <p class="svcShort">Report non-functional street lights and electrical issues.</p>
+                        <div class="svcBody">
+                            Report street light outages and faulty lines. Officers can update progress and
+                            mark work completed.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="svcCard" onclick="toggleSvc(this)">
+                <div class="svcTop">
+                    <div class="svcIcon" style="background:#ffe9e9;color:#ef4444;">🆘</div>
+                    <div>
+                        <h3>Emergency Services</h3>
+                        <p class="svcShort">Urgent municipal emergencies and faster response flow.</p>
+                        <div class="svcBody">
+                            Emergency complaints are prioritized. Officers and admin can see emergency queue
+                            and act quickly.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="svcCard" onclick="toggleSvc(this)">
+                <div class="svcTop">
+                    <div class="svcIcon" style="background:#eaffff;color:#0ea5e9;">📄</div>
+                    <div>
+                        <h3>Certificates & Permits</h3>
+                        <p class="svcShort">Apply for permits and municipal documents online.</p>
+                        <div class="svcBody">
+                            Request certificates and permits, and track approvals. This module can be added
+                            after complaints module is completed.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- EXTRA SECTION when scroll down -->
+        <div class="extra">
+            <div class="box">
+                <h4>How Smart Nagar Helps</h4>
+                <p>
+                    One platform for all citizens and municipal teams. Create complaints, track requests,
+                    and view notices. Admin and municipal officers manage issues and updates in real time.
+                </p>
+            </div>
+
+            <div class="box">
+                <h4>Security & Access</h4>
+                <p>
+                    Your login determines your access automatically (Citizen / Municipal Officer / Admin).
+                    This keeps services secure and prevents unauthorized actions.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <div class="footer">
+        <div class="footerWrap">
+            <div>
+                <h5>Smart Nagar</h5>
+                <a href="#">Transforming civic engagement through digital innovation</a>
+            </div>
+            <div>
+                <h5>Quick Links</h5>
+                <a href="/">Home</a>
+                <a href="#">Services</a>
+                <a href="#">FAQ</a>
+            </div>
+            <div>
+                <h5>Services</h5>
+                <a href="#">File Complaint</a>
+                <a href="#">Track Request</a>
+                <a href="#">Emergency Help</a>
+            </div>
+            <div>
+                <h5>Contact</h5>
+                <a href="#">Municipal Office, City Center</a>
+                <a href="#">1800-XXX-XXXX</a>
+                <a href="#">support@smartnagar.gov.np</a>
+            </div>
+        </div>
+        <div class="copy">© 2026 Smart Nagar. All rights reserved.</div>
+    </div>
+
+    <script>
+        // Toggle open/close (no "Open" link)
+        function toggleSvc(card){
+            // optional: close others for cleaner UI
+            document.querySelectorAll(".svcCard.open").forEach(c => {
+                if(c !== card) c.classList.remove("open");
+            });
+            card.classList.toggle("open");
+        }
+    </script>
+
+</body>
+</html>

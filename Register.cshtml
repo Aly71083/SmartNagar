@@ -1,0 +1,167 @@
+﻿@model SmartNagar.ViewModels.RegisterVM
+@{
+    Layout = null;
+    ViewData["Title"] = "Register";
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Register | Smart Nagar</title>
+
+    <style>
+        * {
+            box-sizing: border-box
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            font-family: "Segoe UI",system-ui,Arial;
+            background: linear-gradient(135deg, #1ea4c8, #31b87b);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .card {
+            width: 100%;
+            max-width: 440px;
+            background: #fff;
+            border-radius: 18px;
+            padding: 28px 26px 30px;
+            box-shadow: 0 25px 60px rgba(0,0,0,.25);
+        }
+
+        .icon {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: #31b87b;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 10px;
+            font-size: 22px;
+        }
+
+        h2 {
+            text-align: center;
+            margin: 10px 0 4px;
+            font-weight: 900;
+            color: #0b1220;
+        }
+
+        .sub {
+            text-align: center;
+            color: #6a768a;
+            font-size: 13px;
+            margin-bottom: 20px;
+        }
+
+        label {
+            font-size: 13px;
+            font-weight: 700;
+            color: #24324b;
+            display: block;
+            margin-bottom: 6px;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px 14px;
+            border-radius: 10px;
+            border: 1px solid #dbe4f1;
+            font-size: 14px;
+            outline: none;
+        }
+
+            input:focus {
+                border-color: #31b87b;
+                box-shadow: 0 0 0 3px rgba(49,184,123,.15);
+            }
+
+        .field {
+            margin-bottom: 14px;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 12px;
+            border-radius: 12px;
+            border: none;
+            font-weight: 900;
+            font-size: 15px;
+            cursor: pointer;
+            background: #31b87b;
+            color: #fff;
+            box-shadow: 0 14px 30px rgba(49,184,123,.35);
+            margin-top: 8px;
+        }
+
+        .bottom {
+            margin-top: 16px;
+            text-align: center;
+            font-size: 13px;
+            color: #6a768a;
+        }
+
+            .bottom a {
+                color: #31b87b;
+                font-weight: 800;
+                text-decoration: none;
+            }
+
+        .error {
+            color: #d12f2f;
+            font-size: 12px;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+
+    <form asp-action="Register" asp-controller="Account" method="post" class="card">
+
+        <div class="icon">🏛️</div>
+
+        <h2>Create Account</h2>
+        <div class="sub">Join Smart Nagar System today</div>
+
+        <div class="error" asp-validation-summary="All"></div>
+
+        <div class="field">
+            <label>Full Name</label>
+            <input asp-for="FullName" placeholder="Enter your full name" />
+        </div>
+
+        <div class="field">
+            <label>Email Address</label>
+            <input asp-for="Email" placeholder="Enter your email" />
+        </div>
+
+        <div class="field">
+            <label>Password</label>
+            <input asp-for="Password" type="password" placeholder="Create a strong password" />
+        </div>
+
+        <div class="field">
+            <label>Confirm Password</label>
+            <input asp-for="ConfirmPassword" type="password" placeholder="Re-enter your password" />
+        </div>
+
+        <button class="btn" type="submit">Register</button>
+
+        <div class="bottom">
+            Already have an account?
+            <a href="/Account/Login">Login Here</a>
+        </div>
+
+    </form>
+
+</body>
+</html>
