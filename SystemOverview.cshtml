@@ -1,0 +1,443 @@
+﻿@model SmartNagar.ViewModels.SystemOverviewVM
+@using System.Text.Json
+@{
+    Layout = null;
+
+    var trendLabelsJson = JsonSerializer.Serialize(Model.TrendLabels ?? new List<string>());
+    var trendValuesJson = JsonSerializer.Serialize(Model.TrendValues ?? new List<int>());
+
+    var catLabelsJson = JsonSerializer.Serialize(Model.CategoryLabels ?? new List<string>());
+    var catValuesJson = JsonSerializer.Serialize(Model.CategoryValues ?? new List<int>());
+
+    var statusLabelsJson = JsonSerializer.Serialize(Model.StatusLabels ?? new List<string>());
+    var statusValuesJson = JsonSerializer.Serialize(Model.StatusValues ?? new List<int>());
+
+    var maxTop = (Model.TopCategories?.Count ?? 0) == 0 ? 1 : Model.TopCategories.Max(x => x.Count);
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>System Overview</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        * {
+            box-sizing: border-box
+        }
+
+        body {
+            margin: 0;
+            font-family: Segoe UI,system-ui,Arial;
+            background: #f6f8fb;
+            color: #0f172a
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit
+        }
+
+        .wrap {
+            width: min(1200px,95%);
+            margin: 22px auto 44px
+        }
+
+        .top {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 12px
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 26px;
+            font-weight: 950
+        }
+
+        .sub {
+            margin-top: 6px;
+            color: #64748b;
+            font-weight: 650
+        }
+
+        .filter {
+            background: #fff;
+            border: 1px solid #eef2f7;
+            border-radius: 14px;
+            padding: 10px 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 10px 22px rgba(0,0,0,.05)
+        }
+
+        select {
+            border: none;
+            outline: none;
+            font-weight: 800
+        }
+
+        .cards {
+            margin-top: 16px;
+            display: grid;
+            grid-template-columns: repeat(5,1fr);
+            gap: 14px
+        }
+
+        .card {
+            background: #fff;
+            border: 1px solid #eef2f7;
+            border-radius: 18px;
+            padding: 16px;
+            box-shadow: 0 12px 26px rgba(0,0,0,.06);
+            position: relative;
+            overflow: hidden
+        }
+
+            .card:before {
+                content: "";
+                position: absolute;
+                left: 0;
+                top: 0;
+                height: 4px;
+                width: 100%;
+                background: linear-gradient(90deg,#6d73ff,#7b4dbb)
+            }
+
+        .t {
+            color: #64748b;
+            font-weight: 950;
+            font-size: 12px;
+            text-transform: uppercase
+        }
+
+        .n {
+            font-size: 28px;
+            font-weight: 950;
+            margin-top: 10px
+        }
+
+        .s {
+            color: #94a3b8;
+            font-weight: 750;
+            font-size: 12px;
+            margin-top: 4px
+        }
+
+        .grid {
+            margin-top: 14px;
+            display: grid;
+            grid-template-columns: 1.2fr .8fr;
+            gap: 14px
+        }
+
+        .panel {
+            background: #fff;
+            border: 1px solid #eef2f7;
+            border-radius: 18px;
+            box-shadow: 0 12px 26px rgba(0,0,0,.06)
+        }
+
+        .pHead {
+            padding: 14px 16px;
+            border-bottom: 1px solid #eef2f7;
+            font-weight: 950;
+            display: flex;
+            justify-content: space-between;
+            align-items: center
+        }
+
+        .pBody {
+            padding: 14px 16px
+        }
+
+        .btns {
+            display: flex;
+            gap: 8px
+        }
+
+        .chip {
+            background: #f1f5ff;
+            border: 1px solid #e6ebff;
+            color: #1e40af;
+            padding: 7px 10px;
+            border-radius: 10px;
+            font-weight: 900;
+            font-size: 12px
+        }
+
+        .grid2 {
+            margin-top: 14px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px
+        }
+
+        canvas {
+            width: 100% !important;
+            height: 300px !important
+        }
+
+        .bars {
+            display: flex;
+            flex-direction: column;
+            gap: 12px
+        }
+
+        .barRow {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px
+        }
+
+        .barLabel {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            font-weight: 900
+        }
+
+        .progress {
+            flex: 1;
+            height: 10px;
+            background: #eef2f7;
+            border-radius: 999px;
+            overflow: hidden
+        }
+
+        .fill {
+            height: 100%;
+            background: linear-gradient(90deg,#6d73ff,#7b4dbb)
+        }
+
+        .count {
+            font-weight: 950;
+            color: #1e40af
+        }
+
+        .navTop {
+            background: #fff;
+            border-bottom: 1px solid #eef2f7;
+            padding: 14px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center
+        }
+
+        .nav a {
+            padding: 10px 12px;
+            border-radius: 12px;
+            font-weight: 900;
+            color: #24324b
+        }
+
+            .nav a:hover {
+                background: #f0f5ff
+            }
+
+            .nav a.active {
+                background: #f0f5ff
+            }
+
+        .right {
+            display: flex;
+            gap: 10px;
+            align-items: center
+        }
+
+        .linkBtn {
+            background: linear-gradient(90deg,#6d73ff,#7b4dbb);
+            color: #fff;
+            padding: 10px 12px;
+            border-radius: 12px;
+            font-weight: 950
+        }
+    </style>
+</head>
+<body>
+
+    <div class="navTop">
+        <div style="font-weight:950">Smart Nagar — Admin</div>
+        <div class="nav">
+            <a href="/Admin/Dashboard">Dashboard</a>
+            <a href="/Admin/ManageUsers">Manage Users</a>
+            <a class="active" href="/Admin/SystemOverview">System Overview</a>
+            <a href="/Admin/PublishNotice">Publish Notice</a>
+            <a href="/Admin/Notices">Notices</a>
+        </div>
+        <div class="right">
+            <a class="linkBtn" href="/Admin/GenerateReportPdf">📄 Export PDF</a>
+            <a href="/Account/Logout" style="font-weight:950">Logout</a>
+        </div>
+    </div>
+
+    <div class="wrap">
+        <div class="top">
+            <div>
+                <h1>Dashboard</h1>
+                <div class="sub">Comprehensive insights and performance metrics</div>
+            </div>
+            <div class="filter">
+                📅
+                <select>
+                    <option>Last 30 Days</option>
+                    <option>Last 7 Days</option>
+                    <option>Today</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- TOP CARDS -->
+        <div class="cards">
+            <div class="card">
+                <div class="t">Total Users</div>
+                <div class="n">@Model.TotalUsers</div>
+                <div class="s">Live from database</div>
+            </div>
+            <div class="card">
+                <div class="t">Total Complaints</div>
+                <div class="n">@Model.TotalComplaints</div>
+                <div class="s">Live from database</div>
+            </div>
+            <div class="card">
+                <div class="t">Resolved Issues</div>
+                <div class="n">@Model.Resolved</div>
+                <div class="s">Status = Resolved</div>
+            </div>
+            <div class="card">
+                <div class="t">Pending Issues</div>
+                <div class="n">@Model.Pending</div>
+                <div class="s">Status = Pending</div>
+            </div>
+            <div class="card">
+                <div class="t">Avg Resolution Time</div>
+                <div class="n">@Model.AvgResolutionDays.ToString("0.0")</div>
+                <div class="s">Days to resolve</div>
+            </div>
+        </div>
+
+        <!-- TREND + CATEGORY -->
+        <div class="grid">
+            <div class="panel">
+                <div class="pHead">
+                    <span>📈 Complaints Trend</span>
+                    <div class="btns">
+                        <span class="chip">7D</span>
+                        <span class="chip" style="opacity:.6">30D</span>
+                        <span class="chip" style="opacity:.6">90D</span>
+                    </div>
+                </div>
+                <div class="pBody">
+                    <canvas id="trendChart"></canvas>
+                </div>
+            </div>
+
+            <div class="panel">
+                <div class="pHead">
+                    <span>🧩 Category Distribution</span>
+                    <span class="chip">Top 5</span>
+                </div>
+                <div class="pBody">
+                    <canvas id="catChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- STATUS + TOP CATEGORIES -->
+        <div class="grid2">
+            <div class="panel">
+                <div class="pHead">📊 Status Breakdown</div>
+                <div class="pBody">
+                    <canvas id="statusChart"></canvas>
+                </div>
+            </div>
+
+            <div class="panel">
+                <div class="pHead">🏷️ Top Categories by Volume</div>
+                <div class="pBody">
+                    <div class="bars">
+                        @if (Model.TopCategories == null || Model.TopCategories.Count == 0)
+                        {
+                            <div style="color:#64748b;font-weight:700">No complaints yet — categories will show once complaints are added.</div>
+                        }
+                        else
+                        {
+                            foreach (var c in Model.TopCategories)
+                            {
+                                var pct = (int)Math.Round((c.Count * 100.0) / maxTop);
+                                <div class="barRow">
+                                    <div class="barLabel">📌 @c.Category</div>
+                                    <div class="progress"><div class="fill" style="width:@pct%"></div></div>
+                                    <div class="count">@c.Count</div>
+                                </div>
+                            }
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        const trendLabels = @Html.Raw(trendLabelsJson);
+        const trendValues = @Html.Raw(trendValuesJson);
+
+        const catLabels = @Html.Raw(catLabelsJson);
+        const catValues = @Html.Raw(catValuesJson);
+
+        const statusLabels = @Html.Raw(statusLabelsJson);
+        const statusValues = @Html.Raw(statusValuesJson);
+
+        new Chart(document.getElementById('trendChart'), {
+            type: 'line',
+            data: {
+                labels: trendLabels,
+                datasets: [{
+                    label: 'Complaints',
+                    data: trendValues,
+                    fill: true,
+                    tension: 0.35
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: { legend: { display: false } }
+            }
+        });
+
+        new Chart(document.getElementById('catChart'), {
+            type: 'doughnut',
+            data: {
+                labels: catLabels,
+                datasets: [{
+                    data: catValues
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: { legend: { position: 'bottom' } }
+            }
+        });
+
+        new Chart(document.getElementById('statusChart'), {
+            type: 'bar',
+            data: {
+                labels: statusLabels,
+                datasets: [{
+                    label: 'Count',
+                    data: statusValues
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: { legend: { display: false } }
+            }
+        });
+    </script>
+
+</body>
+</html>
