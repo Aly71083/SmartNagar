@@ -1,0 +1,217 @@
+﻿@model SmartNagar.ViewModels.ManageUsersVM
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Manage Users</title>
+    <style>
+        * {
+            box-sizing: border-box
+        }
+
+        body {
+            margin: 0;
+            font-family: "Segoe UI",system-ui,Arial;
+            background: #f6f8fb
+        }
+
+        .top {
+            background: #fff;
+            border-bottom: 1px solid #eef2f7;
+            padding: 16px 26px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center
+        }
+
+        .nav a {
+            text-decoration: none;
+            font-weight: 800;
+            padding: 10px 12px;
+            border-radius: 10px;
+            color: #24324b;
+        }
+
+            .nav a:hover {
+                background: #f0f5ff
+            }
+
+        .wrap {
+            width: min(1200px,94%);
+            margin: 0 auto;
+            padding: 22px 0
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 22px;
+            font-weight: 900
+        }
+
+        .sub {
+            color: #6a768a;
+            margin-top: 4px;
+            font-size: 14px
+        }
+
+        .tableBox {
+            margin-top: 16px;
+            background: #fff;
+            border: 1px solid #eef2f7;
+            border-radius: 14px;
+            overflow: hidden;
+            box-shadow: 0 10px 25px rgba(0,0,0,.06)
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse
+        }
+
+        thead {
+            background: #1e90ff;
+            color: #fff
+        }
+
+        th, td {
+            padding: 12px 14px;
+            font-size: 14px;
+            text-align: left
+        }
+
+        tbody tr {
+            border-top: 1px solid #eef2f7
+        }
+
+        .pill {
+            padding: 6px 10px;
+            border-radius: 999px;
+            font-weight: 900;
+            font-size: 12px;
+            display: inline-block
+        }
+
+        .active {
+            background: #e9fff2;
+            color: #2aa44f
+        }
+
+        .inactive {
+            background: #ffe9e9;
+            color: #d12f2f
+        }
+
+        .btn {
+            border: none;
+            border-radius: 8px;
+            padding: 8px 12px;
+            font-weight: 900;
+            font-size: 12px;
+            cursor: pointer;
+            color: #fff;
+        }
+
+        .b-red {
+            background: #ef4444
+        }
+
+        .b-gray {
+            background: #6b7280
+        }
+
+        .actions {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap
+        }
+
+        .msg {
+            margin-top: 10px;
+            font-weight: 900;
+            color: #2aa44f
+        }
+    </style>
+</head>
+<body>
+    <div class="top">
+        <div style="font-weight:900;">Smart Nagar — Admin</div>
+        <div class="nav">
+            <a href="/Admin/Dashboard">Dashboard</a>
+            <a href="/Admin/ManageUsers">Manage Users</a>
+            <a href="/Admin/SystemOverview">System Overview</a>
+            <a href="/Admin/PublishNotice">Publish Notice</a>
+            <a href="/Admin/Notices">Notices</a>
+            <a href="/Account/Logout">Logout</a>
+        </div>
+    </div>
+
+    <div class="wrap">
+        <h1>Manage Users</h1>
+        <div class="sub">View and manage all system users</div>
+
+        @if (TempData["Msg"] != null)
+        {
+            <div class="msg">@TempData["Msg"]</div>
+        }
+
+        <div class="tableBox">
+            <table>
+                <thead>
+                    <tr>
+                        <th>USER ID</th>
+                        <th>NAME</th>
+                        <th>EMAIL</th>
+                        <th>USER TYPE</th>
+                        <th>STATUS</th>
+                        <th style="width:220px;">ACTION</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var u in Model.Users)
+                    {
+                        <tr>
+                            <td>@u.Id</td>
+                            <td>@u.Name</td>
+                            <td>@u.Email</td>
+                            <td>@u.Role</td>
+                            <td>
+                                @if (u.IsActive)
+                                {
+                                    <span class="pill active">Active</span>
+                                }
+                                else
+                                {
+
+                                    <span class="pill inactive">Inactive</span>
+                                }
+                            </td>
+                            <td>
+                                <div class="actions">
+                                    <form method="post" action="/Admin/ToggleActive">
+                                        @Html.AntiForgeryToken()
+
+                                        <input type="hidden" name="id" value="@u.Id" />
+                                        <button class="btn b-gray" type="submit">
+                                            @(u.IsActive ? "Deactivate" : "Activate")
+                                        </button>
+                                    </form>
+
+                                    <form method="post" action="/Admin/DeleteUser" onsubmit="return confirm('Delete this user?');">
+                                        @Html.AntiForgeryToken()
+
+                                        <input type="hidden" name="id" value="@u.Id" />
+                                        <button class="btn b-red" type="submit">Delete</button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+</html>
