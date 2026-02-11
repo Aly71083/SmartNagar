@@ -1,0 +1,196 @@
+﻿@model SmartNagar.Models.Notice
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Edit Notice</title>
+
+    <style>
+        * {
+            box-sizing: border-box
+        }
+
+        body {
+            margin: 0;
+            font-family: "Segoe UI",system-ui,Arial;
+            background: #f5f7fb;
+            color: #0b1220
+        }
+
+        .topbar {
+            background: linear-gradient(135deg,#1ea4c8,#31b87b);
+            color: #fff;
+            padding: 16px 22px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+        }
+
+            .topbar b {
+                font-size: 16px
+            }
+
+        .nav a {
+            color: #fff;
+            text-decoration: none;
+            font-weight: 900;
+            padding: 10px 12px;
+            border-radius: 12px;
+            border: 1px solid rgba(255,255,255,.35);
+            background: rgba(255,255,255,.12);
+            margin-left: 8px;
+            display: inline-block;
+        }
+
+            .nav a:hover {
+                background: rgba(255,255,255,.18)
+            }
+
+        .wrap {
+            width: min(900px,94%);
+            margin: 18px auto 30px
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 22px;
+            font-weight: 1000
+        }
+
+        .sub {
+            margin-top: 6px;
+            color: #6a768a;
+            font-weight: 750
+        }
+
+        .card {
+            margin-top: 16px;
+            background: #fff;
+            border: 1px solid #eef2f7;
+            border-radius: 18px;
+            padding: 18px;
+            box-shadow: 0 10px 25px rgba(0,0,0,.06);
+        }
+
+        label {
+            display: block;
+            font-weight: 950;
+            margin: 12px 0 8px
+        }
+
+        input, textarea, select {
+            width: 100%;
+            padding: 12px 12px;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            font-weight: 750;
+            outline: none;
+        }
+
+        textarea {
+            min-height: 160px;
+            resize: vertical
+        }
+
+        .btnRow {
+            display: flex;
+            gap: 12px;
+            margin-top: 14px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            border: none;
+            border-radius: 14px;
+            padding: 14px 16px;
+            font-weight: 1000;
+            cursor: pointer;
+            font-size: 14px;
+            color: #fff;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+        }
+
+        .btnSave {
+            background: #0b5cff;
+            box-shadow: 0 14px 30px rgba(11,92,255,.25);
+            flex: 1;
+            min-width: 220px;
+        }
+
+        .btnCancel {
+            background: #6b7280;
+            flex: 1;
+            min-width: 220px;
+        }
+
+        .btn:hover {
+            filter: brightness(.98);
+        }
+
+        .metaHint {
+            margin-top: 10px;
+            color: #6a768a;
+            font-weight: 850;
+            font-size: 12px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="topbar">
+        <b>Smart Nagar — Admin</b>
+        <div class="nav">
+            <a href="/Admin/Dashboard">Dashboard</a>
+            <a href="/Admin/ManageUsers">Manage Users</a>
+            <a href="/Admin/SystemOverview">System Overview</a>
+            <a href="/Admin/PublishNotice">Publish Notice</a>
+            <a href="/Admin/Notices">Notices</a>
+            <a href="/Account/Logout">Logout</a>
+        </div>
+    </div>
+
+    <div class="wrap">
+        <h1>Edit Notice</h1>
+        <div class="sub">Update published notice</div>
+
+        <div class="card">
+            <form method="post" action="/Admin/EditNotice">
+                @Html.AntiForgeryToken()
+
+                <input type="hidden" name="Id" value="@Model.Id" />
+
+                <label>Notice Title</label>
+                <input name="Title" value="@Model.Title" />
+
+                <label>Description</label>
+                <textarea name="Description">@Model.Description</textarea>
+
+                <label>Priority</label>
+                <select name="Priority">
+                    <option value="Low" selected="@(Model.Priority == "Low")">Low</option>
+                    <option value="Normal" selected="@(Model.Priority == "Normal")">Normal</option>
+                    <option value="High" selected="@(Model.Priority == "High")">High</option>
+                    <option value="Urgent" selected="@(Model.Priority == "Urgent")">Urgent</option>
+                </select>
+
+                <div class="metaHint">
+                    Published: @Model.CreatedAt.ToLocalTime().ToString("yyyy-MM-dd hh:mm tt")
+                </div>
+
+                <div class="btnRow">
+                    <button class="btn btnSave" type="submit">Save Changes</button>
+                    <a class="btn btnCancel" href="/Admin/Notices">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+</html>
