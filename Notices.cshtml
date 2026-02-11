@@ -1,0 +1,216 @@
+﻿@model List<SmartNagar.Models.Notice>
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Notices</title>
+
+    <style>
+        * {
+            box-sizing: border-box
+        }
+
+        body {
+            margin: 0;
+            font-family: "Segoe UI",system-ui,Arial;
+            background: #f5f7fb;
+            color: #0b1220
+        }
+
+        .topbar {
+            background: linear-gradient(135deg,#1ea4c8,#31b87b);
+            color: #fff;
+            padding: 16px 22px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+        }
+
+            .topbar b {
+                font-size: 16px
+            }
+
+        .nav a {
+            color: #fff;
+            text-decoration: none;
+            font-weight: 900;
+            padding: 10px 12px;
+            border-radius: 12px;
+            border: 1px solid rgba(255,255,255,.35);
+            background: rgba(255,255,255,.12);
+            margin-left: 8px;
+            display: inline-block;
+        }
+
+            .nav a:hover {
+                background: rgba(255,255,255,.18)
+            }
+
+        .wrap {
+            width: min(1000px,94%);
+            margin: 18px auto 30px
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 22px;
+            font-weight: 1000
+        }
+
+        .sub {
+            margin-top: 6px;
+            color: #6a768a;
+            font-weight: 750
+        }
+
+        .msg {
+            margin-top: 12px;
+            padding: 12px;
+            border-radius: 12px;
+            background: #e9fff2;
+            border: 1px solid #bbf7d0;
+            color: #166534;
+            font-weight: 950;
+        }
+
+        .card {
+            margin-top: 14px;
+            background: #fff;
+            border: 1px solid #eef2f7;
+            border-radius: 18px;
+            padding: 16px;
+            box-shadow: 0 10px 25px rgba(0,0,0,.06);
+        }
+
+        .row {
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            flex-wrap: wrap
+        }
+
+        .title {
+            font-weight: 1000;
+            font-size: 16px
+        }
+
+        .meta {
+            color: #6a768a;
+            font-weight: 850;
+            font-size: 12px;
+            margin-top: 6px
+        }
+
+        .desc {
+            margin-top: 10px;
+            color: #44566d;
+            font-weight: 650;
+            line-height: 1.6
+        }
+
+        .btnDel, .btnEdit {
+            border: none;
+            border-radius: 12px;
+            padding: 10px 14px;
+            font-weight: 1000;
+            cursor: pointer;
+            color: #fff;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btnDel {
+            background: #ef4444;
+        }
+
+        .btnEdit {
+            background: #0b5cff;
+        }
+
+        .btnNew {
+            display: inline-block;
+            margin-top: 14px;
+            text-decoration: none;
+            font-weight: 1000;
+            padding: 12px 14px;
+            border-radius: 14px;
+            background: #0b5cff;
+            color: #fff;
+            box-shadow: 0 14px 30px rgba(11,92,255,.18);
+        }
+
+        .btnGroup {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .btnDel:hover, .btnEdit:hover, .btnNew:hover {
+            filter: brightness(.98);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="topbar">
+        <b>Smart Nagar — Admin</b>
+        <div class="nav">
+            <a href="/Admin/Dashboard">Dashboard</a>
+            <a href="/Admin/ManageUsers">Manage Users</a>
+            <a href="/Admin/SystemOverview">System Overview</a>
+            <a href="/Admin/PublishNotice">Publish Notice</a>
+            <a href="/Admin/Notices">Notices</a>
+            <a href="/Account/Logout">Logout</a>
+        </div>
+    </div>
+
+    <div class="wrap">
+        <h1>All Notices</h1>
+        <div class="sub">Published notices</div>
+
+        <a class="btnNew" href="/Admin/PublishNotice">+ Publish New Notice</a>
+
+        @if (TempData["Msg"] != null)
+        {
+            <div class="msg">@TempData["Msg"]</div>
+        }
+
+        @if (Model == null || Model.Count == 0)
+        {
+            <div class="card" style="color:#6a768a;font-weight:900;">No notices found yet.</div>
+        }
+        else
+        {
+            foreach (var n in Model)
+            {
+                <div class="card">
+                    <div class="row">
+                        <div>
+                            <div class="title">@n.Title</div>
+                            <div class="meta">@n.Priority • @n.CreatedAt.ToLocalTime().ToString("yyyy-MM-dd hh:mm tt")</div>
+                        </div>
+
+                        <div class="btnGroup">
+                            <a class="btnEdit" href="/Admin/EditNotice/@n.Id">Edit</a>
+
+                            <form method="post" action="/Admin/DeleteNotice" onsubmit="return confirm('Delete this notice?');">
+                                @Html.AntiForgeryToken()
+                                <input type="hidden" name="id" value="@n.Id" />
+                                <button class="btnDel" type="submit">Delete</button>
+                            </form>
+                        </div>
+                    </div>
+
+                    <div class="desc">@n.Description</div>
+                </div>
+            }
+        }
+    </div>
+</body>
+</html>
