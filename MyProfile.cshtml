@@ -1,0 +1,769 @@
+﻿@model SmartNagar.ViewModels.ProfileViewModel
+@{
+    Layout = "~/Views/Citizen/_CitizenLayout.cshtml";
+    ViewBag.Active = "MyProfile";
+    ViewBag.FullName = Model?.FullName ?? "Citizen";
+}
+
+<style>
+    .profileShell {
+        background: linear-gradient(135deg,#6a7cff,#6e4bb6);
+        border-radius: 22px;
+        padding: 22px;
+        box-shadow: 0 22px 60px rgba(15,23,42,.18);
+    }
+
+    .pTop {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 16px;
+        color: #fff;
+        padding: 6px 6px 18px;
+    }
+
+        .pTop h1 {
+            margin: 0;
+            font-size: 40px;
+            font-weight: 1000;
+        }
+
+        .pTop p {
+            margin: 8px 0 0;
+            opacity: .92;
+            font-weight: 750;
+        }
+
+    .pTopBtns {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+    }
+
+    .pBtn {
+        border: none;
+        cursor: pointer;
+        font-weight: 1000;
+        border-radius: 12px;
+        padding: 10px 14px;
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        text-decoration: none;
+    }
+
+    .pBtnWhite {
+        background: rgba(255,255,255,.92);
+        color: #0f172a;
+        border: 1px solid rgba(255,255,255,.55);
+    }
+
+    .pBtnRed {
+        background: linear-gradient(135deg,#ff5a62,#ef4444);
+        color: #fff;
+        box-shadow: 0 18px 40px rgba(239,68,68,.22);
+    }
+
+    .msg {
+        margin: 0 0 14px;
+        padding: 12px 14px;
+        border-radius: 14px;
+        border: 1px solid #bbf7d0;
+        background: #ecfdf5;
+        color: #14532d;
+        font-weight: 900;
+    }
+
+    .grid {
+        display: grid;
+        grid-template-columns: 340px 1fr;
+        gap: 18px;
+        align-items: start;
+    }
+
+    .leftCard {
+        background: #fff;
+        border: 1px solid #eef2f7;
+        border-radius: 20px;
+        overflow: hidden;
+        box-shadow: 0 16px 40px rgba(15,23,42,.10);
+    }
+
+    .leftHero {
+        background: linear-gradient(135deg, rgba(106,124,255,.95), rgba(110,75,182,.95));
+        color: #fff;
+        padding: 18px 18px 22px;
+        text-align: center;
+        position: relative;
+        min-height: 260px;
+        display: grid;
+        place-items: center;
+    }
+
+    .pill {
+        position: absolute;
+        top: 14px;
+        left: 14px;
+        background: rgba(255,255,255,.22);
+        border: 1px solid rgba(255,255,255,.22);
+        padding: 8px 12px;
+        border-radius: 999px;
+        font-weight: 1000;
+        font-size: 12px;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .avatar {
+        width: 62px;
+        height: 62px;
+        border-radius: 999px;
+        background: rgba(255,255,255,.22);
+        border: 2px solid rgba(255,255,255,.55);
+        display: grid;
+        place-items: center;
+        font-weight: 1000;
+        font-size: 22px;
+        box-shadow: 0 12px 30px rgba(0,0,0,.12);
+    }
+
+    .leftName {
+        margin-top: 10px;
+        font-size: 26px;
+        font-weight: 1000;
+        letter-spacing: .2px;
+    }
+
+    .leftSub {
+        margin-top: 6px;
+        opacity: .92;
+        font-weight: 850;
+        font-size: 12px;
+    }
+
+    .verified {
+        margin-top: 12px;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 12px;
+        border-radius: 999px;
+        background: rgba(255,255,255,.20);
+        border: 1px solid rgba(255,255,255,.20);
+        font-weight: 1000;
+        font-size: 12px;
+    }
+
+    .statsRow {
+        display: grid;
+        grid-template-columns: repeat(3,1fr);
+        background: #fff;
+        border-top: 1px solid #eef2f7;
+    }
+
+    .stat {
+        padding: 16px 10px;
+        text-align: center;
+        border-right: 1px solid #eef2f7;
+    }
+
+        .stat:last-child {
+            border-right: none;
+        }
+
+        .stat b {
+            display: block;
+            font-size: 20px;
+            font-weight: 1000;
+            color: #4f46e5;
+        }
+
+        .stat span {
+            display: block;
+            margin-top: 4px;
+            font-size: 11px;
+            font-weight: 900;
+            color: #64748b;
+            letter-spacing: .6px;
+            text-transform: uppercase;
+        }
+
+    .leftMenu {
+        padding: 12px;
+        display: grid;
+        gap: 8px;
+    }
+
+    .tab {
+        width: 100%;
+        border: 1px solid #eef2f7;
+        background: #fff;
+        border-radius: 14px;
+        padding: 12px 12px;
+        cursor: pointer;
+        font-weight: 900;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        color: #0f172a;
+    }
+
+        .tab.active {
+            background: #f4f7ff;
+            border-color: #dbe3ff;
+            box-shadow: inset 4px 0 0 #6a7cff;
+            color: #1f2a66;
+        }
+
+    .rightCard {
+        background: #fff;
+        border: 1px solid #eef2f7;
+        border-radius: 20px;
+        padding: 18px;
+        box-shadow: 0 16px 40px rgba(15,23,42,.10);
+        min-height: 520px;
+    }
+
+    .section {
+        padding: 8px 8px 16px;
+        border-bottom: 1px solid #eef2f7;
+        margin-bottom: 16px;
+    }
+
+        .section:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+        }
+
+    .secHead {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        margin-bottom: 14px;
+    }
+
+        .secHead h3 {
+            margin: 0;
+            font-size: 20px;
+            font-weight: 1000;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #0f172a;
+        }
+
+    .editBtn {
+        border: none;
+        cursor: pointer;
+        font-weight: 1000;
+        border-radius: 12px;
+        padding: 10px 14px;
+        background: linear-gradient(135deg,#6a7cff,#6e4bb6);
+        color: #fff;
+        box-shadow: 0 16px 35px rgba(106,124,255,.18);
+    }
+
+    .fields {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 14px;
+    }
+
+    .fieldBox {
+        background: #f8fafc;
+        border: 1px solid #eef2f7;
+        border-radius: 16px;
+        padding: 14px;
+        position: relative;
+    }
+
+        .fieldBox:before {
+            content: "";
+            position: absolute;
+            left: 0;
+            top: 12px;
+            bottom: 12px;
+            width: 4px;
+            border-radius: 999px;
+            background: #6a7cff;
+            opacity: .9;
+        }
+
+        .fieldBox small {
+            display: block;
+            font-size: 11px;
+            letter-spacing: .7px;
+            text-transform: uppercase;
+            font-weight: 1000;
+            color: #64748b;
+            padding-left: 10px;
+        }
+
+        .fieldBox input {
+            width: 100%;
+            border: none;
+            outline: none;
+            background: transparent;
+            font-weight: 950;
+            color: #0f172a;
+            margin-top: 6px;
+            padding-left: 10px;
+            font-family: inherit;
+        }
+
+            .fieldBox input[readonly] {
+                opacity: .92;
+            }
+
+    .full {
+        grid-column: 1 / -1;
+    }
+
+    .hint {
+        margin-top: 12px;
+        background: #f4f7ff;
+        border: 1px solid #dbe3ff;
+        color: #1f2a66;
+        border-radius: 16px;
+        padding: 12px 14px;
+        font-weight: 800;
+        line-height: 1.6;
+    }
+
+    .fieldError {
+        color: #ef4444;
+        font-weight: 800;
+        font-size: 12px;
+        margin-top: 6px;
+        display: block;
+        padding-left: 10px;
+    }
+
+    /* Security / Danger zone */
+    .dangerZone {
+        background: #fff7f7;
+        border: 1px solid #fecaca;
+        border-radius: 18px;
+        padding: 14px;
+    }
+
+        .dangerZone h4 {
+            margin: 0 0 10px;
+            font-size: 16px;
+            font-weight: 1000;
+            color: #7f1d1d;
+        }
+
+    .dangerActions {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+    }
+
+    .btnWarn {
+        border: none;
+        cursor: pointer;
+        font-weight: 1000;
+        border-radius: 14px;
+        padding: 12px 16px;
+        background: #f59e0b;
+        color: #111827;
+    }
+
+    .btnDanger {
+        border: none;
+        cursor: pointer;
+        font-weight: 1000;
+        border-radius: 14px;
+        padding: 12px 16px;
+        background: #ef4444;
+        color: #fff;
+    }
+
+    .btnGhost {
+        border: 1px solid #e2e8f0;
+        background: #fff;
+        color: #0f172a;
+        font-weight: 1000;
+        border-radius: 14px;
+        padding: 12px 16px;
+        cursor: pointer;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    /* Modal */
+    .modalBg {
+        position: fixed;
+        inset: 0;
+        background: rgba(15,23,42,.55);
+        display: none;
+        align-items: center;
+        justify-content: center;
+        z-index: 9999;
+        padding: 18px;
+    }
+
+    .modal {
+        width: min(520px, 96vw);
+        background: #fff;
+        border-radius: 18px;
+        border: 1px solid #eef2f7;
+        box-shadow: 0 30px 80px rgba(15,23,42,.30);
+        overflow: hidden;
+    }
+
+    .modalHead {
+        padding: 14px 16px;
+        background: #f8fafc;
+        border-bottom: 1px solid #eef2f7;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 10px;
+    }
+
+        .modalHead b {
+            font-weight: 1000;
+        }
+
+    .xbtn {
+        border: none;
+        background: transparent;
+        font-size: 18px;
+        cursor: pointer;
+        font-weight: 1000;
+        color: #0f172a;
+    }
+
+    .modalBody {
+        padding: 16px;
+        color: #0f172a;
+        font-weight: 750;
+        line-height: 1.6;
+    }
+
+    .modalActions {
+        padding: 14px 16px;
+        display: flex;
+        gap: 10px;
+        justify-content: flex-end;
+        border-top: 1px solid #eef2f7;
+    }
+
+    @@media (max-width: 980px) {
+        .grid
+
+    {
+        grid-template-columns: 1fr;
+    }
+
+    .fields {
+        grid-template-columns: 1fr;
+    }
+
+    .pTop {
+        flex-direction: column;
+    }
+
+    .pTopBtns {
+        width: 100%;
+        justify-content: flex-start;
+    }
+
+    }
+</style>
+
+<div class="profileShell">
+
+    <div class="pTop">
+        <div>
+            <h1>My Profile</h1>
+            <p>Manage your account and update your details</p>
+        </div>
+
+        <div class="pTopBtns">
+            <button type="button" class="pBtn pBtnWhite" id="btnEditTop">✎ Edit</button>
+
+            <form method="post" action="/Account/Logout" style="margin:0;">
+                @Html.AntiForgeryToken()
+                <button type="submit" class="pBtn pBtnRed">⎋ Logout</button>
+            </form>
+        </div>
+    </div>
+
+    @if (TempData["Msg"] != null)
+    {
+        <div class="msg">@TempData["Msg"]</div>
+    }
+
+    <div class="grid">
+
+        <!-- LEFT -->
+        <aside class="leftCard">
+            <div class="leftHero">
+                <div class="pill">● Profile</div>
+
+                <div>
+                    <div class="avatar">@((Model?.FullName ?? "C").Substring(0, 1).ToUpper())</div>
+                    <div class="leftName">@Model.FullName</div>
+                    <div class="leftSub">@Model.Email</div>
+                    <div class="verified">✓ Verified User</div>
+                </div>
+            </div>
+
+            <!-- These can be wired later; safe defaults if your VM doesn't have them -->
+            <div class="statsRow">
+                <div class="stat">
+                    <b>@(Model.TotalComplaints)</b>
+                    <span>Complaints</span>
+                </div>
+                <div class="stat">
+                    <b>@(Model.ResolvedComplaints)</b>
+                    <span>Resolved</span>
+                </div>
+                <div class="stat">
+                    <b>@(Model.MemberYears)</b>
+                    <span>Member</span>
+                </div>
+            </div>
+
+            <div class="leftMenu">
+                <button type="button" class="tab active" data-tab="personal">▢ Personal Info</button>
+                <button type="button" class="tab" data-tab="security">▢ Security</button>
+                <button type="button" class="tab" data-tab="help">▢ Help</button>
+            </div>
+        </aside>
+
+        <!-- RIGHT -->
+        <section class="rightCard">
+
+            <!-- PERSONAL TAB -->
+            <div id="tab-personal">
+                <form method="post" action="/Citizen/MyProfile" id="profileForm">
+                    @Html.AntiForgeryToken()
+
+                    <div class="section">
+                        <div class="secHead">
+                            <h3>▢ Personal Information</h3>
+                            <button type="button" class="editBtn" id="btnEdit">✎ Edit</button>
+                        </div>
+
+                        <div class="fields">
+                            <div class="fieldBox">
+                                <small>Full Name</small>
+                                <input asp-for="FullName" id="FullName" readonly />
+                                <span class="fieldError" asp-validation-for="FullName"></span>
+                            </div>
+
+                            <div class="fieldBox">
+                                <small>Email (locked)</small>
+                                <input asp-for="Email" id="Email" readonly />
+                                <span class="fieldError" asp-validation-for="Email"></span>
+                            </div>
+
+                            <div class="fieldBox full">
+                                <small>Address</small>
+                                <input asp-for="Address" id="Address" readonly placeholder="Enter your address (optional)" />
+                                <span class="fieldError" asp-validation-for="Address"></span>
+
+                                <div class="hint">
+                                    Tip: Keep your address updated so municipal team can locate your complaints faster.
+                                </div>
+                            </div>
+                        </div>
+
+                        <div style="margin-top:14px; display:none;" id="saveRow">
+                            <button type="submit" class="editBtn">Save Changes ✅</button>
+                            <button type="button" class="btnGhost" id="btnCancelEdit" style="margin-left:10px;">Cancel</button>
+                        </div>
+
+                        @if (!ViewData.ModelState.IsValid)
+                        {
+                            <div style="margin-top:12px; padding:12px 14px; border-radius:14px; border:1px solid #fecaca; background:#fff1f2; color:#991b1b; font-weight:900;">
+                                Please fix the errors above and try again.
+                            </div>
+                        }
+                    </div>
+                </form>
+            </div>
+
+            <!-- SECURITY TAB -->
+            <div id="tab-security" style="display:none;">
+                <div class="section">
+                    <div class="secHead">
+                        <h3>▢ Security</h3>
+                    </div>
+
+                    <div class="dangerZone">
+                        <h4>Danger Zone</h4>
+                        <div style="color:#7f1d1d; font-weight:850; margin-bottom:12px;">
+                            Deactivate temporarily or delete permanently.
+                        </div>
+
+                        <div class="dangerActions">
+                            <button type="button" class="btnWarn" id="btnDeactivate">Deactivate Account</button>
+                            <button type="button" class="btnDanger" id="btnDelete">Delete Account</button>
+                            <a class="btnGhost" href="/Citizen/Dashboard">Back to Dashboard</a>
+                        </div>
+
+                        <div style="margin-top:10px; color:#7f1d1d; font-weight:800; font-size:12px;">
+                            Delete is irreversible. Deactivate is reversible (based on your reactivation flow).
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- HELP TAB -->
+            <div id="tab-help" style="display:none;">
+                <div class="section">
+                    <div class="secHead">
+                        <h3>▢ Help & Support</h3>
+                    </div>
+
+                    <div style="background:#f8fafc;border:1px solid #eef2f7;border-radius:18px;padding:14px;font-weight:850;color:#334155;line-height:1.7;">
+                        • For complaint issues, check <b>Track Status</b> page.<br />
+                        • If you changed address, update it here so officers can locate you faster.<br />
+                        • For account recovery, contact admin/support.
+                    </div>
+
+                    <div style="margin-top:12px; display:flex; gap:12px; flex-wrap:wrap;">
+                        <a class="btnGhost" href="/Citizen/Notices">View Notices</a>
+                        <a class="btnGhost" href="/Citizen/MyComplaints">My Complaints</a>
+                        <a class="btnGhost" href="/Citizen/TrackStatus">Track Status</a>
+                    </div>
+                </div>
+            </div>
+
+        </section>
+    </div>
+</div>
+
+<!-- Confirm Modal -->
+<div class="modalBg" id="modalBg">
+    <div class="modal">
+        <div class="modalHead">
+            <b id="modalTitle">Confirm</b>
+            <button class="xbtn" type="button" id="modalClose">✕</button>
+        </div>
+        <div class="modalBody" id="modalBody">Are you sure?</div>
+        <div class="modalActions">
+            <button type="button" class="btnGhost" id="modalCancel">Cancel</button>
+
+            <form method="post" id="modalForm" style="margin:0;">
+                @Html.AntiForgeryToken()
+                <button type="submit" class="editBtn" id="modalOk">Yes, continue</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Tabs
+    const tabs = document.querySelectorAll('.tab');
+    const personal = document.getElementById('tab-personal');
+    const security = document.getElementById('tab-security');
+    const help = document.getElementById('tab-help');
+
+    tabs.forEach(t => {
+        t.addEventListener('click', () => {
+            tabs.forEach(x => x.classList.remove('active'));
+            t.classList.add('active');
+
+            const key = t.getAttribute('data-tab');
+            personal.style.display = key === 'personal' ? '' : 'none';
+            security.style.display = key === 'security' ? '' : 'none';
+            help.style.display = key === 'help' ? '' : 'none';
+        });
+    });
+
+    // Edit mode
+    const btnEdit = document.getElementById('btnEdit');
+    const btnEditTop = document.getElementById('btnEditTop');
+    const btnCancelEdit = document.getElementById('btnCancelEdit');
+    const saveRow = document.getElementById('saveRow');
+
+    const fullName = document.getElementById('FullName');
+    const address = document.getElementById('Address');
+
+    function enableEdit(on) {
+        if (on) {
+            fullName.removeAttribute('readonly');
+            address.removeAttribute('readonly');
+            saveRow.style.display = '';
+            document.querySelector('.tab[data-tab="personal"]').click();
+        } else {
+            fullName.setAttribute('readonly', 'readonly');
+            address.setAttribute('readonly', 'readonly');
+            saveRow.style.display = 'none';
+        }
+    }
+
+    btnEdit.addEventListener('click', () => enableEdit(true));
+    btnEditTop.addEventListener('click', () => enableEdit(true));
+    btnCancelEdit.addEventListener('click', () => enableEdit(false));
+
+    // Modal helpers
+    const modalBg = document.getElementById('modalBg');
+    const modalTitle = document.getElementById('modalTitle');
+    const modalBody = document.getElementById('modalBody');
+    const modalForm = document.getElementById('modalForm');
+    const modalClose = document.getElementById('modalClose');
+    const modalCancel = document.getElementById('modalCancel');
+    const modalOk = document.getElementById('modalOk');
+
+    function openModal(title, body, postUrl, okText, danger) {
+        modalTitle.textContent = title;
+        modalBody.textContent = body;
+        modalForm.action = postUrl;
+        modalOk.textContent = okText || 'Yes, continue';
+
+        if (danger) {
+            modalOk.style.background = '#ef4444';
+            modalOk.style.color = '#fff';
+        } else {
+            modalOk.style.background = '';
+            modalOk.style.color = '';
+        }
+
+        modalBg.style.display = 'flex';
+    }
+
+    function closeModal() { modalBg.style.display = 'none'; }
+
+    modalClose.addEventListener('click', closeModal);
+    modalCancel.addEventListener('click', closeModal);
+    modalBg.addEventListener('click', (e) => { if (e.target === modalBg) closeModal(); });
+
+    // Danger zone buttons
+    document.getElementById('btnDeactivate').addEventListener('click', () => {
+        openModal(
+            'Deactivate Account',
+            'This will temporarily disable your account. You will not be able to login until reactivated.',
+            '/Citizen/DeactivateAccount',
+            'Deactivate',
+            false
+        );
+    });
+
+    document.getElementById('btnDelete').addEventListener('click', () => {
+        openModal(
+            'Delete Account',
+            'This will permanently delete your account. This action cannot be undone.',
+            '/Citizen/DeleteAccount',
+            'Delete Permanently',
+            true
+        );
+    });
+</script>
+
+@section Scripts {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation-unobtrusive/4.0.0/jquery.validate.unobtrusive.min.js"></script>
+}
