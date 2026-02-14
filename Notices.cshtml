@@ -1,6 +1,7 @@
 ﻿@model List<SmartNagar.Models.Notice>
 @{
     Layout = null;
+    var fullName = ViewBag.FullName as string ?? "Citizen";
 }
 
 <!DOCTYPE html>
@@ -8,209 +9,338 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Notices</title>
+    <title>Citizen Notices - Smart Nagar</title>
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
 
     <style>
         * {
-            box-sizing: border-box
+            box-sizing: border-box;
         }
 
         body {
             margin: 0;
-            font-family: "Segoe UI",system-ui,Arial;
+            font-family: "Segoe UI", system-ui, Arial;
             background: #f5f7fb;
-            color: #0b1220
+            color: #0f172a;
         }
 
-        .topbar {
-            background: linear-gradient(135deg,#1ea4c8,#31b87b);
-            color: #fff;
-            padding: 16px 22px;
+        /* TOP HEADER */
+        .top {
+            background: linear-gradient(135deg,#22c55e,#16a34a);
+            color: white;
+            padding: 26px 22px;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            box-shadow: 0 12px 30px rgba(0,0,0,.12);
+        }
+
+        .topRow {
+            max-width: 1200px;
+            margin: 0 auto;
             display: flex;
+            align-items: center;
             justify-content: space-between;
+            gap: 14px;
+        }
+
+        .brand {
+            display: flex;
             align-items: center;
             gap: 12px;
         }
 
-            .topbar b {
-                font-size: 16px
-            }
-
-        .nav a {
-            color: #fff;
-            text-decoration: none;
-            font-weight: 900;
-            padding: 10px 12px;
+        .brandIcon {
+            width: 44px;
+            height: 44px;
             border-radius: 12px;
-            border: 1px solid rgba(255,255,255,.35);
-            background: rgba(255,255,255,.12);
-            margin-left: 8px;
-            display: inline-block;
+            background: rgba(255,255,255,.18);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            font-weight: 1000;
         }
 
-            .nav a:hover {
-                background: rgba(255,255,255,.18)
-            }
-
-        .wrap {
-            width: min(1000px,94%);
-            margin: 18px auto 30px
-        }
-
-        h1 {
+        .brandText h2 {
             margin: 0;
-            font-size: 22px;
-            font-weight: 1000
-        }
-
-        .sub {
-            margin-top: 6px;
-            color: #6a768a;
-            font-weight: 750
-        }
-
-        .msg {
-            margin-top: 12px;
-            padding: 12px;
-            border-radius: 12px;
-            background: #e9fff2;
-            border: 1px solid #bbf7d0;
-            color: #166534;
-            font-weight: 950;
-        }
-
-        .card {
-            margin-top: 14px;
-            background: #fff;
-            border: 1px solid #eef2f7;
-            border-radius: 18px;
-            padding: 16px;
-            box-shadow: 0 10px 25px rgba(0,0,0,.06);
-        }
-
-        .row {
-            display: flex;
-            justify-content: space-between;
-            gap: 12px;
-            flex-wrap: wrap
-        }
-
-        .title {
+            font-size: 18px;
             font-weight: 1000;
-            font-size: 16px
+            letter-spacing: .2px;
         }
 
-        .meta {
-            color: #6a768a;
-            font-weight: 850;
-            font-size: 12px;
-            margin-top: 6px
-        }
-
-        .desc {
-            margin-top: 10px;
-            color: #44566d;
+        .brandText p {
+            margin: 3px 0 0;
+            opacity: .9;
             font-weight: 650;
-            line-height: 1.6
+            font-size: 12px;
         }
 
-        .btnDel, .btnEdit {
-            border: none;
-            border-radius: 12px;
+        .backBtn {
+            text-decoration: none;
+            color: white;
+            border: 1px solid rgba(255,255,255,.35);
+            background: rgba(255,255,255,.14);
             padding: 10px 14px;
-            font-weight: 1000;
-            cursor: pointer;
-            color: #fff;
-            text-decoration: none;
-            display: inline-block;
-        }
-
-        .btnDel {
-            background: #ef4444;
-        }
-
-        .btnEdit {
-            background: #0b5cff;
-        }
-
-        .btnNew {
-            display: inline-block;
-            margin-top: 14px;
-            text-decoration: none;
-            font-weight: 1000;
-            padding: 12px 14px;
-            border-radius: 14px;
-            background: #0b5cff;
-            color: #fff;
-            box-shadow: 0 14px 30px rgba(11,92,255,.18);
-        }
-
-        .btnGroup {
-            display: flex;
+            border-radius: 12px;
+            font-weight: 900;
+            display: inline-flex;
             gap: 10px;
             align-items: center;
         }
 
-        .btnDel:hover, .btnEdit:hover, .btnNew:hover {
-            filter: brightness(.98);
+        .wrap {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 22px;
+        }
+
+        /* FILTER BAR */
+        .filters {
+            display: grid;
+            grid-template-columns: 1fr 220px;
+            gap: 14px;
+            margin-top: 18px;
+        }
+
+        .input, .select {
+            border-radius: 14px;
+            border: 1px solid #e2e8f0;
+            padding: 12px 14px;
+            background: #fff;
+            font-weight: 700;
+            outline: none;
+        }
+
+        .filters .inputWrap {
+            position: relative;
+        }
+
+            .filters .inputWrap i {
+                position: absolute;
+                left: 14px;
+                top: 50%;
+                transform: translateY(-50%);
+                color: #94a3b8;
+            }
+
+        .filters .input {
+            width: 100%;
+            padding-left: 42px;
+        }
+
+        /* NOTICE GRID */
+        .grid {
+            margin-top: 18px;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 14px;
+        }
+
+        .card {
+            background: #fff;
+            border: 1px solid #eef2f7;
+            border-radius: 18px;
+            padding: 16px;
+            box-shadow: 0 12px 30px rgba(15,23,42,.06);
+            position: relative;
+            overflow: hidden;
+        }
+
+            .card:before {
+                content: "";
+                position: absolute;
+                left: 0;
+                top: 0;
+                bottom: 0;
+                width: 5px;
+                background: #22c55e;
+            }
+
+        .cardHead {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 10px;
+        }
+
+        .title {
+            margin: 0;
+            font-size: 16px;
+            font-weight: 1000;
+            line-height: 1.25;
+        }
+
+        .meta {
+            margin-top: 8px;
+            font-size: 12px;
+            color: #64748b;
+            font-weight: 750;
+        }
+
+        .desc {
+            margin-top: 12px;
+            color: #334155;
+            font-weight: 650;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        .badge {
+            padding: 6px 10px;
+            border-radius: 999px;
+            font-size: 12px;
+            font-weight: 900;
+            white-space: nowrap;
+        }
+
+        .bHigh {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .bMedium {
+            background: #fff7ed;
+            color: #9a3412;
+        }
+
+        .bLow {
+            background: #eff6ff;
+            color: #1e3a8a;
+        }
+
+        .bNormal {
+            background: #ecfdf5;
+            color: #14532d;
+        }
+
+        .empty {
+            margin-top: 18px;
+            background: #fff;
+            border: 1px dashed #cbd5e1;
+            border-radius: 18px;
+            padding: 18px;
+            text-align: center;
+            color: #64748b;
+            font-weight: 800;
+        }
+
+        @@media(max-width: 1050px) {
+            .grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .filters {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @@media(max-width: 650px) {
+            .grid {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
 
 <body>
-    <div class="topbar">
-        <b>Smart Nagar — Admin</b>
-        <div class="nav">
-            <a href="/Admin/Dashboard">Dashboard</a>
-            <a href="/Admin/ManageUsers">Manage Users</a>
-            <a href="/Admin/SystemOverview">System Overview</a>
-            <a href="/Admin/PublishNotice">Publish Notice</a>
-            <a href="/Admin/Notices">Notices</a>
-            <a href="/Account/Logout">Logout</a>
+
+    <div class="top">
+        <div class="topRow">
+            <div class="brand">
+                <div class="brandIcon"><i class="fa-solid fa-bullhorn"></i></div>
+                <div class="brandText">
+                    <h2>Citizen Notices</h2>
+                    <p>Announcements published by Admin & Municipal Officers</p>
+                </div>
+            </div>
+
+            <a class="backBtn" href="/Citizen/Dashboard">
+                <i class="fa-solid fa-arrow-left"></i> Back
+            </a>
         </div>
     </div>
 
     <div class="wrap">
-        <h1>All Notices</h1>
-        <div class="sub">Published notices</div>
 
-        <a class="btnNew" href="/Admin/PublishNotice">+ Publish New Notice</a>
+        <div class="filters">
+            <div class="inputWrap">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input class="input" id="searchBox" placeholder="Search by title or text..." />
+            </div>
 
-        @if (TempData["Msg"] != null)
-        {
-            <div class="msg">@TempData["Msg"]</div>
-        }
+            <select class="select" id="priorityFilter">
+                <option value="">All Priorities</option>
+                <option value="High">High</option>
+                <option value="Medium">Medium</option>
+                <option value="Low">Low</option>
+                <option value="Normal">Normal</option>
+            </select>
+        </div>
 
         @if (Model == null || Model.Count == 0)
         {
-            <div class="card" style="color:#6a768a;font-weight:900;">No notices found yet.</div>
+            <div class="empty">
+                No notices published yet.
+            </div>
         }
         else
         {
-            foreach (var n in Model)
-            {
-                <div class="card">
-                    <div class="row">
-                        <div>
-                            <div class="title">@n.Title</div>
-                            <div class="meta">@n.Priority • @n.CreatedAt.ToLocalTime().ToString("yyyy-MM-dd hh:mm tt")</div>
+            <div class="grid" id="noticeGrid">
+                @foreach (var n in Model)
+                {
+                    var pr = (n.Priority ?? "Normal").Trim();
+                    var badgeClass = pr == "High" ? "bHigh"
+                    : pr == "Medium" ? "bMedium"
+                    : pr == "Low" ? "bLow"
+                    : "bNormal";
+
+                    <div class="card noticeCard"
+                         data-priority="@pr"
+                         data-search="@($"{n.Title} {n.Description} {n.CreatedByRole} {n.CreatedByName}".ToLower())">
+
+                        <div class="cardHead">
+                            <h3 class="title">@n.Title</h3>
+                            <span class="badge @badgeClass">@pr</span>
                         </div>
 
-                        <div class="btnGroup">
-                            <a class="btnEdit" href="/Admin/EditNotice/@n.Id">Edit</a>
-
-                            <form method="post" action="/Admin/DeleteNotice" onsubmit="return confirm('Delete this notice?');">
-                                @Html.AntiForgeryToken()
-                                <input type="hidden" name="id" value="@n.Id" />
-                                <button class="btnDel" type="submit">Delete</button>
-                            </form>
+                        <div class="meta">
+                            Published by <b>@(string.IsNullOrWhiteSpace(n.CreatedByRole) ? "Admin/Officer" : n.CreatedByRole)</b>
+                            @(string.IsNullOrWhiteSpace(n.CreatedByName) ? "" : $"({n.CreatedByName})")
+                            • @n.CreatedAt.ToLocalTime().ToString("dd MMM yyyy, hh:mm tt")
                         </div>
+
+                        <div class="desc">@n.Description</div>
                     </div>
-
-                    <div class="desc">@n.Description</div>
-                </div>
-            }
+                }
+            </div>
         }
+
     </div>
+
+    <script>
+        const searchBox = document.getElementById("searchBox");
+        const priorityFilter = document.getElementById("priorityFilter");
+        const cards = document.querySelectorAll(".noticeCard");
+
+        function applyFilters() {
+            const q = (searchBox.value || "").trim().toLowerCase();
+            const p = (priorityFilter.value || "").trim();
+
+            cards.forEach(card => {
+                const matchesText = card.getAttribute("data-search").includes(q);
+                const cardPriority = card.getAttribute("data-priority");
+                const matchesPriority = !p || cardPriority === p;
+
+                card.style.display = (matchesText && matchesPriority) ? "" : "none";
+            });
+        }
+
+        searchBox.addEventListener("input", applyFilters);
+        priorityFilter.addEventListener("change", applyFilters);
+    </script>
+
 </body>
 </html>
