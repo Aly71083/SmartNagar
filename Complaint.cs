@@ -20,8 +20,19 @@ namespace SmartNagar.Models
 
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
+        // ✅ set when complaint becomes resolved
+        public DateTime? ResolvedAt { get; set; }
+
         // optional: citizen link
         public string? CitizenId { get; set; }
         public User? Citizen { get; set; }
+
+        [MaxLength(300)]
+        public string? Address { get; set; } = "";
+
+        public string ? Ward { get; set; } = "";
+
+        public string? Priority { get; set; } = "Normal"; // Normal / High
+
     }
 }
