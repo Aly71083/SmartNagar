@@ -1,0 +1,100 @@
+﻿@model List<SmartNagar.Models.GarbageReminder>
+@{
+    Layout = "~/Views/Citizen/_CitizenLayout.cshtml";
+    ViewBag.Active = "GarbageSchedule";
+    ViewBag.FullName = ViewBag.FullName ?? "Citizen";
+}
+
+<style>
+    .title {
+        font-size: 22px;
+        font-weight: 1000;
+        margin-bottom: 14px;
+    }
+
+    .card {
+        background: #fff;
+        border: 1px solid #eef2f7;
+        border-radius: 18px;
+        padding: 16px;
+        box-shadow: 0 10px 24px rgba(15,23,42,.06);
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    th, td {
+        padding: 12px;
+        border-bottom: 1px solid #eef2f7;
+        font-size: 14px;
+        text-align: left;
+    }
+
+    th {
+        font-size: 12px;
+        letter-spacing: .4px;
+        text-transform: uppercase;
+        color: #64748b;
+        font-weight: 950;
+    }
+
+    .btnDel {
+        border: none;
+        cursor: pointer;
+        background: #ef4444;
+        color: #fff;
+        padding: 8px 12px;
+        border-radius: 12px;
+        font-weight: 950;
+    }
+
+    .empty {
+        padding: 18px;
+        text-align: center;
+        color: #64748b;
+        font-weight: 900;
+    }
+</style>
+
+<div class="title">📌 My Garbage Reminders</div>
+
+<div class="card">
+    @if (Model == null || Model.Count == 0)
+    {
+        <div class="empty">No reminders saved yet.</div>
+    }
+    else
+    {
+        <table>
+            <thead>
+                <tr>
+                    <th>Ward</th>
+                    <th>Days</th>
+                    <th>Time</th>
+                    <th>Saved</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var r in Model)
+                {
+                    <tr>
+                        <td>Ward @r.WardNumber</td>
+                        <td>@r.CollectionDays</td>
+                        <td>@r.CollectionTime</td>
+                        <td>@r.CreatedAt.ToLocalTime().ToString("dd MMM yyyy")</td>
+                        <td>
+                            <form method="post" action="/Citizen/DeleteGarbageReminder">
+                                @Html.AntiForgeryToken()
+                                <input type="hidden" name="id" value="@r.Id" />
+                                <button type="submit" class="btnDel">Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+</div>
