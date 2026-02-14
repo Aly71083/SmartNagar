@@ -1,0 +1,603 @@
+﻿@{
+    Layout = null;
+
+    var fullName = (ViewBag.FullName as string) ?? "Citizen";
+    var active = (ViewBag.Active as string) ?? "Home";
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Citizen Portal - Smart Nagar</title>
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: "Segoe UI", system-ui, Arial;
+            background: #f5f7fb;
+            color: #0f172a;
+        }
+
+        .layout {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* SIDEBAR */
+        .side {
+            width: 260px;
+            background: linear-gradient(180deg,#41b04b,#2f8d3b);
+            color: #fff;
+            padding: 18px 16px;
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            overflow: auto;
+        }
+
+        .brand {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            padding: 10px 10px 16px;
+            border-bottom: 1px solid rgba(255,255,255,.14);
+            margin-bottom: 14px;
+        }
+
+        .brandIcon {
+            width: 38px;
+            height: 38px;
+            border-radius: 12px;
+            background: rgba(255,255,255,.18);
+            display: grid;
+            place-items: center;
+            font-size: 18px;
+        }
+
+        .brandTitle {
+            font-weight: 1000;
+            line-height: 1.1;
+        }
+
+            .brandTitle small {
+                display: block;
+                font-weight: 700;
+                opacity: .9;
+                font-size: 11px;
+                margin-top: 3px;
+            }
+
+        .groupTitle {
+            margin: 14px 8px 8px;
+            font-weight: 900;
+            opacity: .85;
+            font-size: 11px;
+            letter-spacing: .8px;
+            text-transform: uppercase;
+        }
+
+        .menu {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            padding: 0 6px;
+        }
+
+            .menu a {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                padding: 12px 12px;
+                border-radius: 12px;
+                color: #fff;
+                text-decoration: none;
+                font-weight: 800;
+                background: rgba(255,255,255,.08);
+                transition: .12s ease;
+            }
+
+                .menu a:hover {
+                    background: rgba(255,255,255,.14);
+                    transform: translateY(-1px);
+                }
+
+                .menu a.active {
+                    background: rgba(255,255,255,.22);
+                    box-shadow: inset 4px 0 0 rgba(255,255,255,.65);
+                }
+
+            .menu i {
+                width: 18px;
+                text-align: center;
+            }
+
+        /* Sidebar bottom card */
+        .sideBottom {
+            margin-top: 16px;
+            padding: 10px 6px;
+        }
+
+        .userCard {
+            background: rgba(255,255,255,.16);
+            border: 1px solid rgba(255,255,255,.14);
+            border-radius: 14px;
+            padding: 12px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 999px;
+            background: rgba(255,255,255,.25);
+            display: grid;
+            place-items: center;
+            font-weight: 1000;
+        }
+
+        .userCard .meta b {
+            display: block;
+            font-weight: 1000;
+        }
+
+        .userCard .meta small {
+            opacity: .9;
+            font-weight: 700;
+        }
+
+        .logoutBtn {
+            margin-top: 10px;
+            width: 100%;
+            padding: 10px 12px;
+            border-radius: 12px;
+            border: 1px solid rgba(255,255,255,.25);
+            background: rgba(255,255,255,.10);
+            color: #fff;
+            font-weight: 1000;
+            cursor: pointer;
+        }
+
+            .logoutBtn:hover {
+                background: rgba(255,255,255,.16);
+            }
+
+        /* MAIN */
+        .main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            min-width: 0;
+        }
+
+        /* TOPBAR */
+        .topbar {
+            background: #fff;
+            padding: 18px 22px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 8px 24px rgba(15,23,42,.06);
+            position: sticky;
+            top: 0;
+            z-index: 50;
+        }
+
+        .welcome h2 {
+            margin: 0;
+            font-size: 22px;
+            font-weight: 1000;
+        }
+
+        .welcome p {
+            margin: 4px 0 0;
+            color: #64748b;
+            font-weight: 700;
+            font-size: 12px;
+        }
+
+        .topIcons {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            position: relative;
+        }
+
+        .iconBtn {
+            width: 38px;
+            height: 38px;
+            border-radius: 12px;
+            border: 1px solid #eef2f7;
+            background: #f8fafc;
+            cursor: pointer;
+            display: grid;
+            place-items: center;
+            position: relative;
+        }
+
+        .badge {
+            position: absolute;
+            top: -6px;
+            right: -6px;
+            background: #ef4444;
+            color: #fff;
+            font-weight: 1000;
+            font-size: 11px;
+            border-radius: 999px;
+            padding: 3px 7px;
+            border: 2px solid #fff;
+            display: none;
+        }
+
+        /* notification dropdown */
+        .notifPanel {
+            position: absolute;
+            right: 0;
+            top: 46px;
+            width: 360px;
+            background: #fff;
+            border: 1px solid #eef2f7;
+            border-radius: 16px;
+            box-shadow: 0 18px 60px rgba(15,23,42,.18);
+            overflow: hidden;
+            display: none;
+        }
+
+        .notifHead {
+            padding: 12px 14px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #eef2f7;
+        }
+
+            .notifHead b {
+                font-weight: 1000;
+            }
+
+        .markAll {
+            border: none;
+            background: transparent;
+            color: #0b5cff;
+            font-weight: 900;
+            cursor: pointer;
+        }
+
+        .notifList {
+            max-height: 360px;
+            overflow: auto;
+        }
+
+        .notifItem {
+            padding: 12px 14px;
+            border-bottom: 1px solid #f1f5f9;
+            cursor: pointer;
+        }
+
+            .notifItem:hover {
+                background: #f8fafc;
+            }
+
+            .notifItem .t {
+                font-weight: 950;
+                font-size: 13px;
+                margin-bottom: 4px;
+            }
+
+            .notifItem .m {
+                font-size: 12px;
+                color: #64748b;
+                font-weight: 700;
+                line-height: 1.35;
+            }
+
+            .notifItem .time {
+                margin-top: 6px;
+                font-size: 11px;
+                color: #94a3b8;
+                font-weight: 800;
+            }
+
+        .unreadDot {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 999px;
+            background: #ef4444;
+            margin-right: 8px;
+            vertical-align: middle;
+        }
+
+        .page {
+            padding: 22px;
+        }
+
+        @@media (max-width: 980px) {
+            .side
+
+        {
+            width: 220px;
+        }
+
+        }
+
+        @@media (max-width: 820px) {
+            .layout
+
+        {
+            flex-direction: column;
+        }
+
+        .side {
+            width: 100%;
+            height: auto;
+            position: relative;
+        }
+
+        .main {
+            width: 100%;
+        }
+
+        .notifPanel {
+            width: min(92vw, 360px);
+        }
+
+        }
+    </style>
+</head>
+
+<body>
+    <div class="layout">
+
+        <!-- SIDEBAR -->
+        <aside class="side">
+            <div class="brand">
+                <div class="brandIcon"><i class="fa-solid fa-building-columns"></i></div>
+                <div class="brandTitle">
+                    Smart Nagar
+                    <small>Citizen Portal</small>
+                </div>
+            </div>
+
+            <div class="groupTitle">Main</div>
+            <nav class="menu">
+                <a class="@(active == "Home" ? "active" : "")" href="/Citizen/Dashboard">
+                    <i class="fa-solid fa-house"></i> Home
+                </a>
+                <a class="@(active == "MyComplaints" ? "active" : "")" href="/Citizen/MyComplaints">
+                    <i class="fa-regular fa-rectangle-list"></i> My Complaints
+                </a>
+            </nav>
+
+            <div class="groupTitle">Services</div>
+            <nav class="menu">
+                <a class="@(active == "SubmitComplaint" ? "active" : "")" href="/Citizen/SubmitComplaint">
+                    <i class="fa-solid fa-pen-to-square"></i> Submit Complaint
+                </a>
+                <a class="@(active == "TrackStatus" ? "active" : "")" href="/Citizen/TrackStatus">
+                    <i class="fa-solid fa-magnifying-glass"></i> Track Status
+                </a>
+                <a class="@(active == "Emergency" ? "active" : "")" href="/Citizen/Emergency">
+                    <i class="fa-solid fa-triangle-exclamation"></i> Emergency
+                </a>
+            </nav>
+
+            <div class="groupTitle">Information</div>
+            <nav class="menu">
+                <a class="@(active == "GarbageSchedule" ? "active" : "")" href="/Citizen/GarbageSchedule">
+                    <i class="fa-solid fa-trash"></i> Garbage Schedule
+                </a>
+                <a class="@(active == "Notices" ? "active" : "")" href="/Citizen/Notices">
+                    <i class="fa-solid fa-bullhorn"></i> Notices
+                </a>
+                <a class="@(active == "MyProfile" ? "active" : "")" href="/Citizen/MyProfile">
+                    <i class="fa-solid fa-user"></i> My Profile
+                </a>
+            </nav>
+
+            <div class="sideBottom">
+                <div class="userCard">
+                    <div class="avatar"><i class="fa-solid fa-user"></i></div>
+                    <div class="meta">
+                        <b>@fullName</b>
+                        <small>Citizen</small>
+                    </div>
+                </div>
+
+                <!-- Logout -->
+                <form method="post" action="/Account/Logout" style="margin:0;">
+                    @Html.AntiForgeryToken()
+                    <button type="submit" class="logoutBtn">
+                        <i class="fa-solid fa-right-from-bracket"></i> Logout
+                    </button>
+                </form>
+            </div>
+        </aside>
+
+        <!-- MAIN -->
+        <div class="main">
+
+            <!-- TOPBAR -->
+            <div class="topbar">
+                <div class="welcome">
+                    <h2>Welcome Back, @fullName! 👋</h2>
+                    <p>Your one-stop portal for all municipal services</p>
+                </div>
+
+                <div class="topIcons">
+                    <!-- bell -->
+                    <button class="iconBtn" id="bellBtn" type="button" title="Notifications">
+                        <i class="fa-solid fa-bell"></i>
+                        <span class="badge" id="notifBadge">0</span>
+                    </button>
+
+                    <!-- optional: messages icon (just link to notices/notifications page if you want) -->
+                    <a class="iconBtn" href="/Citizen/Notices" title="Notices" style="text-decoration:none;color:inherit;">
+                        <i class="fa-regular fa-comment-dots"></i>
+                    </a>
+
+                    <!-- dropdown -->
+                    <div class="notifPanel" id="notifPanel">
+                        <div class="notifHead">
+                            <b>Notifications</b>
+                            <button type="button" class="markAll" id="markAllBtn">Mark all as read</button>
+                        </div>
+                        <div class="notifList" id="notifList">
+                            <div style="padding:14px;color:#64748b;font-weight:800;">Loading...</div>
+                        </div>
+                    </div>
+
+                    <!-- hidden anti-forgery token for fetch posts -->
+                    <form id="antiForm" style="display:none;">
+                        @Html.AntiForgeryToken()
+                    </form>
+                </div>
+            </div>
+
+            <div class="page">
+                @RenderBody()
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        const bellBtn = document.getElementById('bellBtn');
+        const notifPanel = document.getElementById('notifPanel');
+        const notifList = document.getElementById('notifList');
+        const notifBadge = document.getElementById('notifBadge');
+        const markAllBtn = document.getElementById('markAllBtn');
+
+        function getToken() {
+            const input = document.querySelector('#antiForm input[name="__RequestVerificationToken"]');
+            return input ? input.value : '';
+        }
+
+        function setBadge(n) {
+            if (n && n > 0) {
+                notifBadge.style.display = 'inline-block';
+                notifBadge.textContent = n > 99 ? '99+' : n;
+            } else {
+                notifBadge.style.display = 'none';
+                notifBadge.textContent = '0';
+            }
+        }
+
+        async function loadNotifications() {
+            try {
+                const res = await fetch('/Citizen/Notifications', { credentials: 'same-origin' });
+                const data = await res.json();
+
+                setBadge(data.unread || 0);
+
+                if (!data.list || data.list.length === 0) {
+                    notifList.innerHTML = `<div style="padding:14px;color:#64748b;font-weight:800;">No notifications yet.</div>`;
+                    return;
+                }
+
+                notifList.innerHTML = data.list.map(n => {
+                    const dot = n.isRead ? '' : `<span class="unreadDot"></span>`;
+                    return `
+                        <div class="notifItem" data-id="${n.id}" data-read="${n.isRead}" data-complaint="${n.complaintId || ''}">
+                            <div class="t">${dot}${escapeHtml(n.title || '')}</div>
+                            <div class="m">${escapeHtml(n.message || '')}</div>
+                            <div class="time">${escapeHtml(n.createdAt || '')}</div>
+                        </div>
+                    `;
+                }).join('');
+
+            } catch (e) {
+                notifList.innerHTML = `<div style="padding:14px;color:#ef4444;font-weight:900;">Failed to load notifications.</div>`;
+            }
+        }
+
+        async function markRead(id) {
+            await fetch(`/Citizen/MarkNotificationRead/${id}`, {
+                method: 'POST',
+                headers: {
+                    'RequestVerificationToken': getToken()
+                },
+                credentials: 'same-origin'
+            });
+        }
+
+        async function markAllRead() {
+            await fetch(`/Citizen/MarkAllNotificationsRead`, {
+                method: 'POST',
+                headers: {
+                    'RequestVerificationToken': getToken()
+                },
+                credentials: 'same-origin'
+            });
+        }
+
+        function escapeHtml(str) {
+            return String(str)
+                .replaceAll('&', '&amp;')
+                .replaceAll('<', '&lt;')
+                .replaceAll('>', '&gt;')
+                .replaceAll('"', '&quot;')
+                .replaceAll("'", '&#039;');
+        }
+
+        // Toggle dropdown
+        bellBtn.addEventListener('click', async () => {
+            const open = notifPanel.style.display === 'block';
+            notifPanel.style.display = open ? 'none' : 'block';
+
+            if (!open) {
+                notifList.innerHTML = `<div style="padding:14px;color:#64748b;font-weight:800;">Loading...</div>`;
+                await loadNotifications();
+            }
+        });
+
+        // Click outside closes
+        document.addEventListener('click', (e) => {
+            if (!notifPanel.contains(e.target) && !bellBtn.contains(e.target)) {
+                notifPanel.style.display = 'none';
+            }
+        });
+
+        // Click notification -> mark read + go to TrackStatus if complaintId exists
+        notifList.addEventListener('click', async (e) => {
+            const item = e.target.closest('.notifItem');
+            if (!item) return;
+
+            const id = item.getAttribute('data-id');
+            const wasRead = item.getAttribute('data-read') === 'true';
+            const complaintId = item.getAttribute('data-complaint');
+
+            if (!wasRead) {
+                await markRead(id);
+            }
+
+            await loadNotifications(); // refresh count + list
+
+            if (complaintId) {
+                window.location.href = `/Citizen/TrackStatus?id=${complaintId}`;
+            }
+        });
+
+        markAllBtn.addEventListener('click', async () => {
+            await markAllRead();
+            await loadNotifications();
+        });
+
+        // auto refresh badge every 30s
+        setInterval(loadNotifications, 30000);
+        loadNotifications();
+    </script>
+
+    @RenderSection("Scripts", required: false)
+</body>
+</html>
