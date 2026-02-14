@@ -41,7 +41,7 @@ namespace SmartNagar.Controllers
                     .ToListAsync()
             };
 
-            return View(vm); // Views/Admin/Dashboard.cshtml
+            return View(vm);
         }
 
         // =========================
@@ -62,7 +62,7 @@ namespace SmartNagar.Controllers
                 })
                 .ToListAsync();
 
-            return View(new ManageUsersVM { Users = users }); // Views/Admin/ManageUsers.cshtml
+            return View(new ManageUsersVM { Users = users });
         }
 
         [HttpPost]
@@ -84,13 +84,17 @@ namespace SmartNagar.Controllers
                 Type = "User",
                 Title = user.IsActive ? "User activated" : "User deactivated",
                 Detail = $"{user.FullName} ({user.Email})",
-                IsRead = false
+                IsRead = false,
+                CreatedAt = DateTime.UtcNow
             });
 
             await _db.SaveChangesAsync();
             return RedirectToAction(nameof(ManageUsers));
         }
 
+        // =========================
+        // ✅ DELETE USER (SOFT DELETE FIX)  ✅ NO FK ERROR
+        // =========================
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteUser(string id)
@@ -98,7 +102,7 @@ namespace SmartNagar.Controllers
             if (string.IsNullOrWhiteSpace(id))
                 return RedirectToAction(nameof(ManageUsers));
 
-            var user = await _userManager.FindByIdAsync(id);
+            var user = await _db.Users.FirstOrDefaultAsync(u => u.Id == id);
             if (user == null)
                 return RedirectToAction(nameof(ManageUsers));
 
@@ -109,17 +113,22 @@ namespace SmartNagar.Controllers
                 return RedirectToAction(nameof(ManageUsers));
             }
 
+            // ✅ Soft delete: just disable
+            user.IsActive = false;
+            _db.Users.Update(user);
+
             _db.ActivityLogs.Add(new ActivityLog
             {
                 Type = "User",
-                Title = "User deleted",
+                Title = "User disabled (soft delete)",
                 Detail = $"{user.FullName} ({user.Email})",
-                IsRead = false
+                IsRead = false,
+                CreatedAt = DateTime.UtcNow
             });
 
             await _db.SaveChangesAsync();
-            await _userManager.DeleteAsync(user);
 
+            TempData["Msg"] = "✅ User disabled successfully (complaints kept).";
             return RedirectToAction(nameof(ManageUsers));
         }
 
@@ -129,7 +138,7 @@ namespace SmartNagar.Controllers
         [HttpGet]
         public IActionResult PublishNotice()
         {
-            return View(new PublishNoticeVM()); // Views/Admin/PublishNotice.cshtml
+            return View(new PublishNoticeVM());
         }
 
         [HttpPost]
@@ -154,7 +163,8 @@ namespace SmartNagar.Controllers
                 Type = "Notice",
                 Title = "New notice published",
                 Detail = $"{notice.Title} ({notice.Priority})",
-                IsRead = false
+                IsRead = false,
+                CreatedAt = DateTime.UtcNow
             });
 
             await _db.SaveChangesAsync();
@@ -163,7 +173,9 @@ namespace SmartNagar.Controllers
             return RedirectToAction(nameof(Notices));
         }
 
-        // list notices
+        // =========================
+        // ✅ LIST NOTICES
+        // =========================
         [HttpGet]
         public async Task<IActionResult> Notices()
         {
@@ -171,10 +183,12 @@ namespace SmartNagar.Controllers
                 .OrderByDescending(n => n.CreatedAt)
                 .ToListAsync();
 
-            return View(notices); // Views/Admin/Notices.cshtml
+            return View(notices);
         }
 
-        // delete notice
+        // =========================
+        // ✅ DELETE NOTICE
+        // =========================
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteNotice(int id)
@@ -190,22 +204,28 @@ namespace SmartNagar.Controllers
                 Type = "Notice",
                 Title = "Notice deleted",
                 Detail = notice.Title,
-                IsRead = false
+                IsRead = false,
+                CreatedAt = DateTime.UtcNow
             });
 
             await _db.SaveChangesAsync();
             return RedirectToAction(nameof(Notices));
         }
-        // ✅ Edit Notice (GET)  /Admin/EditNotice/5
+
+        // =========================
+        // ✅ EDIT NOTICE (GET)
+        // =========================
         [HttpGet]
         public async Task<IActionResult> EditNotice(int id)
         {
             var notice = await _db.Notices.FirstOrDefaultAsync(n => n.Id == id);
             if (notice == null) return RedirectToAction(nameof(Notices));
-            return View(notice); // Views/Admin/EditNotice.cshtml
+            return View(notice);
         }
 
-        // ✅ Edit Notice (POST)
+        // =========================
+        // ✅ EDIT NOTICE (POST)
+        // =========================
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> EditNotice(Notice model)
@@ -213,23 +233,18 @@ namespace SmartNagar.Controllers
             var notice = await _db.Notices.FirstOrDefaultAsync(n => n.Id == model.Id);
             if (notice == null) return RedirectToAction(nameof(Notices));
 
-            // update fields
             notice.Title = (model.Title ?? "").Trim();
             notice.Description = (model.Description ?? "").Trim();
             notice.Priority = (model.Priority ?? "Normal").Trim();
 
-            // log into ActivityLogs so it appears in dashboard recent activity (if you use it)
-            try
+            _db.ActivityLogs.Add(new ActivityLog
             {
-                _db.ActivityLogs.Add(new ActivityLog
-                {
-                    Type = "Notice",
-                    Title = "Notice updated",
-                    Detail = $"{notice.Title} ({notice.Priority})",
-                    IsRead = false
-                });
-            }
-            catch { }
+                Type = "Notice",
+                Title = "Notice updated",
+                Detail = $"{notice.Title} ({notice.Priority})",
+                IsRead = false,
+                CreatedAt = DateTime.UtcNow
+            });
 
             await _db.SaveChangesAsync();
 
@@ -237,6 +252,76 @@ namespace SmartNagar.Controllers
             return RedirectToAction(nameof(Notices));
         }
 
+        // =========================
+        // ✅ COMPLAINTS LIST
+        // =========================
+        [HttpGet]
+        public async Task<IActionResult> Complaints()
+        {
+            var list = await _db.Complaints
+                .Include(c => c.Citizen)
+                .OrderByDescending(c => c.CreatedAt)
+                .ToListAsync();
+
+            return View(list);
+        }
+
+        // =========================
+        // ✅ UPDATE COMPLAINT STATUS + NOTIFICATION
+        // =========================
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> UpdateComplaintStatus(int id, string status)
+        {
+            if (string.IsNullOrWhiteSpace(status))
+                return RedirectToAction(nameof(Complaints));
+
+            status = status.Trim();
+
+            var allowed = new[] { "Pending", "In Progress", "Resolved" };
+            if (!allowed.Contains(status))
+                return RedirectToAction(nameof(Complaints));
+
+            var complaint = await _db.Complaints.FirstOrDefaultAsync(c => c.Id == id);
+            if (complaint == null)
+                return RedirectToAction(nameof(Complaints));
+
+            complaint.Status = status;
+
+            if (status == "Resolved")
+                complaint.ResolvedAt = DateTime.UtcNow;
+            else
+                complaint.ResolvedAt = null;
+
+            _db.ActivityLogs.Add(new ActivityLog
+            {
+                Type = "Complaint",
+                Title = "Complaint status updated",
+                Detail = $"Complaint #{complaint.Id} -> {complaint.Status}",
+                IsRead = false,
+                CreatedAt = DateTime.UtcNow
+            });
+
+            await _db.SaveChangesAsync();
+
+            if (!string.IsNullOrEmpty(complaint.CitizenId))
+            {
+                _db.CitizenNotifications.Add(new CitizenNotification
+                {
+                    CitizenId = complaint.CitizenId,
+                    Title = "Complaint Status Updated",
+                    Message = $"Your complaint #{complaint.Id} is now '{complaint.Status}'.",
+                    Type = "ComplaintUpdate",
+                    ComplaintId = complaint.Id,
+                    IsRead = false,
+                    CreatedAt = DateTime.UtcNow
+                });
+
+                await _db.SaveChangesAsync();
+            }
+
+            return RedirectToAction(nameof(Complaints));
+        }
 
         // =========================
         // ✅ SYSTEM OVERVIEW
@@ -248,18 +333,13 @@ namespace SmartNagar.Controllers
 
             var from = DateTime.UtcNow.Date.AddDays(-days + 1);
 
-            // totals
             var totalUsers = await _db.Users.CountAsync();
             var totalComplaints = await _db.Complaints.CountAsync();
             var resolved = await _db.Complaints.CountAsync(c => c.Status == "Resolved");
             var pending = await _db.Complaints.CountAsync(c => c.Status == "Pending");
 
-            // average resolution time (only if your complaints are marked resolved)
-            // NOTE: you currently have Complaint.ResolvedAt as object => we do NOT use it.
-            // We'll set AvgResolutionDays based on CreatedAt only (safe).
             double avgResolutionDays = 0;
 
-            // trend: complaints per day
             var complaintGroups = await _db.Complaints
                 .Where(c => c.CreatedAt >= from)
                 .GroupBy(c => c.CreatedAt.Date)
@@ -275,7 +355,6 @@ namespace SmartNagar.Controllers
                 trendValues.Add(complaintGroups.FirstOrDefault(x => x.Day == d)?.Count ?? 0);
             }
 
-            // category distribution
             var cats = await _db.Complaints
                 .GroupBy(c => c.Category)
                 .Select(g => new { Category = g.Key, Count = g.Count() })
@@ -285,15 +364,9 @@ namespace SmartNagar.Controllers
             var categoryLabels = cats.Select(x => x.Category ?? "Other").ToList();
             var categoryValues = cats.Select(x => x.Count).ToList();
 
-            // status distribution
             var statusLabels = new List<string> { "Pending", "Resolved" };
-            var statusValues = new List<int>
-            {
-                pending,
-                resolved
-            };
+            var statusValues = new List<int> { pending, resolved };
 
-            // top categories (max 6)
             var topCats = cats.Take(6)
                 .Select(x => new SystemOverviewVM.TopCategoryItem { Category = x.Category ?? "Other", Count = x.Count })
                 .ToList();
@@ -315,11 +388,11 @@ namespace SmartNagar.Controllers
                 TopCategories = topCats
             };
 
-            return View(vm); // Views/Admin/SystemOverview.cshtml
+            return View(vm);
         }
 
         // =========================
-        // ✅ NOTIFICATIONS (MARK READ)
+        // ✅ ADMIN NOTIFICATIONS (ACTIVITY LOGS)
         // =========================
         [HttpPost]
         public async Task<IActionResult> MarkActivityRead(int id)
@@ -425,13 +498,13 @@ namespace SmartNagar.Controllers
                     });
 
                     page.Footer()
-    .AlignCenter()
-    .DefaultTextStyle(x => x.FontSize(10).FontColor(Colors.Grey.Darken1))
-    .Text(txt =>
-    {
-        txt.Span("© Smart Nagar — ");
-        txt.Span("System Generated Report").Bold();
-    });
+                        .AlignCenter()
+                        .DefaultTextStyle(x => x.FontSize(10).FontColor(Colors.Grey.Darken1))
+                        .Text(txt =>
+                        {
+                            txt.Span("© Smart Nagar — ");
+                            txt.Span("System Generated Report").Bold();
+                        });
 
                 });
             }).GeneratePdf();
