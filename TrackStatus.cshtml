@@ -1,0 +1,267 @@
+﻿@model SmartNagar.Models.Complaint
+@{
+    Layout = "_CitizenLayout";
+    ViewBag.Active = "TrackStatus";
+}
+
+<style>
+    .wrap {
+        max-width: 950px;
+        margin: 0 auto;
+    }
+
+    .head {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 16px;
+        background: linear-gradient(90deg,#3aa84b,#2e8f3d);
+        color: #fff;
+        border-radius: 18px;
+        padding: 18px;
+        box-shadow: 0 14px 30px rgba(0,0,0,.10);
+    }
+
+        .head h2 {
+            margin: 0;
+            font-size: 22px;
+            font-weight: 950;
+        }
+
+        .head p {
+            margin: 6px 0 0;
+            opacity: .95;
+            font-weight: 650;
+            font-size: 13px;
+        }
+
+    .searchBox {
+        margin-top: 14px;
+        background: #fff;
+        border: 1px solid #eef2f7;
+        border-radius: 18px;
+        padding: 16px;
+        box-shadow: 0 10px 24px rgba(15,23,42,.06);
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        flex-wrap: wrap;
+    }
+
+        .searchBox input {
+            flex: 1;
+            min-width: 240px;
+            padding: 12px 14px;
+            border-radius: 14px;
+            border: 1px solid #e7edf6;
+            outline: none;
+            font-weight: 800;
+            background: #fbfdff;
+        }
+
+    .btn {
+        padding: 12px 16px;
+        border-radius: 14px;
+        border: none;
+        cursor: pointer;
+        font-weight: 950;
+        background: #0b5cff;
+        color: #fff;
+        box-shadow: 0 16px 40px rgba(11,92,255,.25);
+    }
+
+        .btn:hover {
+            filter: brightness(1.02);
+        }
+
+    .hint {
+        margin-top: 10px;
+        color: #64748b;
+        font-weight: 700;
+        font-size: 13px;
+    }
+
+    .error {
+        margin-top: 14px;
+        background: #fff1f2;
+        border: 1px solid #fecdd3;
+        color: #9f1239;
+        padding: 12px 14px;
+        border-radius: 14px;
+        font-weight: 850;
+    }
+
+    .card {
+        margin-top: 14px;
+        background: #fff;
+        border: 1px solid #eef2f7;
+        border-radius: 18px;
+        padding: 16px;
+        box-shadow: 0 10px 24px rgba(15,23,42,.06);
+    }
+
+    .topRow {
+        display: flex;
+        justify-content: space-between;
+        gap: 12px;
+        flex-wrap: wrap;
+        align-items: center;
+    }
+
+    .idChip {
+        background: #f1f5ff;
+        color: #1e40af;
+        border: 1px solid #e0e7ff;
+        font-weight: 950;
+        padding: 8px 12px;
+        border-radius: 999px;
+    }
+
+    .status {
+        font-weight: 950;
+        padding: 8px 12px;
+        border-radius: 999px;
+        border: 1px solid #eef2f7;
+        background: #fff;
+    }
+
+        .status.pending {
+            background: #fff7ed;
+            border-color: #ffedd5;
+            color: #9a3412;
+        }
+
+        .status.progress {
+            background: #eff6ff;
+            border-color: #dbeafe;
+            color: #1d4ed8;
+        }
+
+        .status.resolved {
+            background: #f0fdf4;
+            border-color: #dcfce7;
+            color: #166534;
+        }
+
+    .grid {
+        margin-top: 12px;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+    }
+
+    .info {
+        border: 1px solid #eef2f7;
+        border-radius: 16px;
+        padding: 12px;
+        background: #fbfdff;
+    }
+
+    .k {
+        color: #64748b;
+        font-weight: 850;
+        font-size: 12px;
+        margin-bottom: 4px;
+        text-transform: uppercase;
+        letter-spacing: .6px;
+    }
+
+    .v {
+        font-weight: 900;
+        color: #0f172a;
+    }
+
+    .desc {
+        margin-top: 12px;
+        border: 1px solid #eef2f7;
+        border-radius: 16px;
+        padding: 12px;
+        background: #fff;
+    }
+
+        .desc p {
+            margin: 0;
+            color: #475569;
+            font-weight: 650;
+            line-height: 1.6;
+            font-size: 14px;
+            white-space: pre-line;
+        }
+
+    @@media(max-width: 760px) {
+        .grid {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+
+<div class="wrap">
+
+    <div class="head">
+        <div>
+            <h2>🔎 Track Complaint Status</h2>
+            <p>Enter your complaint ID to view current status and updates.</p>
+        </div>
+    </div>
+
+    <form class="searchBox" method="get" action="/Citizen/TrackStatus">
+        <input type="number" name="id" placeholder="Enter Complaint ID (e.g., 5)" min="1" required />
+        <button class="btn" type="submit">Track</button>
+        <div class="hint">Tip: You can find complaint ID in <b>My Complaints</b> page.</div>
+    </form>
+
+    @if (ViewBag.Error != null)
+    {
+        <div class="error">@ViewBag.Error</div>
+    }
+
+    @if (Model != null)
+    {
+        var status = (Model.Status ?? "").Trim();
+        var statusClass =
+        status.Equals("Resolved", StringComparison.OrdinalIgnoreCase) ? "resolved" :
+        status.Equals("In Progress", StringComparison.OrdinalIgnoreCase) ? "progress" :
+        "pending";
+
+        <div class="card">
+            <div class="topRow">
+                <div class="idChip">Complaint #@Model.Id</div>
+                <div class="status @statusClass">Status: @Model.Status</div>
+            </div>
+
+            <div class="grid">
+                <div class="info">
+                    <div class="k">Category</div>
+                    <div class="v">@Model.Category</div>
+                </div>
+
+                <div class="info">
+                    <div class="k">Title</div>
+                    <div class="v">@Model.Title</div>
+                </div>
+
+                <div class="info">
+                    <div class="k">Created At</div>
+                    <div class="v">@Model.CreatedAt.ToLocalTime().ToString("dd MMM yyyy, hh:mm tt")</div>
+                </div>
+
+                <div class="info">
+                    <div class="k">Resolved At</div>
+                    <div class="v">
+                        @(Model.ResolvedAt == null ? "Not yet resolved" : Model.ResolvedAt.Value.ToLocalTime().ToString("dd MMM yyyy, hh:mm tt"))
+                    </div>
+                </div>
+            </div>
+
+            <div class="desc">
+                <div class="k">Description</div>
+                <p>@Model.Description</p>
+            </div>
+
+            <div style="margin-top:12px; display:flex; gap:10px; flex-wrap:wrap;">
+                <a class="btn" style="background:#46b050; box-shadow:none;" href="/Citizen/MyComplaints">Go to My Complaints</a>
+                <a class="btn" style="background:#111827; box-shadow:none;" href="/Citizen/SubmitComplaint">Submit New Complaint</a>
+            </div>
+        </div>
+    }
+</div>
