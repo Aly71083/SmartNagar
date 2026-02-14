@@ -1,0 +1,883 @@
+﻿@model SmartNagar.ViewModels.ComplaintWizardVM
+@{
+    Layout = "~/Views/Citizen/_CitizenLayout.cshtml";
+    ViewBag.Active = "SubmitComplaint";
+    ViewBag.FullName = ViewBag.FullName ?? "Citizen";
+}
+
+<style>
+    .wrap {
+        display: flex;
+        justify-content: center;
+        padding: 18px 0 40px;
+    }
+
+    .wizard {
+        width: 100%;
+        max-width: 1040px;
+        border-radius: 22px;
+        overflow: hidden;
+        background: #fff;
+        box-shadow: 0 18px 55px rgba(15,23,42,.14);
+        border: 1px solid #eef2f7;
+    }
+
+    .hero {
+        padding: 34px 26px 22px;
+        background: linear-gradient(135deg,#6a7cff,#6e4bb6);
+        color: #fff;
+        text-align: center;
+    }
+
+        .hero h1 {
+            margin: 0;
+            font-size: 44px;
+            font-weight: 1000;
+        }
+
+        .hero p {
+            margin: 10px 0 0;
+            opacity: .92;
+            font-weight: 750;
+        }
+
+    .stepbar {
+        background: linear-gradient(90deg, rgba(106,124,255,.88), rgba(110,75,182,.88));
+        color: #fff;
+        padding: 18px 22px;
+    }
+
+    .steps {
+        display: flex;
+        gap: 10px;
+        position: relative;
+        align-items: center;
+    }
+
+        .steps:before {
+            content: "";
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: 18px;
+            height: 4px;
+            background: rgba(255,255,255,.35);
+            border-radius: 999px;
+        }
+
+    .step {
+        z-index: 2;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .bubble {
+        width: 40px;
+        height: 40px;
+        border-radius: 999px;
+        background: rgba(255,255,255,.35);
+        display: grid;
+        place-items: center;
+        font-weight: 1000;
+        border: 2px solid rgba(255,255,255,.55);
+    }
+
+    .step.active .bubble {
+        background: #fff;
+        color: #4f46e5;
+        border-color: #fff;
+    }
+
+    .step label {
+        font-weight: 900;
+        opacity: .95;
+    }
+
+    .content {
+        padding: 26px;
+    }
+
+    .title {
+        font-size: 34px;
+        font-weight: 1000;
+        margin: 10px 0 6px;
+        color: #0f172a;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .sub {
+        color: #64748b;
+        font-weight: 750;
+        margin: 0 0 16px;
+    }
+
+    /* category cards */
+    .catGrid {
+        display: grid;
+        grid-template-columns: repeat(4,1fr);
+        gap: 16px;
+        margin-top: 12px;
+    }
+
+    .catCard {
+        border: 2px solid #e2e8f0;
+        border-radius: 18px;
+        padding: 18px 14px;
+        text-align: center;
+        cursor: pointer;
+        background: #fff;
+        transition: .14s ease;
+        user-select: none;
+    }
+
+        .catCard:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 26px rgba(15,23,42,.10);
+        }
+
+        .catCard .ico {
+            font-size: 28px;
+        }
+
+        .catCard .name {
+            margin-top: 10px;
+            font-weight: 1000;
+        }
+
+        .catCard.selected {
+            border-color: #6a7cff;
+            box-shadow: 0 12px 30px rgba(106,124,255,.25);
+        }
+
+    label {
+        display: block;
+        font-weight: 900;
+        color: #0f172a;
+        margin-bottom: 6px;
+    }
+
+    input, textarea, select {
+        width: 100%;
+        padding: 14px;
+        border-radius: 14px;
+        border: 1px solid #e2e8f0;
+        outline: none;
+        font-weight: 750;
+        font-family: inherit;
+        background: #fff;
+    }
+
+    textarea {
+        min-height: 160px;
+        resize: vertical;
+    }
+
+    .req {
+        color: #ef4444;
+        margin-left: 4px;
+    }
+
+    .rowActions {
+        display: flex;
+        justify-content: space-between;
+        gap: 14px;
+        margin-top: 22px;
+        flex-wrap: wrap;
+    }
+
+    .btn {
+        padding: 14px 18px;
+        border-radius: 16px;
+        border: none;
+        font-weight: 1000;
+        cursor: pointer;
+        min-width: 190px;
+    }
+
+    .btnGhost {
+        background: #e2e8f0;
+        color: #0f172a;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+    }
+
+    .btnPrimary {
+        background: linear-gradient(135deg,#6a7cff,#6e4bb6);
+        color: #fff;
+        box-shadow: 0 18px 45px rgba(106,124,255,.25);
+    }
+
+    .btnDanger {
+        background: #ef4444;
+        color: #fff;
+    }
+
+    .btn[disabled] {
+        opacity: .55;
+        cursor: not-allowed;
+        box-shadow: none;
+    }
+
+    .errorText {
+        color: #ef4444;
+        font-weight: 900;
+        margin-top: 10px;
+        display: none;
+    }
+
+    .fieldError {
+        color: #ef4444;
+        font-weight: 800;
+        font-size: 12px;
+        margin-top: 6px;
+    }
+
+    /* Review */
+    .reviewBox {
+        border: 1px solid #e2e8f0;
+        border-radius: 18px;
+        padding: 18px;
+        background: #fbfdff;
+    }
+
+    .reviewGrid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 14px;
+        margin-top: 12px;
+    }
+
+    .kv {
+        border: 1px solid #eef2f7;
+        border-radius: 14px;
+        padding: 12px;
+        background: #fff;
+    }
+
+        .kv .k {
+            color: #64748b;
+            font-weight: 900;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: .6px;
+        }
+
+        .kv .v {
+            font-weight: 900;
+            margin-top: 6px;
+            color: #0f172a;
+        }
+
+    /* ===== Step2 Sample-like additions ===== */
+    .grid3 {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+        margin-top: 10px;
+    }
+
+    .counter {
+        float: right;
+        font-size: 12px;
+        color: #94a3b8;
+        font-weight: 900;
+        margin-top: -6px;
+    }
+
+    .addrRow {
+        display: grid;
+        grid-template-columns: 1fr 220px;
+        gap: 14px;
+        align-items: end;
+    }
+
+    .btnMini {
+        padding: 14px 16px;
+        border-radius: 14px;
+        border: none;
+        font-weight: 1000;
+        cursor: pointer;
+        background: #5b6eea;
+        color: #fff;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+    }
+
+    .dropzone {
+        border: 2px dashed #aeb9ff;
+        background: #f4f7ff;
+        border-radius: 18px;
+        min-height: 180px;
+        display: grid;
+        place-items: center;
+        text-align: center;
+        padding: 24px;
+        cursor: pointer;
+        transition: .12s ease;
+    }
+
+        .dropzone:hover {
+            border-color: #6a7cff;
+            box-shadow: 0 16px 40px rgba(106,124,255,.18);
+            transform: translateY(-1px);
+        }
+
+    .dzIcon {
+        width: 44px;
+        height: 44px;
+        border-radius: 12px;
+        border: 2px solid #6a7cff;
+        display: grid;
+        place-items: center;
+        font-weight: 1000;
+        color: #6a7cff;
+        margin: 0 auto 12px;
+    }
+
+    .dzTitle {
+        font-weight: 1000;
+        color: #0f172a;
+        font-size: 18px;
+    }
+
+    .dzSub {
+        margin-top: 6px;
+        color: #64748b;
+        font-weight: 800;
+        font-size: 13px;
+    }
+
+    .tipsCard {
+        margin-top: 18px;
+        border-radius: 18px;
+        background: #eef3ff;
+        border: 1px solid #dbe3ff;
+        padding: 18px 18px 18px 20px;
+        position: relative;
+    }
+
+        .tipsCard:before {
+            content: "";
+            position: absolute;
+            left: 0;
+            top: 16px;
+            bottom: 16px;
+            width: 6px;
+            border-radius: 999px;
+            background: #6a7cff;
+        }
+
+    .tipsTitle {
+        font-size: 18px;
+        font-weight: 1000;
+        color: #0f172a;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .tipList {
+        list-style: none;
+        padding: 14px 0 0 0;
+        margin: 0;
+        display: grid;
+        gap: 12px;
+    }
+
+        .tipList li {
+            display: flex;
+            gap: 12px;
+            align-items: flex-start;
+            color: #334155;
+            font-weight: 800;
+        }
+
+    .tick {
+        width: 22px;
+        height: 22px;
+        border-radius: 999px;
+        background: #e2e8ff;
+        display: grid;
+        place-items: center;
+        color: #4f46e5;
+        font-weight: 1000;
+        flex: 0 0 22px;
+    }
+
+    @@media(max - width:980px) {
+        .catGrid
+
+    {
+        grid-template-columns: repeat(2,1fr);
+    }
+
+    .grid3 {
+        grid-template-columns: 1fr;
+    }
+
+    .btn {
+        min-width: 140px;
+        width: 100%;
+    }
+
+    .rowActions {
+        flex-direction: column;
+    }
+
+    .reviewGrid {
+        grid-template-columns: 1fr;
+    }
+
+    .addrRow {
+        grid-template-columns: 1fr;
+    }
+
+    }
+</style>
+
+<div class="wrap">
+    <div class="wizard">
+
+        <div class="hero">
+            <h1>Submit Your Complaint</h1>
+            <p>We’re here to help resolve issues in your community</p>
+        </div>
+
+        <div class="stepbar">
+            <div class="steps">
+                <div class="step active" id="s1">
+                    <div class="bubble">1</div>
+                    <label>Category</label>
+                </div>
+                <div class="step" id="s2">
+                    <div class="bubble">2</div>
+                    <label>Details</label>
+                </div>
+                <div class="step" id="s3">
+                    <div class="bubble">3</div>
+                    <label>Review</label>
+                </div>
+            </div>
+        </div>
+
+        <div class="content">
+            <!-- IMPORTANT: action set so it hits CitizenController POST SubmitComplaint -->
+            <form method="post" id="wizForm" action="/Citizen/SubmitComplaint" enctype="multipart/form-data">
+                @Html.AntiForgeryToken()
+
+                <!-- Hidden Category (must match VM property name) -->
+                <input type="hidden" name="Category" id="Category" value="@Model.Category" />
+
+                <!-- STEP 1 -->
+                <div id="step1">
+                    <div class="title">🧩 Select Complaint Category</div>
+                    <div class="sub">Choose the category that best describes your issue</div>
+
+                    <div class="catGrid">
+                        <div class="catCard" data-val="Road"><div class="ico">🛣️</div><div class="name">Road & Infrastructure</div></div>
+                        <div class="catCard" data-val="Water"><div class="ico">💧</div><div class="name">Water Supply</div></div>
+                        <div class="catCard" data-val="Garbage"><div class="ico">🗑️</div><div class="name">Garbage Collection</div></div>
+                        <div class="catCard" data-val="Street Light"><div class="ico">💡</div><div class="name">Street Lights</div></div>
+
+                        <div class="catCard" data-val="Drainage"><div class="ico">🚰</div><div class="name">Drainage & Sewage</div></div>
+                        <div class="catCard" data-val="Parks"><div class="ico">🌳</div><div class="name">Parks & Gardens</div></div>
+                        <div class="catCard" data-val="Illegal Construction"><div class="ico">🏗️</div><div class="name">Illegal Construction</div></div>
+                        <div class="catCard" data-val="Noise"><div class="ico">🔊</div><div class="name">Noise Pollution</div></div>
+
+                        <div class="catCard" data-val="Stray Animals"><div class="ico">🐕</div><div class="name">Stray Animals</div></div>
+                        <div class="catCard" data-val="Electricity"><div class="ico">⚡</div><div class="name">Electricity</div></div>
+                        <div class="catCard" data-val="Air Pollution"><div class="ico">🏭</div><div class="name">Air Pollution</div></div>
+                        <div class="catCard" data-val="Other"><div class="ico">📋</div><div class="name">Other Issues</div></div>
+                    </div>
+
+                    <div class="errorText" id="errStep1">Please select a category to continue.</div>
+                    <span class="fieldError" asp-validation-for="Category"></span>
+
+                    <div class="rowActions">
+                        <a class="btn btnGhost" href="/Citizen/Dashboard">Cancel</a>
+                        <button type="button" class="btn btnPrimary" id="btnNext1" disabled>Next Step ➜</button>
+                    </div>
+                </div>
+
+                <!-- STEP 2 -->
+                <div id="step2" style="display:none;">
+                    <div class="title">📝 Complaint Details</div>
+                    <div class="sub">Provide detailed information about your complaint</div>
+
+                    <div class="grid3">
+                        <div>
+                            <label>Complaint Subject <span class="req">*</span></label>
+                            <input asp-for="Title" id="Title" placeholder="Brief description of the issue" />
+                            <span class="fieldError" asp-validation-for="Title"></span>
+                        </div>
+
+                        <div>
+                            <label>Priority <span class="req">*</span></label>
+                            <select asp-for="Priority" id="Priority">
+                                <option value="Low">Low</option>
+                                <option value="Medium">Medium</option>
+                                <option value="High">High</option>
+                                <option value="Critical">Critical</option>
+                            </select>
+                            <span class="fieldError" asp-validation-for="Priority"></span>
+                        </div>
+
+                        <div>
+                            <label>Ward Number <span class="req">*</span></label>
+                            <select asp-for="WardNumber" id="WardNumber">
+                                <option value="">Select Ward</option>
+                                @for (int i = 1; i <= 19; i++)
+                                {
+                                    <option value="@i">@i</option>
+                                }
+                            </select>
+                            <span class="fieldError" asp-validation-for="WardNumber"></span>
+                        </div>
+
+                        <div>
+                            <label>Contact Number <span class="req">*</span></label>
+                            <input asp-for="ContactNumber" id="ContactNumber" placeholder="10-digit mobile number" />
+                            <span class="fieldError" asp-validation-for="ContactNumber"></span>
+                        </div>
+
+                        <div style="grid-column:1/-1;">
+                            <label>
+                                Detailed Description <span class="req">*</span>
+                                <span class="counter" id="descCounter">0/1000 characters</span>
+                            </label>
+                            <textarea asp-for="Description" id="Description" maxlength="1000"
+                                      placeholder="Describe the issue in detail..."></textarea>
+                            <span class="fieldError" asp-validation-for="Description"></span>
+                        </div>
+
+                        <div>
+                            <label>Area/Locality <span class="req">*</span></label>
+                            <input asp-for="AreaLocality" id="AreaLocality" placeholder="Enter area name" />
+                            <span class="fieldError" asp-validation-for="AreaLocality"></span>
+                        </div>
+
+                        <div>
+                            <label>Nearest Landmark</label>
+                            <input asp-for="Landmark" id="Landmark" placeholder="E.g., Near City Mall" />
+                            <span class="fieldError" asp-validation-for="Landmark"></span>
+                        </div>
+
+                        <div style="grid-column:1/-1;">
+                            <div class="addrRow">
+                                <div>
+                                    <label>Complete Address <span class="req">*</span></label>
+                                    <input asp-for="Address" id="Address" placeholder="Enter full address" />
+                                    <span class="fieldError" asp-validation-for="Address"></span>
+                                </div>
+                                <button type="button" class="btnMini" id="btnMyLocation">⦿ Use My Location</button>
+                            </div>
+                        </div>
+
+                        <div style="grid-column:1/-1;">
+                            <label>Upload Photos (Optional)</label>
+                            <div class="dropzone" id="dropzone">
+                                <div>
+                                    <div class="dzIcon">⬚</div>
+                                    <div class="dzTitle">Drag &amp; Drop photos here</div>
+                                    <div class="dzSub">or click to browse (Max 5 images, 5MB each)</div>
+                                </div>
+                                <input asp-for="Photos" type="file" id="Photos" name="Photos" multiple accept="image/*" style="display:none;" />
+                            </div>
+                            <div class="sub" id="photoInfo" style="margin-top:10px;"></div>
+                        </div>
+
+                        <div>
+                            <label>Email Address</label>
+                            <input asp-for="Email" id="Email" placeholder="your.email@example.com" />
+                            <span class="fieldError" asp-validation-for="Email"></span>
+                        </div>
+
+                        <div style="display:none;"></div>
+                    </div>
+
+                    <div class="tipsCard">
+                        <div class="tipsTitle">☑ Tips for Better Resolution</div>
+                        <ul class="tipList">
+                            <li><span class="tick">✓</span>Provide clear and specific details about the location</li>
+                            <li><span class="tick">✓</span>Upload photos to help us understand the issue better</li>
+                            <li><span class="tick">✓</span>Include nearby landmarks for easy identification</li>
+                            <li><span class="tick">✓</span>Set appropriate priority based on urgency</li>
+                            <li><span class="tick">✓</span>Keep your contact information up to date</li>
+                        </ul>
+                    </div>
+
+                    <div class="errorText" id="errStep2">Please fill all required fields to continue.</div>
+
+                    <div class="rowActions">
+                        <button type="button" class="btn btnGhost" id="btnPrev2">⬅ Previous</button>
+                        <button type="button" class="btn btnPrimary" id="btnNext2">Review Complaint ➜</button>
+                    </div>
+                </div>
+
+                <!-- STEP 3 -->
+                <div id="step3" style="display:none;">
+                    <div class="title">✅ Review Complaint</div>
+                    <div class="sub">Confirm details before submitting</div>
+
+                    <div class="reviewBox">
+                        <div style="font-weight:1000;">Your Complaint Summary</div>
+
+                        <div class="reviewGrid">
+                            <div class="kv">
+                                <div class="k">Category</div>
+                                <div class="v" id="rvCategory">-</div>
+                            </div>
+                            <div class="kv">
+                                <div class="k">Priority</div>
+                                <div class="v" id="rvPriority">-</div>
+                            </div>
+
+                            <div class="kv">
+                                <div class="k">Ward</div>
+                                <div class="v" id="rvWard">-</div>
+                            </div>
+                            <div class="kv">
+                                <div class="k">Contact</div>
+                                <div class="v" id="rvContact">-</div>
+                            </div>
+
+                            <div class="kv">
+                                <div class="k">Area</div>
+                                <div class="v" id="rvArea">-</div>
+                            </div>
+                            <div class="kv">
+                                <div class="k">Landmark</div>
+                                <div class="v" id="rvLandmark">-</div>
+                            </div>
+
+                            <div class="kv" style="grid-column:1/-1;">
+                                <div class="k">Subject</div>
+                                <div class="v" id="rvTitle">-</div>
+                            </div>
+
+                            <div class="kv" style="grid-column:1/-1;">
+                                <div class="k">Address</div>
+                                <div class="v" id="rvAddress">-</div>
+                            </div>
+
+                            <div class="kv" style="grid-column:1/-1;">
+                                <div class="k">Description</div>
+                                <div class="v" id="rvDesc">-</div>
+                            </div>
+
+                            <div class="kv" style="grid-column:1/-1;">
+                                <div class="k">Email</div>
+                                <div class="v" id="rvEmail">-</div>
+                            </div>
+
+                            <div class="kv" style="grid-column:1/-1;">
+                                <div class="k">Photos</div>
+                                <div class="v" id="rvPhotos">0 file(s)</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="rowActions">
+                        <button type="button" class="btn btnDanger" id="btnDelete">Reset</button>
+
+                        <div style="display:flex; gap:14px; flex-wrap:wrap; width:100%;">
+                            <button type="button" class="btn btnGhost" id="btnEdit">Edit</button>
+                            <button type="submit" class="btn btnPrimary">Submit Complaint ✅</button>
+                        </div>
+                    </div>
+                </div>
+
+            </form>
+        </div>
+
+    </div>
+</div>
+
+<script>
+    const step1 = document.getElementById('step1');
+    const step2 = document.getElementById('step2');
+    const step3 = document.getElementById('step3');
+
+    const s1 = document.getElementById('s1');
+    const s2 = document.getElementById('s2');
+    const s3 = document.getElementById('s3');
+
+    function setActiveStep(n){
+        [s1,s2,s3].forEach(x => x.classList.remove('active'));
+        if(n===1) s1.classList.add('active');
+        if(n===2) s2.classList.add('active');
+        if(n===3) s3.classList.add('active');
+    }
+
+    function showStep(n){
+        step1.style.display = (n===1) ? '' : 'none';
+        step2.style.display = (n===2) ? '' : 'none';
+        step3.style.display = (n===3) ? '' : 'none';
+        setActiveStep(n);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // Helpers
+    function v(id){ return (document.getElementById(id)?.value || '').trim(); }
+
+    // Step 1: category selection
+    const catCards = document.querySelectorAll('.catCard');
+    const catHidden = document.getElementById('Category');
+    const btnNext1 = document.getElementById('btnNext1');
+    const errStep1 = document.getElementById('errStep1');
+
+    catCards.forEach(card => {
+        card.addEventListener('click', () => {
+            catCards.forEach(c => c.classList.remove('selected'));
+            card.classList.add('selected');
+            catHidden.value = card.getAttribute('data-val');
+            btnNext1.disabled = false;
+            errStep1.style.display = 'none';
+        });
+    });
+
+    btnNext1.addEventListener('click', () => {
+        if(!catHidden.value){
+            errStep1.style.display = 'block';
+            return;
+        }
+        showStep(2);
+    });
+
+    // Step 2 validation
+    const btnPrev2 = document.getElementById('btnPrev2');
+    const btnNext2 = document.getElementById('btnNext2');
+    const errStep2 = document.getElementById('errStep2');
+
+    btnPrev2.addEventListener('click', () => showStep(1));
+
+    function validateStep2(){
+        return v('Title') && v('Address') && v('Description')
+            && v('Priority') && v('WardNumber') && v('AreaLocality') && v('ContactNumber');
+    }
+
+    btnNext2.addEventListener('click', () => {
+        if(!validateStep2()){
+            errStep2.style.display = 'block';
+            return;
+        }
+        errStep2.style.display = 'none';
+
+        // Fill review
+        document.getElementById('rvCategory').innerText = catHidden.value || '-';
+        document.getElementById('rvPriority').innerText = v('Priority') || '-';
+        document.getElementById('rvWard').innerText = v('WardNumber') || '-';
+        document.getElementById('rvContact').innerText = v('ContactNumber') || '-';
+        document.getElementById('rvArea').innerText = v('AreaLocality') || '-';
+        document.getElementById('rvLandmark').innerText = v('Landmark') || '-';
+        document.getElementById('rvTitle').innerText = v('Title') || '-';
+        document.getElementById('rvAddress').innerText = v('Address') || '-';
+        document.getElementById('rvDesc').innerText = v('Description') || '-';
+        document.getElementById('rvEmail').innerText = v('Email') || '-';
+
+        const files = document.getElementById('Photos')?.files;
+        document.getElementById('rvPhotos').innerText = `${files ? files.length : 0} file(s)`;
+
+        showStep(3);
+    });
+
+    document.getElementById('btnEdit').addEventListener('click', () => showStep(2));
+
+    document.getElementById('btnDelete').addEventListener('click', () => {
+        document.getElementById('wizForm').reset();
+        catHidden.value = "";
+        btnNext1.disabled = true;
+        catCards.forEach(c => c.classList.remove('selected'));
+        const photoInfo = document.getElementById('photoInfo');
+        if (photoInfo) photoInfo.textContent = "";
+        updateCounter();
+        showStep(1);
+    });
+
+    // Description counter
+    const desc = document.getElementById('Description');
+    const descCounter = document.getElementById('descCounter');
+    function updateCounter() {
+        const len = (desc.value || '').length;
+        if (descCounter) descCounter.textContent = `${len}/1000 characters`;
+    }
+    if (desc) { desc.addEventListener('input', updateCounter); updateCounter(); }
+
+    // Dropzone upload
+    const dropzone = document.getElementById('dropzone');
+    const photos = document.getElementById('Photos');
+    const photoInfo = document.getElementById('photoInfo');
+
+    function setPhotoInfo(files) {
+        if (!photoInfo) return;
+        if (!files || files.length === 0) { photoInfo.textContent = ""; return; }
+        photoInfo.textContent = `${files.length} file(s) selected`;
+    }
+
+    if (dropzone && photos) {
+        dropzone.addEventListener('click', () => photos.click());
+
+        photos.addEventListener('change', () => {
+            if (photos.files.length > 5) {
+                alert("Max 5 images allowed.");
+                photos.value = "";
+                setPhotoInfo([]);
+                return;
+            }
+            setPhotoInfo(photos.files);
+        });
+
+        dropzone.addEventListener('dragover', (e) => { e.preventDefault(); dropzone.style.borderColor = "#6a7cff"; });
+        dropzone.addEventListener('dragleave', () => { dropzone.style.borderColor = "#aeb9ff"; });
+
+        dropzone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dropzone.style.borderColor = "#aeb9ff";
+            const files = e.dataTransfer.files;
+            if (files.length > 5) { alert("Max 5 images allowed."); return; }
+            photos.files = files;
+            setPhotoInfo(files);
+        });
+    }
+
+    // Use My Location (adds coords to address field)
+    const btnMyLocation = document.getElementById('btnMyLocation');
+    if (btnMyLocation) {
+        btnMyLocation.addEventListener('click', () => {
+            if (!navigator.geolocation) { alert("Geolocation not supported in this browser."); return; }
+            navigator.geolocation.getCurrentPosition(
+                (pos) => {
+                    const lat = pos.coords.latitude.toFixed(6);
+                    const lng = pos.coords.longitude.toFixed(6);
+                    const addr = document.getElementById('Address');
+                    addr.value = `${addr.value ? addr.value + " | " : ""}Lat:${lat}, Lng:${lng}`;
+                },
+                () => alert("Unable to fetch location. Please allow location permission.")
+            );
+        });
+    }
+
+    // If server-side validation fails, reopen Step 2 so errors are visible
+    const serverInvalid =
+        document.querySelectorAll('.field-validation-error').length > 0 ||
+        document.querySelectorAll('.input-validation-error').length > 0;
+    if (serverInvalid) showStep(2);
+    else showStep(1);
+</script>
+
+@section Scripts {
+    <!-- If your project already has validation bundles, you can remove these -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation-unobtrusive/4.0.0/jquery.validate.unobtrusive.min.js"></script>
+}
