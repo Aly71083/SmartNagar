@@ -1,213 +1,391 @@
-﻿@model SmartNagar.ViewModels.CitizenDashboardVM
+﻿@model SmartNagar.ViewModels.OfficerDashboardVM
 @{
-    Layout = "~/Views/Citizen/_CitizenLayout.cshtml";
-    ViewBag.Active = "Home";
-    ViewBag.FullName = Model?.FullName ?? "Citizen";
+    Layout = "~/Views/Officer/_OfficerLayout.cshtml";
+    ViewBag.Title = "Dashboard";
 }
 
 <style>
-    .banner {
-        background: linear-gradient(90deg,#4fb75b,#6ccf77);
-        border-radius: 16px;
-        padding: 22px;
-        color: #fff;
-        box-shadow: 0 14px 30px rgba(0,0,0,.08);
-        display: flex;
-        align-items: center;
+    .title {
+        font-size: 28px;
+        font-weight: 1000;
+        margin: 6px 0 4px;
+    }
+
+    .subtitle {
+        color: #667085;
+        font-weight: 700;
+        margin-bottom: 18px;
+    }
+
+    .quick {
+        display: grid;
+        grid-template-columns: repeat(3,1fr);
         gap: 14px;
         margin-bottom: 16px;
     }
 
-        .banner h3 {
-            margin: 0;
-            font-size: 22px;
-            font-weight: 1000;
+    .quickCard {
+        border-radius: 18px;
+        color: #fff;
+        padding: 18px;
+        font-weight: 900;
+        box-shadow: 0 16px 40px rgba(124,58,237,.18);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        min-height: 92px;
+        cursor: pointer;
+        user-select: none;
+        text-decoration: none; /* ✅ for <a> */
+    }
+
+        .quickCard:hover {
+            filter: brightness(.98);
         }
 
-        .banner p {
-            margin: 6px 0 0;
-            opacity: .95;
-            font-size: 13px;
-            font-weight: 750;
-        }
+    .qc1 {
+        background: linear-gradient(135deg,#22c55e,#16a34a);
+    }
+
+    .qc2 {
+        background: linear-gradient(135deg,#f59e0b,#ea580c);
+    }
+
+    .qc3 {
+        background: linear-gradient(135deg,#8b5cf6,#7c3aed);
+    }
+
+    .quickCard small {
+        opacity: .92;
+        font-weight: 800;
+        margin-top: 4px;
+    }
 
     .stats {
         display: grid;
         grid-template-columns: repeat(4,1fr);
         gap: 14px;
-        margin: 14px 0 18px;
+        margin-bottom: 14px;
     }
 
-    .stat {
+    .cardx {
         background: #fff;
-        border-radius: 14px;
+        border: 1px solid #ece7ff;
+        border-radius: 18px;
+        box-shadow: 0 12px 35px rgba(16,24,40,.08);
         padding: 16px;
-        box-shadow: 0 10px 22px rgba(0,0,0,.06);
         position: relative;
         overflow: hidden;
-        border: 1px solid #eef2f7;
-        min-height: 82px;
     }
 
-        .stat:before {
-            content: "";
-            position: absolute;
-            left: 0;
-            top: 0;
-            bottom: 0;
-            width: 4px;
-            background: var(--c, #46b050);
-        }
-
-        .stat h2 {
-            margin: 0;
-            font-size: 24px;
-            font-weight: 1000;
-        }
-
-        .stat small {
-            color: #64748b;
-            font-weight: 800;
-            font-size: 12px;
-        }
-
-    .cards {
-        display: grid;
-        grid-template-columns: repeat(5,1fr);
-        gap: 14px;
+    .statNum {
+        font-size: 32px;
+        font-weight: 1000;
         margin-top: 16px;
     }
 
-    .card {
-        background: #fff;
-        border-radius: 16px;
-        padding: 18px;
-        box-shadow: 0 12px 24px rgba(0,0,0,.06);
-        text-decoration: none;
-        color: #111827;
-        transition: .15s transform ease, .15s box-shadow ease;
-        border: 1px solid #eef2f7;
-        min-height: 130px;
+    .statLbl {
+        color: #667085;
+        font-weight: 800;
+        font-size: 13px;
+        margin-top: 4px;
     }
 
-        .card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 18px 36px rgba(15,23,42,.10);
-        }
+    .pill {
+        position: absolute;
+        top: 14px;
+        right: 14px;
+        background: #ede9fe;
+        color: #7c3aed;
+        padding: 6px 10px;
+        border-radius: 999px;
+        font-weight: 900;
+        font-size: 12px;
+    }
 
-    .ico {
-        width: 52px;
-        height: 52px;
-        border-radius: 14px;
+    .grid2 {
+        display: grid;
+        grid-template-columns: 2fr 1fr;
+        gap: 14px;
+        margin-top: 14px;
+    }
+
+    .boxTitle {
+        font-weight: 1000;
+        margin: 0 0 10px;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 13px;
+    }
+
+    th {
+        text-align: left;
+        color: #667085;
+        font-weight: 1000;
+        font-size: 11px;
+        letter-spacing: .06em;
+        padding: 12px 10px;
+        text-transform: uppercase;
+        border-bottom: 1px solid #f1edff;
+    }
+
+    td {
+        padding: 14px 10px;
+        border-bottom: 1px solid #f4f1ff;
+        vertical-align: middle;
+    }
+
+    .tag {
+        padding: 6px 10px;
+        border-radius: 999px;
+        font-weight: 900;
+        font-size: 12px;
+        display: inline-block;
+    }
+
+    .t-pending {
+        background: #fee2e2;
+        color: #b42318;
+    }
+
+    .t-progress {
+        background: #dbeafe;
+        color: #1d4ed8;
+    }
+
+    .t-resolved {
+        background: #dcfce7;
+        color: #166534;
+    }
+
+    .t-rejected {
+        background: #f3f4f6;
+        color: #374151;
+    }
+
+    .t-low {
+        background: #dcfce7;
+        color: #166534;
+    }
+
+    .t-medium {
+        background: #ffedd5;
+        color: #9a3412;
+    }
+
+    .t-high {
+        background: #ffe4e6;
+        color: #9f1239;
+    }
+
+    .t-critical {
+        background: #7f1d1d;
+        color: #fff;
+    }
+
+    .toggleRow {
         display: flex;
         align-items: center;
-        justify-content: center;
-        color: #fff;
-        font-size: 18px;
-        margin-bottom: 12px;
-        box-shadow: 0 14px 28px rgba(15,23,42,.12);
+        justify-content: space-between;
+        gap: 10px;
+        margin-bottom: 10px;
     }
 
-    .card h4 {
-        margin: 0 0 6px;
-        font-weight: 1000;
-    }
-
-    .card p {
-        margin: 0;
-        font-size: 12px;
-        color: #6b7280;
-        line-height: 1.4;
-        font-weight: 700;
-    }
-
-    @@media (max-width: 1100px) {
-        .cards
-
-    {
-        grid-template-columns: repeat(3,1fr);
-    }
-
-    .stats {
-        grid-template-columns: repeat(2,1fr);
-    }
-
-    }
-
-    @@media (max-width: 720px) {
-        .cards
-
-    {
-        grid-template-columns: repeat(2,1fr);
-    }
-
-    }
-
-    @@media (max-width: 520px) {
-        .cards
-
-    {
-        grid-template-columns: 1fr;
-    }
-
+    .btnTiny {
+        border: 1px solid #ece7ff;
+        background: #fff;
+        border-radius: 10px;
+        padding: 8px 10px;
+        font-weight: 900;
+        cursor: pointer;
     }
 </style>
 
-<div class="banner">
-    <div style="font-size:26px">🌟</div>
-    <div>
-        <h3>Quick Access to Services</h3>
-        <p>Report issues, track complaints, and stay updated with municipal activities</p>
+<div>
+    <div class="title">Dashboard Overview</div>
+    <div class="subtitle">Welcome back! Here’s what’s happening in your jurisdiction today.</div>
+
+    <!-- ✅ QUICK ACTIONS NOW WORK -->
+    <div class="quick">
+        <a class="quickCard qc1" href="/Officer/AddCitizen">
+            Add Citizen
+            <small>Register new citizen</small>
+        </a>
+
+        <a class="quickCard qc2" href="/Officer/SendNotice">
+            Send Notice
+            <small>Broadcast announcement</small>
+        </a>
+
+        <a class="quickCard qc3" href="/Officer/ExportPdf">
+            Generate Report
+            <small>Download analytics</small>
+        </a>
+    </div>
+
+    <!-- toggles -->
+    <div class="toggleRow">
+        <div style="font-weight:1000;">Dashboard Cards</div>
+        <button class="btnTiny" onclick="toggleCards()">Toggle Cards</button>
+    </div>
+
+    <div id="cardsWrap">
+        <div class="stats">
+            <div class="cardx">
+                <div class="pill">Live</div>
+                <div class="statNum">@Model.TotalComplaints</div>
+                <div class="statLbl">Total Complaints</div>
+            </div>
+
+            <div class="cardx">
+                <div class="pill">Live</div>
+                <div class="statNum">@Model.PendingReview</div>
+                <div class="statLbl">Pending Review</div>
+            </div>
+
+            <div class="cardx">
+                <div class="pill">Live</div>
+                <div class="statNum">@Model.InProgress</div>
+                <div class="statLbl">In Progress</div>
+            </div>
+
+            <div class="cardx">
+                <div class="pill">Live</div>
+                <div class="statNum">@Model.Resolved</div>
+                <div class="statLbl">Resolved</div>
+            </div>
+        </div>
+
+        <div class="stats" style="grid-template-columns: repeat(4,1fr);">
+            <div class="cardx">
+                <div class="pill">Live</div>
+                <div class="statNum">@Model.CriticalIssues</div>
+                <div class="statLbl">Critical Issues</div>
+            </div>
+            <div class="cardx">
+                <div class="statNum">—</div>
+                <div class="statLbl">Avg Response Time</div>
+            </div>
+            <div class="cardx">
+                <div class="statNum">—</div>
+                <div class="statLbl">Resolution Rate</div>
+            </div>
+            <div class="cardx">
+                <div class="statNum">—</div>
+                <div class="statLbl">Satisfaction Score</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="grid2">
+        <div class="cardx" style="padding:16px;">
+            <div style="display:flex; align-items:center; justify-content:space-between;">
+                <div class="boxTitle">Recent Complaints</div>
+                <a href="/Officer/Complaints" style="font-weight:900; color:#7c3aed; text-decoration:none;">View All</a>
+            </div>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Complaint ID</th>
+                        <th>Subject</th>
+                        <th>Citizen</th>
+                        <th>Ward</th>
+                        <th>Priority</th>
+                        <th>Status</th>
+                        <th>Date</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var c in Model.RecentComplaints)
+                    {
+                        <tr>
+                            <td style="font-weight:900; color:#6d28d9;">#@c.ComplaintNo</td>
+                            <td>@c.Subject</td>
+                            <td>@c.CitizenName</td>
+                            <td>@c.Ward</td>
+                            <td>
+                                @{
+                                    var p = c.Priority?.ToLower() ?? "";
+                                    var pcls = p switch
+                                    {
+                                        "low" => "t-low",
+                                        "medium" => "t-medium",
+                                        "high" => "t-high",
+                                        "critical" => "t-critical",
+                                        _ => "t-medium"
+                                    };
+                                }
+                                <span class="tag @pcls">@c.Priority</span>
+                            </td>
+                            <td>
+                                @{
+                                    var s = (c.Status ?? "").ToLower().Replace(" ", "");
+                                    var scls = s switch
+                                    {
+                                        "pending" => "t-pending",
+                                        "inprogress" => "t-progress",
+                                        "resolved" => "t-resolved",
+                                        "rejected" => "t-rejected",
+                                        _ => "t-pending"
+                                    };
+                                }
+                                <span class="tag @scls">@c.Status</span>
+                            </td>
+                            <td>@c.DateText</td>
+                            <td>
+                                <a href="/Officer/ComplaintDetails/@c.Id" style="font-weight:900; color:#7c3aed; text-decoration:none;">Open</a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        <div class="cardx" style="padding:16px;">
+            <div class="boxTitle">Category Distribution</div>
+
+            @if (Model.TopCategories != null && Model.TopCategories.Count > 0)
+            {
+                foreach (var item in Model.TopCategories)
+                {
+                    <div style="display:flex; align-items:center; justify-content:space-between; padding:12px; border:1px solid #f1edff; border-radius:14px; margin-bottom:10px; background:#fbf9ff;">
+                        <div style="font-weight:900;">@item.Key</div>
+                        <div style="font-weight:1000; color:#7c3aed;">@item.Value</div>
+                    </div>
+                }
+            }
+            else
+            {
+                <div style="color:#667085; font-weight:800;">No complaints yet.</div>
+            }
+        </div>
     </div>
 </div>
 
-<div class="stats">
-    <div class="stat" style="--c:#16a34a">
-        <h2>@Model.TotalComplaints</h2>
-        <small>Total Complaints</small>
-    </div>
-    <div class="stat" style="--c:#3b82f6">
-        <h2>@Model.InProgress</h2>
-        <small>In Progress</small>
-    </div>
-    <div class="stat" style="--c:#f59e0b">
-        <h2>@Model.Pending</h2>
-        <small>Pending</small>
-    </div>
-    <div class="stat" style="--c:#22c55e">
-        <h2>@Model.Resolved</h2>
-        <small>Resolved</small>
-    </div>
-</div>
+<script>
+    function toggleCards() {
+        const el = document.getElementById("cardsWrap");
+        const key = "officer_cards_hidden";
+        const hidden = localStorage.getItem(key) === "1";
 
-<div class="cards">
-    <a class="card" href="/Citizen/SubmitComplaint">
-        <div class="ico" style="background:#46b050"><i class="fa-solid fa-pen-to-square"></i></div>
-        <h4>Submit Complaint</h4>
-        <p>Report civic issues like roads, water, waste management instantly</p>
-    </a>
+        if (hidden) {
+            el.style.display = "";
+            localStorage.setItem(key, "0");
+        } else {
+            el.style.display = "none";
+            localStorage.setItem(key, "1");
+        }
+    }
 
-    <a class="card" href="/Citizen/TrackStatus">
-        <div class="ico" style="background:#3b82f6"><i class="fa-solid fa-magnifying-glass"></i></div>
-        <h4>Track Status</h4>
-        <p>Monitor real-time status updates of your submitted complaints</p>
-    </a>
-
-    <a class="card" href="/Citizen/Emergency">
-        <div class="ico" style="background:#ef4444"><i class="fa-solid fa-triangle-exclamation"></i></div>
-        <h4>Emergency</h4>
-        <p>Quick access to police, ambulance, and fire services</p>
-    </a>
-
-    <a class="card" href="/Citizen/GarbageSchedule">
-        <div class="ico" style="background:#f59e0b"><i class="fa-solid fa-trash"></i></div>
-        <h4>Garbage Schedule</h4>
-        <p>View area-wise garbage collection days and timings</p>
-    </a>
-
-    <a class="card" href="/Citizen/Notices">
-        <div class="ico" style="background:#a855f7"><i class="fa-solid fa-bullhorn"></i></div>
-        <h4>Notices</h4>
-        <p>Stay updated with latest municipal announcements</p>
-    </a>
-</div>
+    (function () {
+        const el = document.getElementById("cardsWrap");
+        const hidden = localStorage.getItem("officer_cards_hidden") === "1";
+        if (hidden) el.style.display = "none";
+    })();
+</script>

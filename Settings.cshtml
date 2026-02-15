@@ -1,0 +1,440 @@
+﻿@model SmartNagar.ViewModels.OfficerSettingsVM
+@{
+    Layout = "~/Views/Officer/_OfficerLayout.cshtml";
+    ViewBag.Title = "Settings";
+    var fullNameTop = ViewBag.FullName as string ?? (Model?.FullName ?? "Municipal Officer");
+}
+
+<style>
+    .wrap {
+        max-width: 1200px;
+        margin: auto;
+    }
+
+    .title {
+        font-size: 26px;
+        font-weight: 1000;
+        margin-bottom: 6px;
+    }
+
+    .sub {
+        color: #667085;
+        font-weight: 800;
+        margin-bottom: 16px;
+        font-size: 13px;
+    }
+
+    .grid {
+        display: grid;
+        grid-template-columns: 1.2fr .8fr;
+        gap: 16px;
+        align-items: start;
+    }
+
+    @@media (max-width: 980px) {
+        .grid
+
+    {
+        grid-template-columns: 1fr;
+    }
+
+    }
+
+    .cardx {
+        background: #fff;
+        border: 1px solid #ece7ff;
+        border-radius: 18px;
+        box-shadow: 0 12px 35px rgba(16,24,40,.08);
+        padding: 18px;
+    }
+
+        .cardx h4 {
+            margin: 0 0 10px;
+            font-weight: 1000;
+            color: #101828;
+        }
+
+    .pill {
+        display: inline-flex;
+        gap: 8px;
+        align-items: center;
+        padding: 8px 10px;
+        border-radius: 999px;
+        background: #f4f1ff;
+        color: #5b21b6;
+        font-weight: 1000;
+        font-size: 12px;
+        margin-bottom: 14px;
+    }
+
+    .row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+        margin-top: 12px;
+    }
+
+    @@media (max-width: 700px) {
+        .row
+
+    {
+        grid-template-columns: 1fr;
+    }
+
+    }
+
+    .field label {
+        display: block;
+        font-weight: 900;
+        font-size: 11px;
+        color: #667085;
+        margin-bottom: 6px;
+        text-transform: uppercase;
+        letter-spacing: .07em;
+    }
+
+    .field input, .field select {
+        width: 100%;
+        padding: 11px 12px;
+        border-radius: 12px;
+        border: 1px solid #e5e7eb;
+        outline: none;
+        font-weight: 900;
+        box-sizing: border-box;
+    }
+
+        .field input:focus, .field select:focus {
+            border-color: #7c3aed;
+            box-shadow: 0 0 0 4px rgba(124,58,237,.12);
+        }
+
+    .btnRow {
+        display: flex;
+        gap: 10px;
+        justify-content: flex-end;
+        margin-top: 14px;
+        flex-wrap: wrap;
+    }
+
+    .btn {
+        border: none;
+        border-radius: 12px;
+        padding: 10px 14px;
+        font-weight: 1000;
+        cursor: pointer;
+    }
+
+    .btnPrimary {
+        background: linear-gradient(135deg,#7c3aed,#6d28d9);
+        color: #fff;
+    }
+
+    .btnGhost {
+        background: #fff;
+        border: 1px solid #ece7ff;
+        color: #7c3aed;
+    }
+
+    .small {
+        color: #667085;
+        font-weight: 800;
+        font-size: 12px;
+        margin-top: 8px;
+        line-height: 1.4;
+    }
+
+    .alert {
+        padding: 12px 14px;
+        border-radius: 14px;
+        font-weight: 900;
+        margin-bottom: 14px;
+        border: 1px solid;
+    }
+
+    .ok {
+        background: #ecfdf3;
+        color: #027a48;
+        border-color: #abefc6;
+    }
+
+    .err {
+        background: #fff1f2;
+        color: #b42318;
+        border-color: #fecdd3;
+    }
+
+    .split {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        margin-top: 10px;
+        padding: 12px;
+        border-radius: 14px;
+        border: 1px solid #f1eaff;
+        background: #fff;
+    }
+
+        .split b {
+            font-weight: 1000;
+            display: block;
+            margin-bottom: 2px;
+        }
+
+    .toggle {
+        width: 54px;
+        height: 32px;
+        border-radius: 999px;
+        background: #e5e7eb;
+        position: relative;
+        cursor: pointer;
+        flex-shrink: 0;
+        border: 1px solid #e5e7eb;
+        transition: .2s;
+    }
+
+    .knob {
+        width: 26px;
+        height: 26px;
+        border-radius: 999px;
+        background: #fff;
+        position: absolute;
+        top: 2px;
+        left: 2px;
+        box-shadow: 0 6px 15px rgba(16,24,40,.12);
+        transition: .2s;
+    }
+
+    .toggle.on {
+        background: #7c3aed;
+        border-color: #7c3aed;
+    }
+
+        .toggle.on .knob {
+            left: 26px;
+        }
+
+    .danger {
+        border-color: #ffe4e6;
+        background: #fff1f2;
+    }
+
+    .btnDanger {
+        background: #ef4444;
+        color: #fff;
+    }
+</style>
+
+<div class="wrap">
+    <div class="title">Settings</div>
+    <div class="sub">Manage your account, portal preferences, and security options.</div>
+
+    @if (TempData["ok"] != null)
+    {
+        <div class="alert ok">@TempData["ok"]</div>
+    }
+    @if (TempData["err"] != null)
+    {
+        <div class="alert err">@TempData["err"]</div>
+    }
+
+    <div class="grid">
+
+        <!-- LEFT: Profile + Password -->
+        <div class="cardx">
+            <h4>Profile</h4>
+            <div class="pill">👤 @fullNameTop · Municipal Officer</div>
+
+            <!-- ✅ Saves FullName to DB -->
+            <form method="post" action="/Officer/SaveProfile">
+                @Html.AntiForgeryToken()
+
+                <div class="row">
+                    <div class="field">
+                        <label>Full Name</label>
+                        <input name="FullName" value="@Model.FullName" placeholder="Full name" required />
+                    </div>
+
+                    <div class="field">
+                        <label>Email</label>
+                        <input name="Email" value="@Model.Email" placeholder="Email" readonly />
+                    </div>
+                </div>
+
+               
+
+
+                <div class="btnRow">
+                    <button type="reset" class="btn btnGhost">Reset</button>
+                    <button type="submit" class="btn btnPrimary">Save Changes</button>
+                </div>
+
+                <div class="small">
+                   
+                </div>
+            </form>
+
+            <div style="height:16px;"></div>
+
+            <h4>Change Password</h4>
+
+           
+            <form method="post" action="/Officer/ChangePassword">
+                @Html.AntiForgeryToken()
+
+                <div class="row">
+                    <div class="field">
+                        <label>Current Password</label>
+                        <input type="password" name="CurrentPassword" placeholder="" required />
+                    </div>
+
+                    <div class="field">
+                        <label>New Password</label>
+                        <input type="password" name="NewPassword" placeholder="" required />
+                    </div>
+                </div>
+
+                <div class="field" style="margin-top:12px;">
+                    <label>Confirm New Password</label>
+                    <input type="password" name="ConfirmNewPassword" placeholder="" required />
+                </div>
+
+                <div class="btnRow">
+                    <button type="submit" class="btn btnPrimary">Update Password</button>
+                </div>
+
+                <div class="small">
+                    
+                </div>
+            </form>
+        </div>
+
+    
+        <div style="display:flex;flex-direction:column;gap:16px;">
+            <div class="cardx">
+                <h4>Preferences</h4>
+
+                <div class="split">
+                    <div>
+                        <b>Dark Mode</b>
+                        <div class="small">.</div>
+                    </div>
+                    <div class="toggle" id="darkToggle" onclick="toggleDark()">
+                        <div class="knob"></div>
+                    </div>
+                </div>
+
+                <div class="split">
+                    <div>
+                        <b>Compact Layout</b>
+                        <div class="small">.</div>
+                    </div>
+                    <div class="toggle" id="compactToggle" onclick="toggleCompact()">
+                        <div class="knob"></div>
+                    </div>
+                </div>
+
+                <div class="split">
+                    <div>
+                        <b>Notifications</b>
+                        <div class="small">Saved in browser (localStorage).</div>
+                    </div>
+                    <div class="toggle on" id="notifToggle" onclick="toggleGeneric('notifToggle','Notifications')">
+                        <div class="knob"></div>
+                    </div>
+                </div>
+
+                <div class="btnRow">
+                    <button type="button" class="btn btnPrimary" onclick="toast('Preferences saved locally ✅')">Save Preferences</button>
+                </div>
+            </div>
+
+            <div class="cardx danger">
+                <h4>Danger Zone</h4>
+
+                <div class="split" style="border-color:#fecdd3;background:#fff;">
+                    <div>
+                        <b>Reset Preferences</b>
+                        <div class="small">Clears local preferences.</div>
+                    </div>
+                    <button type="button" class="btn btnDanger" onclick="resetPrefs()">Reset</button>
+                </div>
+
+                <div class="small">
+                    If you want “Sign out all devices”, we can implement it by updating the user’s security stamp.
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script>
+    function toast(msg) {
+        let t = document.createElement('div');
+        t.textContent = msg;
+        t.style.position = 'fixed';
+        t.style.bottom = '18px';
+        t.style.right = '18px';
+        t.style.background = '#101828';
+        t.style.color = '#fff';
+        t.style.padding = '10px 12px';
+        t.style.borderRadius = '12px';
+        t.style.fontWeight = '900';
+        t.style.boxShadow = '0 14px 40px rgba(0,0,0,.18)';
+        t.style.zIndex = 9999;
+        document.body.appendChild(t);
+        setTimeout(() => { t.style.opacity = '0'; t.style.transition = '.25s'; }, 1400);
+        setTimeout(() => { t.remove(); }, 1800);
+    }
+
+    function setToggle(id, on) {
+        const el = document.getElementById(id);
+        if (!el) return;
+        el.classList.toggle('on', !!on);
+    }
+
+    function toggleDark() {
+        const on = !(localStorage.getItem('officer_dark') === '1');
+        localStorage.setItem('officer_dark', on ? '1' : '0');
+        applyPrefs();
+    }
+
+    function toggleCompact() {
+        const on = !(localStorage.getItem('officer_compact') === '1');
+        localStorage.setItem('officer_compact', on ? '1' : '0');
+        applyPrefs();
+    }
+
+    function toggleGeneric(id, name) {
+        const key = 'officer_' + id;
+        const on = !(localStorage.getItem(key) === '1');
+        localStorage.setItem(key, on ? '1' : '0');
+        setToggle(id, on);
+        toast(name + (on ? ' enabled' : ' disabled'));
+    }
+
+    function resetPrefs() {
+        localStorage.removeItem('officer_dark');
+        localStorage.removeItem('officer_compact');
+        localStorage.removeItem('officer_notifToggle');
+        applyPrefs();
+        toast('Preferences reset ✅');
+    }
+
+    function applyPrefs() {
+        const dark = localStorage.getItem('officer_dark') === '1';
+        const compact = localStorage.getItem('officer_compact') === '1';
+
+        setToggle('darkToggle', dark);
+        setToggle('compactToggle', compact);
+
+        // Simple global effect
+        document.body.style.background = dark ? '#0b1220' : '';
+        document.body.style.color = dark ? '#e5e7eb' : '';
+
+        document.body.classList.toggle('compact', compact);
+    }
+
+    applyPrefs();
+</script>
