@@ -1,0 +1,306 @@
+﻿@model SmartNagar.ViewModels.OfficerAssignmentsVM
+@{
+    Layout = "~/Views/Officer/_OfficerLayout.cshtml";
+    ViewBag.Title = "My Assignments";
+}
+
+<style>
+    .title {
+        font-size: 26px;
+        font-weight: 1000;
+        margin: 6px 0 4px;
+    }
+
+    .subtitle {
+        color: #667085;
+        font-weight: 700;
+        margin-bottom: 16px;
+    }
+
+    .cardx {
+        background: #fff;
+        border: 1px solid #ece7ff;
+        border-radius: 18px;
+        box-shadow: 0 12px 35px rgba(16,24,40,.08);
+        padding: 16px;
+    }
+
+    .filters {
+        display: grid;
+        grid-template-columns: 1.6fr 1fr 0.8fr 0.8fr;
+        gap: 10px;
+        align-items: end;
+        margin-bottom: 14px;
+    }
+
+    label {
+        font-size: 12px;
+        color: #667085;
+        font-weight: 900;
+        display: block;
+        margin-bottom: 6px;
+    }
+
+    input, select {
+        width: 100%;
+        border: 1px solid #ece7ff;
+        border-radius: 12px;
+        padding: 10px 12px;
+        outline: none;
+        background: #fff;
+        font-weight: 800;
+    }
+
+    .btn {
+        border: none;
+        border-radius: 12px;
+        padding: 10px 14px;
+        font-weight: 900;
+        cursor: pointer;
+    }
+
+    .btnPurple {
+        background: #7c3aed;
+        color: #fff;
+    }
+
+        .btnPurple:hover {
+            background: #6d28d9;
+        }
+
+    .btnGhost {
+        border: 1px solid #ece7ff;
+        background: #fff;
+        color: #7c3aed;
+        text-decoration: none;
+        display: inline-block;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 13px;
+    }
+
+    th {
+        text-align: left;
+        color: #667085;
+        font-weight: 1000;
+        font-size: 11px;
+        letter-spacing: .06em;
+        padding: 12px 10px;
+        text-transform: uppercase;
+        border-bottom: 1px solid #f1edff;
+    }
+
+    td {
+        padding: 14px 10px;
+        border-bottom: 1px solid #f4f1ff;
+        vertical-align: middle;
+        font-weight: 800;
+    }
+
+    .tag {
+        padding: 6px 10px;
+        border-radius: 999px;
+        font-weight: 900;
+        font-size: 12px;
+        display: inline-block;
+    }
+
+    .t-pending {
+        background: #fee2e2;
+        color: #b42318;
+    }
+
+    .t-progress {
+        background: #dbeafe;
+        color: #1d4ed8;
+    }
+
+    .t-resolved {
+        background: #dcfce7;
+        color: #166534;
+    }
+
+    .t-rejected {
+        background: #f3f4f6;
+        color: #374151;
+    }
+
+    .pageBtns {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+    }
+
+    .pageBtn {
+        padding: 8px 12px;
+        border-radius: 12px;
+        border: 1px solid #ece7ff;
+        background: #fff;
+        font-weight: 900;
+        text-decoration: none;
+        color: #7c3aed;
+    }
+
+        .pageBtn.active {
+            background: #7c3aed;
+            color: #fff;
+            border-color: #7c3aed;
+        }
+</style>
+
+<div>
+    <div class="title">My Assignments</div>
+    <div class="subtitle">Only complaints assigned to you show here.</div>
+
+    <div class="cardx">
+        <form method="get" action="/Officer/MyAssignments">
+            <div class="filters">
+                <div>
+                    <label>Search</label>
+                    <input name="q" value="@Model.Q" placeholder="Title, description, citizen..." />
+                </div>
+
+                <div>
+                    <label>Status</label>
+                    <select name="status">
+                        <option value="">All</option>
+                        @foreach (var s in Model.Statuses)
+                        {
+                            <option value="@s" selected="@(Model.Status == s)">@s</option>
+                        }
+                    </select>
+                </div>
+
+                <div>
+                    <label>Sort</label>
+                    <select name="sort">
+                        <option value="new" selected="@(Model.Sort == "new")">Newest</option>
+                        <option value="old" selected="@(Model.Sort == "old")">Oldest</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label>Page Size</label>
+                    <select name="pageSize">
+                        @foreach (var s in new[] { 10, 20, 30, 50 })
+                        {
+                            <option value="@s" selected="@(Model.PageSize == s)">@s</option>
+                        }
+                    </select>
+                </div>
+            </div>
+
+            <div style="display:flex; gap:10px; align-items:center;">
+                <button class="btn btnPurple" type="submit">Apply</button>
+                <a class="btnGhost" href="/Officer/MyAssignments">Reset</a>
+
+                <div style="margin-left:auto; color:#667085; font-weight:900;">
+                    Total: @Model.TotalCount
+                </div>
+            </div>
+        </form>
+
+        <div style="height:14px;"></div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Title</th>
+                    <th>Citizen</th>
+                    <th>Category</th>
+                    <th>Status</th>
+                    <th>Assigned</th>
+                    <th>Quick Update</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                @if (Model.Items.Count == 0)
+                {
+                    <tr><td colspan="8" style="color:#667085;">No assignments yet. Go to All Complaints and click “Assign to me”.</td></tr>
+                }
+                else
+                {
+                    foreach (var c in Model.Items)
+                    {
+                        var s = (c.Status ?? "Pending").ToLower();
+                        var cls = s switch
+                        {
+                            "pending" => "t-pending",
+                            "in progress" => "t-progress",
+                            "resolved" => "t-resolved",
+                            "rejected" => "t-rejected",
+                            _ => "t-pending"
+                        };
+
+                        <tr>
+                            <td style="color:#6d28d9; font-weight:1000;">CN-@c.Id.ToString("0000")</td>
+                            <td>@c.Title</td>
+                            <td>@(c.Citizen?.FullName ?? "Citizen")</td>
+                            <td>@(c.Category ?? "Other")</td>
+                            <td><span class="tag @cls">@c.Status</span></td>
+                            <td>@(c.AssignedAt?.ToLocalTime().ToString("MMM dd, yyyy") ?? "-")</td>
+
+                            <td>
+                                <form asp-action="UpdateStatus" method="post" style="display:flex; gap:8px; align-items:center;">
+                                    @Html.AntiForgeryToken()
+                                    <input type="hidden" name="id" value="@c.Id" />
+                                    <select name="status" style="padding:8px 10px;">
+                                        @foreach (var st in Model.Statuses)
+                                        {
+                                            <option value="@st" selected="@(c.Status == st)">@st</option>
+                                        }
+                                    </select>
+                                    <button class="btn btnPurple" type="submit" style="padding:8px 10px;">Save</button>
+                                </form>
+                            </td>
+
+                            <td>
+                                <a href="/Officer/ComplaintDetails/@c.Id" style="font-weight:1000; color:#7c3aed; text-decoration:none;">Open</a>
+                            </td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-top:12px; flex-wrap:wrap; gap:10px;">
+            <div style="color:#667085; font-weight:900;">Page @Model.Page of @Model.TotalPages</div>
+
+            <div class="pageBtns">
+                @{
+                    string qsBase =
+                    $"q={Uri.EscapeDataString(Model.Q ?? "")}" +
+                    $"&status={Uri.EscapeDataString(Model.Status ?? "")}" +
+                    $"&sort={Uri.EscapeDataString(Model.Sort ?? "new")}" +
+                    $"&pageSize={Model.PageSize}";
+                }
+
+                @if (Model.Page > 1)
+                {
+                    <a class="pageBtn" href="/Officer/MyAssignments?@qsBase&page=@(Model.Page - 1)">Prev</a>
+                }
+
+                @{
+                    var start = Math.Max(1, Model.Page - 2);
+                    var end = Math.Min(Model.TotalPages, Model.Page + 2);
+                    for (int p = start; p <= end; p++)
+                    {
+                        <a class="pageBtn @(p == Model.Page ? "active" : "")" href="/Officer/MyAssignments?@qsBase&page=@p">@p</a>
+                        ;
+                    }
+                }
+
+                @if (Model.Page < Model.TotalPages)
+                {
+                    <a class="pageBtn" href="/Officer/MyAssignments?@qsBase&page=@(Model.Page + 1)">Next</a>
+                }
+            </div>
+        </div>
+    </div>
+</div>
