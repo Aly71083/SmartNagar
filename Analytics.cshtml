@@ -1,0 +1,721 @@
+﻿@model SmartNagar.ViewModels.OfficerAnalyticsVM
+@{
+    Layout = "~/Views/Officer/_OfficerLayout.cshtml";
+    ViewBag.Title = "Analytics";
+}
+
+<style>
+    :root {
+        --bg1: #f6efff;
+        --bg2: #efe3ff;
+        --card: #fff;
+        --text: #101828;
+        --muted: #667085;
+        --border: #ece7ff;
+        --primary: #7c3aed;
+        --primary2: #6d28d9;
+        --shadow: 0 14px 40px rgba(16,24,40,.08);
+        --radius: 18px;
+    }
+
+    .pageWrap {
+        max-width: 1220px;
+        margin: 0 auto;
+    }
+
+    .heroTop {
+        background: var(--card);
+        border: 1px solid var(--border);
+        box-shadow: var(--shadow);
+        border-radius: 22px;
+        padding: 18px 20px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 14px;
+    }
+
+    .heroTitle {
+        font-size: 30px;
+        font-weight: 1000;
+        color: var(--primary);
+        margin: 0;
+        line-height: 1.1;
+    }
+
+    .heroSub {
+        margin-top: 6px;
+        color: var(--muted);
+        font-weight: 800;
+        font-size: 13px;
+    }
+
+    .rangeBox {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+        .rangeBox input {
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 10px 12px;
+            font-weight: 900;
+            outline: none;
+            background: #fff;
+            min-width: 140px;
+        }
+
+        .rangeBox .btn {
+            border: none;
+            border-radius: 12px;
+            padding: 10px 14px;
+            font-weight: 1000;
+            cursor: pointer;
+            color: #fff;
+            background: linear-gradient(135deg,var(--primary),var(--primary2));
+            box-shadow: 0 10px 22px rgba(124,58,237,.25);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+    /* KPI cards */
+    .kpis {
+        margin-top: 18px;
+        display: grid;
+        grid-template-columns: repeat(4,1fr);
+        gap: 14px;
+    }
+    @@media(max - width:1100px) {
+        .kpis
+
+    {
+        grid-template-columns: repeat(2,1fr);
+    }
+
+    }
+    @@media(max - width:650px) {
+        .kpis
+
+    {
+        grid-template-columns: 1fr;
+    }
+
+    .rangeBox {
+        flex-wrap: wrap;
+        justify-content: flex-end;
+    }
+
+    }
+
+    .kpi {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 22px;
+        box-shadow: var(--shadow);
+        padding: 18px;
+        position: relative;
+        overflow: hidden;
+        min-height: 124px;
+    }
+
+    .kpiCorner {
+        position: absolute;
+        right: -40px;
+        top: -40px;
+        width: 120px;
+        height: 120px;
+        border-radius: 999px;
+        background: rgba(124,58,237,.07);
+    }
+
+    .kpiIcon {
+        width: 44px;
+        height: 44px;
+        border-radius: 14px;
+        background: linear-gradient(135deg,var(--primary),#9f67ff);
+        color: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 1000;
+    }
+
+    .kpiRow {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 10px;
+    }
+
+    .chip {
+        font-size: 12px;
+        font-weight: 1000;
+        border-radius: 999px;
+        padding: 6px 10px;
+        background: #eef2ff;
+        color: #3730a3;
+    }
+
+        .chip.good {
+            background: #ecfdf3;
+            color: #067647;
+        }
+
+        .chip.bad {
+            background: #fff1f2;
+            color: #b42318;
+        }
+
+    .kpiValue {
+        margin-top: 14px;
+        font-size: 36px;
+        font-weight: 1100;
+        color: var(--text);
+        letter-spacing: -.02em;
+    }
+
+    .kpiLabel {
+        margin-top: 2px;
+        color: var(--muted);
+        font-weight: 900;
+    }
+
+    .kpiNote {
+        margin-top: 6px;
+        font-size: 12px;
+        color: var(--muted);
+        font-weight: 800;
+    }
+
+    /* middle layout */
+    .grid2 {
+        margin-top: 16px;
+        display: grid;
+        grid-template-columns: 2fr 1fr;
+        gap: 14px;
+    }
+    @@media(max - width:1100px) {
+        .grid2
+
+    {
+        grid-template-columns: 1fr;
+    }
+
+    }
+
+    .card {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 22px;
+        box-shadow: var(--shadow);
+        padding: 16px;
+    }
+
+    .cardHead {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+        margin-bottom: 12px;
+    }
+
+    .cardTitle {
+        margin: 0;
+        font-weight: 1000;
+        font-size: 18px;
+        color: var(--text);
+    }
+
+    .tabs {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+    }
+
+    .tab {
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        padding: 6px 10px;
+        background: #fff;
+        font-weight: 1000;
+        font-size: 12px;
+        cursor: pointer;
+        color: #5b21b6;
+    }
+
+        .tab.active {
+            background: linear-gradient(135deg,var(--primary),var(--primary2));
+            color: #fff;
+            border-color: transparent;
+        }
+
+    /* chart placeholder */
+    .chartBox {
+        border-radius: 18px;
+        border: 1px solid #f1ecff;
+        background: #faf7ff;
+        height: 260px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        position: relative;
+    }
+
+    .chartHint {
+        position: absolute;
+        bottom: 12px;
+        left: 12px;
+        color: #6d28d9;
+        font-weight: 1000;
+        font-size: 12px;
+        opacity: .9;
+    }
+
+    /* category distribution */
+    .catList {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        margin-top: 10px;
+    }
+
+    .catItem {
+        border: 1px solid #f1ecff;
+        background: #fbfaff;
+        border-radius: 16px;
+        padding: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+    }
+
+    .catLeft {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex: 1;
+    }
+
+    .catBarDot {
+        width: 6px;
+        height: 34px;
+        border-radius: 999px;
+        background: var(--primary);
+    }
+
+    .catName {
+        font-weight: 1000;
+        font-size: 13px;
+        color: var(--text);
+    }
+
+    .bar {
+        height: 6px;
+        border-radius: 999px;
+        background: #eadcff;
+        overflow: hidden;
+        margin-top: 8px;
+    }
+
+        .bar > i {
+            display: block;
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg,var(--primary),#b08cff);
+            border-radius: 999px;
+        }
+
+    .catCount {
+        font-weight: 1100;
+        color: #5b21b6;
+        min-width: 36px;
+        text-align: right;
+    }
+
+    /* strip kpis */
+    .stripRow {
+        margin-top: 14px;
+        display: grid;
+        grid-template-columns: repeat(3,1fr);
+        gap: 14px;
+    }
+    @@media(max - width:1100px) {
+        .stripRow
+
+    {
+        grid-template-columns: 1fr;
+    }
+
+    }
+
+    .strip {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 22px;
+        box-shadow: var(--shadow);
+        padding: 14px 16px;
+    }
+
+    .stripBig {
+        font-size: 26px;
+        font-weight: 1100;
+    }
+
+    .stripSub {
+        margin-top: 4px;
+        color: var(--muted);
+        font-weight: 900;
+        font-size: 12px;
+    }
+
+    .stripBar {
+        margin-top: 10px;
+        height: 6px;
+        background: #eadcff;
+        border-radius: 999px;
+        overflow: hidden;
+    }
+
+        .stripBar > i {
+            display: block;
+            height: 100%;
+            background: linear-gradient(90deg,var(--primary),#b08cff);
+            width: 0%;
+            border-radius: 999px;
+        }
+
+    .stripRightNote {
+        float: right;
+        color: var(--muted);
+        font-weight: 900;
+        font-size: 12px;
+    }
+
+    /* table */
+    .tableCard {
+        margin-top: 14px;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 10px;
+        overflow: hidden;
+        border-radius: 16px;
+    }
+
+    thead th {
+        text-align: left;
+        padding: 12px 12px;
+        font-size: 11px;
+        letter-spacing: .08em;
+        text-transform: uppercase;
+        color: #6b7280;
+        background: #fbfaff;
+        border-bottom: 1px solid #f1ecff;
+        font-weight: 1100;
+    }
+
+    tbody td {
+        padding: 12px 12px;
+        border-bottom: 1px solid #f4f1ff;
+        font-weight: 900;
+        color: var(--text);
+        font-size: 13px;
+    }
+
+    tbody tr:hover {
+        background: #fcfbff;
+    }
+
+    .pill {
+        display: inline-flex;
+        align-items: center;
+        padding: 6px 10px;
+        border-radius: 999px;
+        font-weight: 1000;
+        font-size: 12px;
+        background: #eef2ff;
+        color: #3730a3;
+    }
+
+        .pill.excellent {
+            background: #ecfdf3;
+            color: #067647;
+        }
+
+        .pill.good {
+            background: #eef2ff;
+            color: #3730a3;
+        }
+
+        .pill.average {
+            background: #fffbeb;
+            color: #b45309;
+        }
+</style>
+
+<div class="pageWrap">
+
+    <!-- HEADER -->
+    <div class="heroTop">
+        <div>
+            <div class="heroTitle">Analytics Dashboard</div>
+            <div class="heroSub">Comprehensive insights and performance metrics</div>
+        </div>
+
+        <form class="rangeBox" method="get" action="/Officer/Analytics">
+            <input type="date" name="from" value="@Model.From.ToString("yyyy-MM-dd")" />
+            <span style="font-weight:1000;color:#6b7280;">to</span>
+            <input type="date" name="to" value="@Model.To.ToString("yyyy-MM-dd")" />
+            <button class="btn" type="submit">▣ Update</button>
+        </form>
+    </div>
+
+    <!-- KPI CARDS -->
+    <div class="kpis">
+        <div class="kpi">
+            <div class="kpiCorner"></div>
+            <div class="kpiRow">
+                <div class="kpiIcon">📄</div>
+                <span class="chip good">↑ @Model.TotalComplaintsDeltaText</span>
+            </div>
+            <div class="kpiValue">@Model.TotalComplaints</div>
+            <div class="kpiLabel">Total Complaints</div>
+            <div class="kpiNote">@Model.TotalComplaintsDeltaNote</div>
+        </div>
+
+        <div class="kpi">
+            <div class="kpiCorner"></div>
+            <div class="kpiRow">
+                <div class="kpiIcon">⏱️</div>
+                <span class="chip @(Model.AvgResponseDeltaIsBad ? "bad" : "good")">@Model.AvgResponseDeltaText</span>
+            </div>
+            <div class="kpiValue">@Model.AvgResponseTimeText</div>
+            <div class="kpiLabel">Avg Response Time</div>
+            <div class="kpiNote">@Model.AvgResponseDeltaNote</div>
+        </div>
+
+        <div class="kpi">
+            <div class="kpiCorner"></div>
+            <div class="kpiRow">
+                <div class="kpiIcon">✅</div>
+                <span class="chip good">↑ @Model.ResolutionRateDeltaText</span>
+            </div>
+            <div class="kpiValue">@Model.ResolutionRateText</div>
+            <div class="kpiLabel">Resolution Rate</div>
+            <div class="kpiNote">@Model.ResolutionRateDeltaNote</div>
+        </div>
+
+        <div class="kpi">
+            <div class="kpiCorner"></div>
+            <div class="kpiRow">
+                <div class="kpiIcon">⭐</div>
+                <span class="chip good">↑ @Model.SatisfactionDeltaText</span>
+            </div>
+            <div class="kpiValue">@Model.SatisfactionScoreText</div>
+            <div class="kpiLabel">Satisfaction Score</div>
+            <div class="kpiNote">@Model.SatisfactionDeltaNote</div>
+        </div>
+    </div>
+
+    <!-- TRENDS + CATEGORY -->
+    <div class="grid2">
+        <div class="card">
+            <div class="cardHead">
+                <h3 class="cardTitle">Complaint Trends</h3>
+                <div class="tabs">
+                    <button type="button" class="tab active" onclick="setRange(7,this)">7 Days</button>
+                    <button type="button" class="tab" onclick="setRange(30,this)">30 Days</button>
+                    <button type="button" class="tab" onclick="setRange(90,this)">90 Days</button>
+                    <button type="button" class="tab" onclick="setRange(365,this)">1 Year</button>
+                </div>
+            </div>
+
+            <div class="chartBox">
+                <svg id="trendSvg" width="100%" height="100%" viewBox="0 0 900 260" preserveAspectRatio="none"></svg>
+                <div class="chartHint">Line/Area Chart - Complaint Trends Over Time</div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="cardHead">
+                <h3 class="cardTitle">Category Distribution</h3>
+            </div>
+
+            <div class="catList">
+                @{
+                    var totalCat = Model.CategoryStats.Sum(x => x.Value);
+                    if (totalCat <= 0) { totalCat = 1; }
+                }
+                @foreach (var c in Model.CategoryStats.Take(8))
+                {
+                    var pct = (int)Math.Round((c.Value * 100.0) / totalCat);
+                    <div class="catItem">
+                        <div class="catLeft">
+                            <div class="catBarDot"></div>
+                            <div style="flex:1">
+                                <div class="catName">@c.Key</div>
+                                <div class="bar"><i style="width:@pct%"></i></div>
+                            </div>
+                        </div>
+                        <div class="catCount">@c.Value</div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+
+    <!-- STRIP KPIS -->
+    <div class="stripRow">
+        <div class="strip">
+            <div class="stripBig">@Model.ResolvedWithin48HoursText</div>
+            <div class="stripSub">Resolved within 48 hours <span class="stripRightNote">@Model.ResolvedWithin48HoursNote</span></div>
+            <div class="stripBar"><i style="width:@Model.ResolvedWithin48HoursPercent%"></i></div>
+        </div>
+
+        <div class="strip">
+            <div class="stripBig">@Model.ActiveUsersText</div>
+            <div class="stripSub">Active users this month <span class="stripRightNote">@Model.ActiveUsersNote</span></div>
+            <div class="stripBar"><i style="width:@Model.ActiveUsersBarPercent%"></i></div>
+        </div>
+
+        <div class="strip">
+            <div class="stripBig">@Model.OverallPerformanceText</div>
+            <div class="stripSub">Overall performance score <span class="stripRightNote">@Model.OverallPerformanceNote</span></div>
+            <div class="stripBar"><i style="width:@Model.OverallPerformanceBarPercent%"></i></div>
+        </div>
+    </div>
+
+    <!-- TABLE -->
+    <div class="card tableCard">
+        <div class="cardHead">
+            <h3 class="cardTitle">Ward-wise Performance</h3>
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Ward</th>
+                    <th>Total Complaints</th>
+                    <th>Resolved</th>
+                    <th>Pending</th>
+                    <th>Avg Resolution Time</th>
+                    <th>Performance</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var w in Model.WardStats)
+                {
+                    var pillClass = w.PerformanceTag.ToLower() switch
+                    {
+                        "excellent" => "excellent",
+                        "good" => "good",
+                        _ => "average"
+                    };
+
+                    <tr>
+                        <td>@w.WardName</td>
+                        <td>@w.Total</td>
+                        <td>@w.Resolved</td>
+                        <td>@w.Pending</td>
+                        <td>@w.AvgResolutionTimeText</td>
+                        <td><span class="pill @pillClass">@w.PerformanceTag</span></td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+</div>
+
+<script>
+    // ---------- Trend data from server ----------
+    const trendDataAll = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.TrendPoints));
+
+    function setActiveTab(btn){
+        document.querySelectorAll('.tab').forEach(x => x.classList.remove('active'));
+        btn.classList.add('active');
+    }
+
+    function setRange(days, btn){
+        setActiveTab(btn);
+        const now = new Date();
+        const start = new Date(now);
+        start.setDate(now.getDate() - (days - 1));
+
+        const filtered = trendDataAll.filter(p => {
+            const d = new Date(p.date);
+            return d >= start && d <= now;
+        });
+
+        drawTrend(filtered);
+    }
+
+    function drawTrend(points){
+        const svg = document.getElementById('trendSvg');
+        svg.innerHTML = '';
+
+        const W = 900, H = 260;
+        const pad = 24;
+
+        if(!points || points.length === 0){
+            const t = document.createElementNS("http://www.w3.org/2000/svg","text");
+            t.setAttribute("x", W/2);
+            t.setAttribute("y", H/2);
+            t.setAttribute("text-anchor","middle");
+            t.setAttribute("font-size","14");
+            t.setAttribute("font-weight","900");
+            t.setAttribute("fill","#6d28d9");
+            t.textContent = "No data for selected range";
+            svg.appendChild(t);
+            return;
+        }
+
+        const maxY = Math.max(...points.map(p => p.count), 1);
+        const minY = 0;
+
+        const scaleX = (i) => pad + (i * (W - pad*2) / (points.length - 1 || 1));
+        const scaleY = (v) => (H - pad) - ((v - minY) * (H - pad*2) / (maxY - minY || 1));
+
+        // area path
+        let dArea = `M ${scaleX(0)} ${H - pad} `;
+        points.forEach((p,i) => dArea += `L ${scaleX(i)} ${scaleY(p.count)} `);
+        dArea += `L ${scaleX(points.length-1)} ${H - pad} Z`;
+
+        const area = document.createElementNS("http://www.w3.org/2000/svg","path");
+        area.setAttribute("d", dArea);
+        area.setAttribute("fill", "rgba(124,58,237,.12)");
+        svg.appendChild(area);
+
+        // line path
+        let dLine = `M ${scaleX(0)} ${scaleY(points[0].count)} `;
+        points.forEach((p,i) => dLine += `L ${scaleX(i)} ${scaleY(p.count)} `);
+
+        const line = document.createElementNS("http://www.w3.org/2000/svg","path");
+        line.setAttribute("d", dLine);
+        line.setAttribute("fill", "none");
+        line.setAttribute("stroke", "#7c3aed");
+        line.setAttribute("stroke-width", "3");
+        line.setAttribute("stroke-linecap", "round");
+        line.setAttribute("stroke-linejoin", "round");
+        svg.appendChild(line);
+
+        // dots
+        points.forEach((p,i) => {
+            const c = document.createElementNS("http://www.w3.org/2000/svg","circle");
+            c.setAttribute("cx", scaleX(i));
+            c.setAttribute("cy", scaleY(p.count));
+            c.setAttribute("r", "4.2");
+            c.setAttribute("fill", "#7c3aed");
+            svg.appendChild(c);
+        });
+    }
+
+    // default = 7 days
+    drawTrend(trendDataAll.slice(-7));
+</script>
