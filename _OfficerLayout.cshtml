@@ -1,0 +1,294 @@
+﻿@{
+    Layout = null;
+    var fullName = ViewBag.FullName as string ?? "Municipal Officer";
+    var initial = !string.IsNullOrWhiteSpace(fullName) ? fullName.Substring(0, 1).ToUpper() : "M";
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewBag.Title - Smart Nagar (Officer)</title>
+</head>
+
+<body>
+    <style>
+        :root {
+            --bg1: #f6efff;
+            --bg2: #efe3ff;
+            --card: #ffffff;
+            --text: #101828;
+            --muted: #667085;
+            --border: #ece7ff;
+            --primary: #7c3aed;
+            --primary2: #6d28d9;
+            --shadow: 0 14px 40px rgba(16,24,40,.08);
+            --radius: 18px;
+        }
+
+        body {
+            margin: 0;
+            font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
+            background: linear-gradient(180deg,var(--bg1) 0%, var(--bg2) 100%);
+            color: var(--text);
+        }
+
+        .app {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* SIDEBAR */
+        .sidebar {
+            width: 260px;
+            background: linear-gradient(180deg,#1f3b5c 0%, #234a73 100%);
+            color: #fff;
+            padding: 18px 14px;
+            position: sticky;
+            top: 0;
+            height: 100vh;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 10px;
+            margin-bottom: 12px;
+        }
+
+        .brandIcon {
+            width: 44px;
+            height: 44px;
+            border-radius: 14px;
+            background: rgba(255,255,255,.14);
+        }
+
+        .brandTitle {
+            font-weight: 900;
+            font-size: 16px;
+        }
+
+        .brandSub {
+            opacity: .8;
+            font-size: 12px;
+            font-weight: 700;
+            margin-top: 2px;
+        }
+
+        .sectionTitle {
+            margin: 16px 10px 8px;
+            opacity: .75;
+            font-size: 11px;
+            font-weight: 900;
+            letter-spacing: .08em;
+        }
+
+        .nav a {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 12px;
+            border-radius: 12px;
+            color: #e9f2ff;
+            text-decoration: none;
+            font-weight: 800;
+            font-size: 13px;
+            margin: 4px 6px;
+        }
+
+            .nav a:hover {
+                background: rgba(255,255,255,.12);
+            }
+
+        .logoutBtn {
+            margin: 16px 6px 0;
+            width: calc(100% - 12px);
+            border: none;
+            padding: 10px 12px;
+            border-radius: 12px;
+            font-weight: 900;
+            background: rgba(255,255,255,.14);
+            color: #fff;
+            cursor: pointer;
+        }
+
+        /* CONTENT */
+        .content {
+            flex: 1;
+            padding: 22px;
+        }
+
+        /* TOP BAR */
+        .topbar {
+            background: var(--card);
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow);
+            border-radius: var(--radius);
+            padding: 14px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 14px;
+        }
+
+        .search {
+            width: 460px;
+            max-width: 56vw;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 10px 12px;
+            outline: none;
+            font-weight: 800;
+        }
+
+        .right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .iconBtn {
+            border: 1px solid var(--border);
+            background: #fff;
+            border-radius: 12px;
+            padding: 10px 12px;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .badge {
+            position: absolute;
+            top: -6px;
+            right: -6px;
+            background: #ef4444;
+            color: #fff;
+            font-weight: 900;
+            font-size: 12px;
+            border-radius: 999px;
+            padding: 2px 7px;
+            display: none;
+        }
+
+        .profile {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .avatar {
+            width: 38px;
+            height: 38px;
+            border-radius: 999px;
+            background: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-weight: 900;
+        }
+
+        .pname {
+            font-weight: 900;
+        }
+
+        .prole {
+            font-size: 12px;
+            color: var(--muted);
+            font-weight: 800;
+        }
+    </style>
+
+    <div class="app">
+        <aside class="sidebar">
+            <div class="brand">
+                <div class="brandIcon"></div>
+                <div>
+                    <div class="brandTitle">Smart Nagar</div>
+                    <div class="brandSub">Officer Portal</div>
+                </div>
+            </div>
+
+            <div class="nav">
+                <div class="sectionTitle">MAIN</div>
+                <a href="/Officer/Dashboard">Dashboard</a>
+                <a href="/Officer/Complaints">All Complaints</a>
+                <a href="/Officer/MyAssignments">My Assignments</a>
+
+                <div class="sectionTitle">MANAGEMENT</div>
+                <a href="/Officer/Management">Management</a>
+
+                <div class="sectionTitle">REPORTS</div>
+                <a href="/Officer/Analytics">Analytics</a>
+                <a href="/Officer/ExportPdf">Export PDF</a>
+
+                <div class="sectionTitle">SYSTEM</div>
+                <a href="/Officer/Settings">Settings</a>
+
+                <form method="post" action="/Account/Logout">
+                    @Html.AntiForgeryToken()
+                    <button class="logoutBtn" type="submit">Logout</button>
+                </form>
+            </div>
+        </aside>
+
+        <main class="content">
+            <div class="topbar">
+
+                <!-- ✅ WORKING SEARCH -->
+                <form method="get" action="/Officer/Complaints" style="flex:1;">
+                    <input class="search"
+                           name="q"
+                           value="@(Context.Request.Query["q"])"
+                           placeholder="Search complaints, citizens, or wards..." />
+                </form>
+
+                <div class="right">
+                    <button class="iconBtn" id="bellBtn" type="button" onclick="window.location='/Officer/Notifications'">
+                        🔔
+                        <span class="badge" id="bellCount">0</span>
+                    </button>
+
+                    <div class="profile">
+                        <div class="avatar">@initial</div>
+                        <div>
+                            <div class="pname">@fullName</div>
+                            <div class="prole">Admin Access</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div style="height:16px;"></div>
+
+            @RenderBody()
+        </main>
+    </div>
+
+    <script>
+        async function loadBellCount() {
+            try {
+                const res = await fetch('/Officer/UnreadNotificationCount');
+                const data = await res.json();
+                const badge = document.getElementById('bellCount');
+                const n = data.count || 0;
+
+                if (n <= 0) {
+                    badge.style.display = 'none';
+                    badge.textContent = '';
+                } else {
+                    badge.style.display = 'inline-block';
+                    badge.textContent = (n > 99) ? '99+' : n;
+                }
+            } catch (e) {
+                console.log(e);
+            }
+        }
+
+        loadBellCount();
+        setInterval(loadBellCount, 10000);
+    </script>
+
+</body>
+</html>
