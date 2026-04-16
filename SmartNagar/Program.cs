@@ -2,58 +2,98 @@
 using Microsoft.EntityFrameworkCore;
 using SmartNagar.Data;
 using SmartNagar.Models;
-using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
+using SmartNagar.Services;
+using QuestPDF.Infrastructure;
 
+using Microsoft.AspNetCore.Localization;
+using Microsoft.Extensions.Options;
+using System.Globalization;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-builder.Services.AddControllersWithViews();
+// Localization
+builder.Services.AddLocalization(options => options.ResourcesPath = "Resources");
 
-builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseMySql(
-        builder.Configuration.GetConnectionString("DefaultConnection"),
-        new MySqlServerVersion(new Version(8, 0, 33)) // replace with your MySQL version
-    ));
+builder.Services
+    .AddControllersWithViews()
+    .AddViewLocalization()
+    .AddDataAnnotationsLocalization();
 
+// Request localization options
+builder.Services.Configure<RequestLocalizationOptions>(options =>
+{
+    var supportedCultures = new[]
+    {
+        new CultureInfo("en-US"),
+        new CultureInfo("ne-NP")
+    };
 
-// ✅ Configure Identity
+    options.DefaultRequestCulture = new RequestCulture("en-US");
+    options.SupportedCultures = supportedCultures;
+    options.SupportedUICultures = supportedCultures;
+
+    options.RequestCultureProviders = new IRequestCultureProvider[]
+    {
+        new CookieRequestCultureProvider()
+    };
+});
+
+var cs = builder.Configuration.GetConnectionString("DefaultConnection");
+
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
+    options.UseMySql(cs, ServerVersion.AutoDetect(cs))
+);
+
 builder.Services.AddIdentity<User, IdentityRole>(options =>
 {
-    // Password settings
-    options.Password.RequireDigit = false;
-    options.Password.RequireLowercase = false;
+    options.Password.RequireDigit = true;
+    options.Password.RequireLowercase = true;
     options.Password.RequireUppercase = false;
     options.Password.RequireNonAlphanumeric = false;
-    options.Password.RequiredLength = 8;
-    options.Password.RequiredUniqueChars = 0;
+    options.Password.RequiredLength = 6;
 
-    // User settings
     options.User.RequireUniqueEmail = true;
-
-    // Sign-in settings
-    options.SignIn.RequireConfirmedEmail = false; // Set true when email verification is implemented
-    options.SignIn.RequireConfirmedAccount = false;
-    options.SignIn.RequireConfirmedPhoneNumber = false;
 })
-.AddEntityFrameworkStores<AppDbContext>()
+.AddEntityFrameworkStores<ApplicationDbContext>()
 .AddDefaultTokenProviders();
 
-// ✅ Optional: configure cookie settings (customize if needed)
-builder.Services.ConfigureApplicationCookie(options =>
+builder.Services.ConfigureApplicationCookie(opt =>
 {
-    options.LoginPath = "/Account/Login"; // Redirect to login page
-    options.LogoutPath = "/Account/Logout";
-    options.AccessDeniedPath = "/Account/AccessDenied";
+    opt.LoginPath = "/Account/Login";
+    opt.AccessDeniedPath = "/Account/AccessDenied";
 });
+
+// Email settings
+builder.Services.Configure<EmailSettings>(
+    builder.Configuration.GetSection("EmailSettings"));
+
+builder.Services.AddScoped<IEmailService, EmailService>();
+
+// Reminder email services
+builder.Services.AddScoped<IReminderEmailService, ReminderEmailService>();
+builder.Services.AddHostedService<GarbageReminderBackgroundService>();
+
+// Gemini settings
+builder.Services.Configure<GeminiSettings>(
+    builder.Configuration.GetSection("GeminiSettings"));
+
+builder.Services.AddScoped<IGeminiService, GeminiService>();
+
+// QuestPDF License
+QuestPDF.Settings.License = LicenseType.Community;
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+// Seed database
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    await DbSeeder.SeedAsync(services);
+}
+
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
-    app.UseHsts();
 }
 
 app.UseHttpsRedirection();
@@ -61,11 +101,13 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
-// ✅ Add Authentication & Authorization middleware
+// Localization
+var locOptions = app.Services.GetRequiredService<IOptions<RequestLocalizationOptions>>();
+app.UseRequestLocalization(locOptions.Value);
+
 app.UseAuthentication();
 app.UseAuthorization();
 
-// ✅ Configure default routing
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
