@@ -1,103 +1,646 @@
-﻿@model SmartNagar.Models.ViewModels.RegisterViewModel
-
+﻿@model SmartNagar.ViewModels.RegisterVM
 @{
+    Layout = null;
     ViewData["Title"] = "Register";
 }
 
-<style>
-    body {
-        background: hsla(9, 100%, 64%, 0.5);
-        min-height: 100vh;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-family: Arial, sans-serif;
-    }
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Register | Smart Nagar</title>
 
-    .auth-card {
-        background: #fff;
-        padding: 35px;
-        border-radius: 10px;
-        width: 100%;
-        max-width: 450px;
-        box-shadow: 0 10px 25px rgba(0,0,0,0.15);
-    }
-
-        .auth-card h2 {
-            text-align: center;
-            margin-bottom: 25px;
-            color: #333;
+    <style>
+        * {
+            box-sizing: border-box;
         }
 
-    .form-group {
-        margin-bottom: 15px;
-    }
+        body {
+            margin: 0;
+            min-height: 100vh;
+            font-family: "Segoe UI", system-ui, Arial, sans-serif;
+            background: linear-gradient(135deg, #7c4dff, #ec4899);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 30px 16px;
+        }
 
-    .btn-success {
-        width: 100%;
-        padding: 10px;
-    }
+        .wrap {
+            width: 100%;
+            max-width: 920px;
+        }
 
-    .auth-links {
-        text-align: center;
-        margin-top: 15px;
-    }
-</style>
+        .card {
+            background: #fff;
+            border-radius: 24px;
+            box-shadow: 0 25px 60px rgba(124,77,255,.25);
+            overflow: hidden;
+        }
 
-<div class="auth-card">
-    <h2>Register</h2>
+        .top {
+            padding: 28px 34px 12px;
+            text-align: center;
+        }
 
-    <form asp-action="Register" method="post">
-        @Html.AntiForgeryToken()
+        .logo {
+            width: 64px;
+            height: 64px;
+            margin: 0 auto 10px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #7c4dff, #ec4899);
+            color: #fff;
+            font-size: 26px;
+            box-shadow: 0 14px 30px rgba(124,77,255,.25);
+        }
 
-        <div asp-validation-summary="All" class="text-danger mb-3"></div>
+        .title {
+            margin: 0;
+            font-size: 34px;
+            font-weight: 900;
+            color: #0f172a;
+        }
 
-        <div class="form-group">
-            <label asp-for="FullName"></label>
-            <input asp-for="FullName" class="form-control" />
-            <span asp-validation-for="FullName" class="text-danger"></span>
-        </div>
+        .subtitle {
+            margin-top: 8px;
+            color: #6b7280;
+            font-size: 15px;
+        }
 
-        <div class="form-group">
-            <label asp-for="UserName"></label>
-            <input asp-for="UserName" class="form-control" />
-            <span asp-validation-for="UserName" class="text-danger"></span>
-        </div>
+        .stepper {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            padding: 18px 34px 10px;
+            flex-wrap: wrap;
+        }
 
-        <div class="form-group">
-            <label asp-for="Email"></label>
-            <input asp-for="Email" class="form-control" />
-            <span asp-validation-for="Email" class="text-danger"></span>
-        </div>
+        .step-line {
+            flex: 1;
+            height: 2px;
+            background: #e5e7eb;
+            min-width: 50px;
+        }
 
-        <div class="form-group">
-            <label asp-for="PhoneNumber"></label>
-            <input asp-for="PhoneNumber" class="form-control" />
-            <span asp-validation-for="PhoneNumber" class="text-danger"></span>
-        </div>
+        .step {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            min-width: 180px;
+        }
 
-        <div class="form-group">
-            <label asp-for="Password"></label>
-            <input asp-for="Password" class="form-control" />
-            <span asp-validation-for="Password" class="text-danger"></span>
-        </div>
+        .step-circle {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            border: 2px solid #d1d5db;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 15px;
+            color: #6b7280;
+            background: #fff;
+        }
 
-        <div class="form-group">
-            <label asp-for="ConfirmPassword"></label>
-            <input asp-for="ConfirmPassword" class="form-control" />
-            <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
-        </div>
+        .step.active .step-circle {
+            background: linear-gradient(135deg, #7c4dff, #ec4899);
+            color: #fff;
+            border-color: transparent;
+            box-shadow: 0 10px 25px rgba(124,77,255,.25);
+        }
 
-        <button type="submit" class="btn btn-success">
-            Register
-        </button>
+        .step.done .step-circle {
+            background: #ecfdf5;
+            color: #10b981;
+            border-color: #86efac;
+        }
 
-        <div class="auth-links">
-            <a asp-action="Login">Already have an account? Login</a>
-        </div>
-    </form>
-</div>
+        .step-text small {
+            display: block;
+            font-size: 11px;
+            letter-spacing: 1.3px;
+            font-weight: 800;
+            color: #6b7280;
+        }
 
-@section Scripts {
+        .step-text strong {
+            display: block;
+            margin-top: 2px;
+            font-size: 15px;
+            color: #111827;
+        }
+
+        .content {
+            padding: 24px 34px 34px;
+        }
+
+        .step-panel {
+            display: none;
+        }
+
+            .step-panel.active {
+                display: block;
+            }
+
+        .section-title {
+            font-size: 18px;
+            font-weight: 900;
+            color: #111827;
+            margin-bottom: 6px;
+        }
+
+        .section-sub {
+            color: #6b7280;
+            font-size: 14px;
+            margin-bottom: 24px;
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 18px 20px;
+        }
+
+        .field {
+            margin-bottom: 18px;
+        }
+
+            .field.full {
+                grid-column: 1 / -1;
+            }
+
+        label {
+            display: block;
+            font-size: 14px;
+            font-weight: 800;
+            color: #374151;
+            margin-bottom: 8px;
+        }
+
+        .input-wrap {
+            position: relative;
+        }
+
+        .input-icon {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #9ca3af;
+            font-size: 16px;
+            pointer-events: none;
+        }
+
+        .eye-btn {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            color: #6b7280;
+            font-size: 16px;
+        }
+
+        input {
+            width: 100%;
+            height: 56px;
+            border-radius: 16px;
+            border: 1px solid #e5e7eb;
+            outline: none;
+            padding: 0 16px 0 46px;
+            font-size: 15px;
+            color: #111827;
+            background: #fff;
+        }
+
+            input.password-input {
+                padding-right: 46px;
+            }
+
+            input:focus {
+                border-color: #a855f7;
+                box-shadow: 0 0 0 4px rgba(168,85,247,.12);
+            }
+
+        .text-danger,
+        .field-validation-error {
+            display: block;
+            color: #dc2626;
+            font-size: 12px;
+            margin-top: 6px;
+            font-weight: 600;
+        }
+
+        .summary-errors {
+            margin-bottom: 16px;
+            padding: 12px 14px;
+            border-radius: 14px;
+            background: #fef2f2;
+            border: 1px solid #fecaca;
+            color: #b91c1c;
+            font-size: 13px;
+        }
+
+        .hint-box {
+            margin-top: 8px;
+            padding: 14px 16px;
+            border-radius: 14px;
+            background: #f5f3ff;
+            color: #7c3aed;
+            border: 1px solid #ddd6fe;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .actions {
+            display: flex;
+            justify-content: space-between;
+            gap: 14px;
+            margin-top: 22px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            min-width: 150px;
+            height: 50px;
+            border-radius: 14px;
+            border: none;
+            font-size: 15px;
+            font-weight: 900;
+            cursor: pointer;
+            transition: .2s ease;
+        }
+
+            .btn:hover {
+                transform: translateY(-1px);
+            }
+
+        .btn-secondary {
+            background: #fff;
+            border: 1px solid #e5e7eb;
+            color: #374151;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #7c4dff, #ec4899);
+            color: #fff;
+            box-shadow: 0 14px 30px rgba(124,77,255,.25);
+        }
+
+        .bottom {
+            margin-top: 22px;
+            text-align: center;
+            color: #6b7280;
+            font-size: 14px;
+        }
+
+            .bottom a {
+                text-decoration: none;
+                color: #a855f7;
+                font-weight: 800;
+            }
+
+        .progress-card {
+            display: none;
+            margin-bottom: 22px;
+            padding: 18px;
+            border-radius: 16px;
+            background: #f5f3ff;
+            border: 1px solid #ddd6fe;
+        }
+
+            .progress-card.show {
+                display: block;
+            }
+
+        .progress-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            color: #7c3aed;
+            font-weight: 800;
+            font-size: 14px;
+        }
+
+        .progress-bar {
+            height: 10px;
+            width: 100%;
+            background: #ddd6fe;
+            border-radius: 999px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            width: 55%;
+            background: linear-gradient(135deg, #7c4dff, #ec4899);
+            border-radius: 999px;
+            transition: width .25s ease;
+        }
+
+        @@media (max-width: 768px) {
+            .grid-2 {
+                grid-template-columns: 1fr;
+            }
+
+            .stepper {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .step-line {
+                display: none;
+            }
+
+            .step {
+                min-width: unset;
+            }
+
+            .content,
+            .top,
+            .stepper {
+                padding-left: 20px;
+                padding-right: 20px;
+            }
+
+            .title {
+                font-size: 28px;
+            }
+
+            .btn {
+                width: 100%;
+            }
+
+            .actions {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="wrap">
+        <form asp-action="Register" asp-controller="Account" method="post" class="card" id="registerForm">
+            @Html.AntiForgeryToken()
+
+            <div class="top">
+                <div class="logo">🏛️</div>
+                <h1 class="title">Create your account</h1>
+                <div class="subtitle">Complete the steps below to get started.</div>
+            </div>
+
+            <div class="stepper">
+                <div class="step active" id="stepIndicator1">
+                    <div class="step-circle">1</div>
+                    <div class="step-text">
+                        <small>STEP 1</small>
+                        <strong>Your name</strong>
+                    </div>
+                </div>
+
+                <div class="step-line"></div>
+
+                <div class="step" id="stepIndicator2">
+                    <div class="step-circle">2</div>
+                    <div class="step-text">
+                        <small>STEP 2</small>
+                        <strong>Account info</strong>
+                    </div>
+                </div>
+
+                <div class="step-line"></div>
+
+                <div class="step" id="stepIndicator3">
+                    <div class="step-circle">3</div>
+                    <div class="step-text">
+                        <small>STEP 3</small>
+                        <strong>Security</strong>
+                    </div>
+                </div>
+            </div>
+
+            <div class="content">
+                <div asp-validation-summary="All" class="summary-errors"></div>
+
+                <div class="progress-card" id="progressCard">
+                    <div class="progress-top">
+                        <span>Creating user...</span>
+                        <span id="progressPercent">55%</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progressFill"></div>
+                    </div>
+                </div>
+
+                <!-- STEP 1 -->
+                <div class="step-panel active" id="panel1">
+                    <div class="section-title">Tell us your name</div>
+                    <div class="section-sub">Start by entering your full name.</div>
+
+                    <div class="field">
+                        <label asp-for="FullName"></label>
+                        <div class="input-wrap">
+                            <span class="input-icon">👤</span>
+                            <input asp-for="FullName" placeholder="Enter your full name" />
+                        </div>
+                        <span asp-validation-for="FullName" class="text-danger"></span>
+                    </div>
+
+                    <div class="actions">
+                        <div></div>
+                        <button type="button" class="btn btn-primary" onclick="goToStep(2)">Next →</button>
+                    </div>
+                </div>
+
+                <!-- STEP 2 -->
+                <div class="step-panel" id="panel2">
+                    <div class="section-title">Set up your account</div>
+                    <div class="section-sub">These details must be unique before you continue.</div>
+
+                    <div class="grid-2">
+                        <div class="field full">
+                            <label asp-for="Username"></label>
+                            <div class="input-wrap">
+                                <span class="input-icon">🪪</span>
+                                <input asp-for="Username" placeholder="Choose a unique username" />
+                            </div>
+                            <span asp-validation-for="Username" class="text-danger"></span>
+                        </div>
+
+                        <div class="field">
+                            <label asp-for="Email"></label>
+                            <div class="input-wrap">
+                                <span class="input-icon">✉️</span>
+                                <input asp-for="Email" placeholder="Enter your email address" />
+                            </div>
+                            <span asp-validation-for="Email" class="text-danger"></span>
+                        </div>
+
+                        <div class="field">
+                            <label asp-for="PhoneNumber"></label>
+                            <div class="input-wrap">
+                                <span class="input-icon">📞</span>
+                                <input asp-for="PhoneNumber" placeholder="Enter your phone number" />
+                            </div>
+                            <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="actions">
+                        <button type="button" class="btn btn-secondary" onclick="goToStep(1)">← Back</button>
+                        <button type="button" class="btn btn-primary" onclick="goToStep(3)">Next →</button>
+                    </div>
+                </div>
+
+                <!-- STEP 3 -->
+                <div class="step-panel" id="panel3">
+                    <div class="section-title">Create a password</div>
+                    <div class="section-sub">Finish by securing your account.</div>
+
+                    <div class="field">
+                        <label asp-for="Password"></label>
+                        <div class="input-wrap">
+                            <span class="input-icon">🔒</span>
+                            <input asp-for="Password" type="password" class="password-input" id="Password" placeholder="Create a strong password" />
+                            <button type="button" class="eye-btn" onclick="togglePassword('Password', this)">👁</button>
+                        </div>
+                        <span asp-validation-for="Password" class="text-danger"></span>
+                    </div>
+
+                    <div class="field">
+                        <label asp-for="ConfirmPassword"></label>
+                        <div class="input-wrap">
+                            <span class="input-icon">🔒</span>
+                            <input asp-for="ConfirmPassword" type="password" class="password-input" id="ConfirmPassword" placeholder="Re-enter your password" />
+                            <button type="button" class="eye-btn" onclick="togglePassword('ConfirmPassword', this)">👁</button>
+                        </div>
+                        <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                    </div>
+
+                    <div class="hint-box">
+                        Use at least 6 characters and include one special character for stronger security.
+                    </div>
+
+                    <div class="actions">
+                        <button type="button" class="btn btn-secondary" onclick="goToStep(2)">← Back</button>
+                        <button type="submit" class="btn btn-primary" id="submitBtn">Create Account</button>
+                    </div>
+                </div>
+
+                <div class="bottom">
+                    Already have an account?
+                    <a href="/Account/Login">Sign in</a>
+                </div>
+            </div>
+        </form>
+    </div>
+
     <partial name="_ValidationScriptsPartial" />
-}
+
+    <script>
+        let currentStep = 1;
+
+        function goToStep(step) {
+            if (step > currentStep) {
+                if (!validateCurrentStep()) return;
+            }
+
+            currentStep = step;
+
+            for (let i = 1; i <= 3; i++) {
+                document.getElementById("panel" + i).classList.remove("active");
+                document.getElementById("stepIndicator" + i).classList.remove("active", "done");
+            }
+
+            document.getElementById("panel" + step).classList.add("active");
+
+            for (let i = 1; i <= 3; i++) {
+                if (i < step) {
+                    document.getElementById("stepIndicator" + i).classList.add("done");
+                } else if (i === step) {
+                    document.getElementById("stepIndicator" + i).classList.add("active");
+                }
+            }
+        }
+
+        function validateCurrentStep() {
+            if (currentStep === 1) {
+                const fullName = document.getElementById("FullName");
+                if (!fullName.value.trim()) {
+                    fullName.focus();
+                    return false;
+                }
+            }
+
+            if (currentStep === 2) {
+                const username = document.getElementById("Username");
+                const email = document.getElementById("Email");
+                const phone = document.getElementById("PhoneNumber");
+
+                if (!username.value.trim()) {
+                    username.focus();
+                    return false;
+                }
+
+                if (!email.value.trim()) {
+                    email.focus();
+                    return false;
+                }
+
+                if (!phone.value.trim()) {
+                    phone.focus();
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        function togglePassword(id, btn) {
+            const input = document.getElementById(id);
+            if (input.type === "password") {
+                input.type = "text";
+                btn.textContent = "🙈";
+            } else {
+                input.type = "password";
+                btn.textContent = "👁";
+            }
+        }
+
+        document.getElementById("registerForm").addEventListener("submit", function () {
+            if (!validateCurrentStep()) return;
+
+            const progressCard = document.getElementById("progressCard");
+            const progressFill = document.getElementById("progressFill");
+            const progressPercent = document.getElementById("progressPercent");
+            const submitBtn = document.getElementById("submitBtn");
+
+            progressCard.classList.add("show");
+            submitBtn.disabled = true;
+            submitBtn.textContent = "Creating user...";
+
+            let percent = 55;
+            progressFill.style.width = percent + "%";
+            progressPercent.textContent = percent + "%";
+
+            const interval = setInterval(function () {
+                if (percent < 90) {
+                    percent += 5;
+                    progressFill.style.width = percent + "%";
+                    progressPercent.textContent = percent + "%";
+                } else {
+                    clearInterval(interval);
+                }
+            }, 180);
+        });
+    </script>
+</body>
+</html>

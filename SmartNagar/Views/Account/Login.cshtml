@@ -1,77 +1,187 @@
-﻿@model SmartNagar.ViewModel.LoginViewModel
+﻿@model SmartNagar.ViewModels.LoginVM
 @{
+    Layout = null;
     ViewData["Title"] = "Login";
 }
 
-<style>
-    body {
-        background: hsla(9, 100%, 64%, 0.5);
-        min-height: 100vh;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-family: Arial, sans-serif;
-    }
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Login | Smart Nagar</title>
 
-    .auth-card {
-        background: #fff;
-        padding: 30px;
-        border-radius: 10px;
-        width: 100%;
-        max-width: 400px;
-        box-shadow: 0 10px 25px rgba(0,0,0,0.15);
-    }
+    <style>
+        * {
+            box-sizing: border-box
+        }
 
-    .welcome-text {
-        text-align: center;
-        font-size: 1.5rem;
-        margin-bottom: 10px;
-        color: #333;
-    }
+        body {
+            margin: 0;
+            min-height: 100vh;
+            font-family: "Segoe UI",system-ui,Arial;
+            background: linear-gradient(135deg, #7c4dff, #ec4899);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
 
-    .login-heading {
-        text-align: center;
-        margin-bottom: 20px;
-        font-weight: bold;
-    }
-</style>
+        .card {
+            width: 100%;
+            max-width: 420px;
+            background: #fff;
+            border-radius: 18px;
+            padding: 28px 26px 30px;
+            box-shadow: 0 25px 60px rgba(124,77,255,.25);
+        }
 
-<div class="auth-card">
-    <!-- Welcome Back message with emoji -->
-    <div class="welcome-text">Welcome Back 😊</div>
+        .icon {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: #a855f7;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 10px;
+            font-size: 22px;
+        }
 
-    <h2 class="login-heading">Login</h2>
+        h2 {
+            text-align: center;
+            margin: 10px 0 4px;
+            font-weight: 900;
+            color: #0b1220;
+        }
 
-    <form asp-action="Login" method="post">
-        @Html.AntiForgeryToken()
+        .sub {
+            text-align: center;
+            color: #6a768a;
+            font-size: 13px;
+            margin-bottom: 10px;
+        }
 
-        <div asp-validation-summary="All" class="text-danger mb-3"></div>
+        .success {
+            text-align: center;
+            font-size: 13px;
+            font-weight: 800;
+            color: #7c3aed;
+            margin-bottom: 12px;
+        }
 
-        <div class="mb-3">
-            <label asp-for="Email"></label>
-            <input asp-for="Email" class="form-control" />
-            <span asp-validation-for="Email" class="text-danger"></span>
+        label {
+            font-size: 13px;
+            font-weight: 700;
+            color: #24324b;
+            display: block;
+            margin-bottom: 6px;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px 14px;
+            border-radius: 10px;
+            border: 1px solid #dbe4f1;
+            font-size: 14px;
+            outline: none;
+        }
+
+            input:focus {
+                border-color: #a855f7;
+                box-shadow: 0 0 0 3px rgba(168,85,247,.15);
+            }
+
+        .field {
+            margin-bottom: 14px;
+        }
+
+        .forgot {
+            text-align: right;
+            margin: 6px 0 14px;
+        }
+
+            .forgot a {
+                font-size: 12px;
+                color: #7c4dff;
+                text-decoration: none;
+                font-weight: 700;
+            }
+
+        .btn {
+            width: 100%;
+            padding: 12px;
+            border-radius: 12px;
+            border: none;
+            font-weight: 900;
+            font-size: 15px;
+            cursor: pointer;
+            background: linear-gradient(135deg, #7c4dff, #ec4899);
+            color: #fff;
+            box-shadow: 0 14px 30px rgba(124,77,255,.30);
+        }
+
+        .bottom {
+            margin-top: 16px;
+            text-align: center;
+            font-size: 13px;
+            color: #6a768a;
+        }
+
+            .bottom a {
+                color: #a855f7;
+                font-weight: 800;
+                text-decoration: none;
+            }
+
+        .error {
+            color: #d12f2f;
+            font-size: 12px;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+
+    <form asp-action="Login" asp-controller="Account" method="post" class="card">
+
+        <div class="icon">🏛️</div>
+
+        <h2>Smart Nagar System</h2>
+        <div class="sub">Login to access municipal services</div>
+
+        @if (TempData["SuccessMsg"] != null)
+        {
+            <div class="success">
+                @TempData["SuccessMsg"]
+            </div>
+        }
+
+        <div class="error" asp-validation-summary="All"></div>
+
+        <div class="field">
+            <label>Email Address</label>
+            <input asp-for="Email" placeholder="Enter your email" />
         </div>
 
-        <div class="mb-3">
-            <label asp-for="Password"></label>
-            <input asp-for="Password" class="form-control" />
-            <span asp-validation-for="Password" class="text-danger"></span>
+        <div class="field">
+            <label>Password</label>
+            <input asp-for="Password" type="password" placeholder="Enter your password" />
         </div>
 
-        <div class="form-check mb-3">
-            <input asp-for="RememberMe" class="form-check-input" />
-            <label asp-for="RememberMe" class="form-check-label"></label>
+        <div class="forgot">
+            <a href="/Account/ForgotPassword">Forgot Password?</a>
         </div>
 
-        <button class="btn btn-primary w-100">Login</button>
+        <button class="btn" type="submit">Login</button>
 
-        <div class="text-center mt-3">
-            <a asp-action="Register">Don't have an account? Register</a>
+        <div class="bottom">
+            Don’t have an account?
+            <a href="/Account/Register">Register Now</a>
         </div>
+
     </form>
-</div>
 
-@section Scripts {
-    <partial name="_ValidationScriptsPartial" />
-}
+</body>
+</html>

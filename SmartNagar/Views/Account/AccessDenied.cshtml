@@ -1,0 +1,121 @@
+﻿@{
+    Layout = null;
+    ViewData["Title"] = "Access Denied";
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Access Denied | Smart Nagar</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            font-family: "Segoe UI", Arial, sans-serif;
+            background: linear-gradient(135deg, #ede9fe, #f5f3ff);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+        }
+
+        .card {
+            width: 100%;
+            max-width: 520px;
+            background: #ffffff;
+            border-radius: 24px;
+            padding: 36px 30px;
+            text-align: center;
+            box-shadow: 0 25px 70px rgba(109, 40, 217, 0.15);
+        }
+
+        .icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 18px;
+            border-radius: 50%;
+            display: grid;
+            place-items: center;
+            background: #ede9fe;
+            color: #7c3aed;
+            font-size: 36px;
+            font-weight: 900;
+            box-shadow: 0 10px 30px rgba(124, 58, 237, 0.2);
+        }
+
+        h1 {
+            margin: 0 0 12px;
+            font-size: 30px;
+            color: #4c1d95;
+        }
+
+        p {
+            margin: 0 0 26px;
+            color: #6b7280;
+            font-size: 15px;
+            line-height: 1.7;
+        }
+
+        .actions {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            text-decoration: none;
+            padding: 12px 18px;
+            border-radius: 14px;
+            font-weight: 700;
+            transition: .25s ease;
+            display: inline-block;
+        }
+
+        .btn-home {
+            background: #7c3aed;
+            color: white;
+            box-shadow: 0 12px 30px rgba(124, 58, 237, 0.25);
+        }
+
+            .btn-home:hover {
+                background: #6d28d9;
+                transform: translateY(-2px);
+            }
+
+        .btn-login {
+            background: #a78bfa;
+            color: white;
+        }
+
+            .btn-login:hover {
+                background: #8b5cf6;
+                transform: translateY(-2px);
+            }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <div class="icon">🚫</div>
+
+        <h1>Access Denied</h1>
+
+        <p>
+            You don’t have permission to access this page.
+            Please login with the correct role or go back safely.
+        </p>
+
+        <div class="actions">
+            <a class="btn btn-home" href="/">🏠 Home</a>
+            <a class="btn btn-login" href="/Account/Login">🔑 Login</a>
+        </div>
+    </div>
+</body>
+</html>
