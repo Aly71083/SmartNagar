@@ -1,0 +1,325 @@
+﻿@{
+    var mode = ViewBag.ChatbotMode as string ?? "guest";
+
+    var suggestions = mode == "citizen"
+        ? new[]
+        {
+            "How do I submit a complaint?",
+            "How can I track my complaint?",
+            "Where is garbage schedule?",
+            "How do I contact emergency help?"
+        }
+        : new[]
+        {
+            "How do I login?",
+            "How do I sign up?",
+            "What is Smart Nagar?",
+            "What can I do on this platform?"
+        };
+}
+
+<div class="sn-chatbot-wrap">
+    <div class="sn-chatbox" id="snChatbox">
+        <div class="sn-chatbox-header">
+            <div class="sn-chatbox-title">🤖 Smart Nagar AI</div>
+            <button type="button" class="sn-chatbox-close" onclick="toggleSmartNagarChat()">×</button>
+        </div>
+
+        <div class="sn-chatbox-body" id="snChatMessages">
+            <div class="sn-msg sn-bot-msg">
+                Hello! How can I help you today?
+            </div>
+        </div>
+
+        <div class="sn-suggestions-wrap">
+            <div class="sn-suggestions-title">Quick Questions</div>
+            <div class="sn-suggestions" id="snSuggestionBox">
+                @foreach (var s in suggestions)
+                {
+                    <button type="button" class="sn-suggestion-chip" onclick="sendSuggestedMessage('@s')">@s</button>
+                }
+            </div>
+        </div>
+
+        <div class="sn-chatbox-footer">
+            <input type="text"
+                   id="snChatInput"
+                   class="sn-chat-input"
+                   placeholder="Ask something..."
+                   onkeydown="if(event.key==='Enter'){ sendSmartNagarMessage(); }" />
+
+            <button type="button" class="sn-send-btn" onclick="sendSmartNagarMessage()">➤</button>
+        </div>
+    </div>
+
+    <button type="button" class="sn-floating-btn" onclick="toggleSmartNagarChat()">
+        💬
+    </button>
+</div>
+
+<style>
+    .sn-chatbot-wrap {
+        position: fixed;
+        right: 22px;
+        bottom: 22px;
+        z-index: 99999;
+        font-family: "Segoe UI", Arial, sans-serif;
+    }
+
+    .sn-floating-btn {
+        width: 58px;
+        height: 58px;
+        border: none;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #7c4dff, #a855f7);
+        color: #fff;
+        font-size: 24px;
+        cursor: pointer;
+        box-shadow: 0 16px 35px rgba(124, 77, 255, .30);
+        transition: .2s ease;
+    }
+
+        .sn-floating-btn:hover {
+            transform: translateY(-2px);
+        }
+
+    .sn-chatbox {
+        width: 365px;
+        max-width: calc(100vw - 30px);
+        height: 500px;
+        background: #fff;
+        border: 1px solid #e9ddff;
+        border-radius: 20px;
+        box-shadow: 0 20px 55px rgba(82, 42, 140, .22);
+        display: none;
+        flex-direction: column;
+        overflow: hidden;
+        margin-bottom: 10px;
+    }
+
+    .sn-chatbox-header {
+        background: linear-gradient(135deg, #8b5cf6, #a78bfa);
+        color: #fff;
+        padding: 14px 16px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .sn-chatbox-title {
+        font-size: 18px;
+        font-weight: 900;
+    }
+
+    .sn-chatbox-close {
+        border: none;
+        background: transparent;
+        color: #fff;
+        font-size: 22px;
+        cursor: pointer;
+        font-weight: 900;
+        line-height: 1;
+    }
+
+    .sn-chatbox-body {
+        flex: 1;
+        padding: 12px;
+        overflow-y: auto;
+        background: #faf7ff;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .sn-msg {
+        max-width: 86%;
+        padding: 10px 12px;
+        border-radius: 14px;
+        font-size: 14px;
+        line-height: 1.6;
+        word-break: break-word;
+        white-space: pre-wrap;
+    }
+
+    .sn-bot-msg {
+        align-self: flex-start;
+        background: #ede9fe;
+        color: #4c1d95;
+    }
+
+    .sn-user-msg {
+        align-self: flex-end;
+        background: linear-gradient(135deg, #7c4dff, #8b5cf6);
+        color: #fff;
+        text-align: right;
+    }
+
+    .sn-suggestions-wrap {
+        padding: 10px 12px 8px;
+        border-top: 1px solid #eee3ff;
+        background: #ffffff;
+    }
+
+    .sn-suggestions-title {
+        font-size: 12px;
+        font-weight: 900;
+        color: #7c3aed;
+        margin-bottom: 8px;
+    }
+
+    .sn-suggestions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        max-height: 90px;
+        overflow-y: auto;
+    }
+
+    .sn-suggestion-chip {
+        border: 1px solid #d9c6ff;
+        background: #fff;
+        color: #6d28d9;
+        border-radius: 999px;
+        padding: 8px 12px;
+        font-size: 12px;
+        font-weight: 800;
+        cursor: pointer;
+        transition: .2s ease;
+    }
+
+        .sn-suggestion-chip:hover {
+            background: #f3ecff;
+        }
+
+    .sn-chatbox-footer {
+        padding: 10px;
+        border-top: 1px solid #eee3ff;
+        background: #fff;
+        display: flex;
+        gap: 8px;
+        align-items: center;
+    }
+
+    .sn-chat-input {
+        flex: 1;
+        height: 42px;
+        border: 1px solid #d8c8fa;
+        border-radius: 12px;
+        padding: 0 12px;
+        outline: none;
+        font-size: 14px;
+    }
+
+        .sn-chat-input:focus {
+            border-color: #8b5cf6;
+            box-shadow: 0 0 0 3px rgba(139,92,246,.12);
+        }
+
+    .sn-send-btn {
+        width: 42px;
+        height: 42px;
+        border: none;
+        border-radius: 12px;
+        background: linear-gradient(135deg, #7c4dff, #8b5cf6);
+        color: #fff;
+        font-size: 16px;
+        cursor: pointer;
+        font-weight: 900;
+    }
+
+    .sn-typing {
+        opacity: .8;
+        font-style: italic;
+    }
+</style>
+
+<script>
+    function toggleSmartNagarChat() {
+        const box = document.getElementById("snChatbox");
+        box.style.display = box.style.display === "flex" ? "none" : "flex";
+    }
+
+    function addSmartNagarMessage(text, type) {
+        const messages = document.getElementById("snChatMessages");
+        const msg = document.createElement("div");
+        msg.className = type === "user" ? "sn-msg sn-user-msg" : "sn-msg sn-bot-msg";
+        msg.innerText = text;
+        messages.appendChild(msg);
+        messages.scrollTop = messages.scrollHeight;
+    }
+
+    function sendSuggestedMessage(text) {
+        document.getElementById("snChatInput").value = text;
+        sendSmartNagarMessage();
+    }
+
+    async function sendSmartNagarMessage() {
+        const input = document.getElementById("snChatInput");
+        const text = input.value.trim();
+
+        if (!text) return;
+
+        addSmartNagarMessage(text, "user");
+        input.value = "";
+
+        const messages = document.getElementById("snChatMessages");
+        const typing = document.createElement("div");
+        typing.className = "sn-msg sn-bot-msg sn-typing";
+        typing.id = "snTypingMsg";
+        typing.innerText = "Typing...";
+        messages.appendChild(typing);
+        messages.scrollTop = messages.scrollHeight;
+
+        try {
+            const res = await fetch('/Chatbot/Ask', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    message: text,
+                    mode: "@mode"
+                })
+            });
+
+            const typingMsg = document.getElementById("snTypingMsg");
+            if (typingMsg) typingMsg.remove();
+
+            if (!res.ok) {
+                addSmartNagarMessage("Server error: " + res.status + ". Please check chatbot setup.", "bot");
+                return;
+            }
+
+            const data = await res.json();
+            typeBotReply(data.reply || "No response received.");
+        }
+        catch (err) {
+            const typingMsg = document.getElementById("snTypingMsg");
+            if (typingMsg) typingMsg.remove();
+
+            addSmartNagarMessage("Connection failed. Please check chatbot setup.", "bot");
+            console.error(err);
+        }
+    }
+
+    function typeBotReply(text) {
+        const messages = document.getElementById("snChatMessages");
+        const msg = document.createElement("div");
+        msg.className = "sn-msg sn-bot-msg";
+        messages.appendChild(msg);
+
+        let i = 0;
+        const speed = 18;
+
+        function type() {
+            if (i < text.length) {
+                msg.innerText += text.charAt(i);
+                i++;
+                messages.scrollTop = messages.scrollHeight;
+                setTimeout(type, speed);
+            }
+        }
+
+        type();
+    }
+</script>

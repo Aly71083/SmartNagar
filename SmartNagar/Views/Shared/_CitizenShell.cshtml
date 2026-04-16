@@ -1,0 +1,122 @@
+﻿@{
+    Layout = null;
+    var fullName = ViewBag.FullName as string ?? "Citizen";
+    var active = ViewBag.Active as string ?? "Home";
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Citizen Portal - Smart Nagar</title>
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', system-ui, Arial;
+            background: #f5f7fb;
+        }
+
+        .layout {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .side {
+            width: 260px;
+            background: linear-gradient(180deg,#3aa84b,#2e8f3d);
+            color: white;
+            padding: 20px;
+        }
+
+        .menu {
+            margin-top: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+            .menu a {
+                padding: 10px;
+                border-radius: 10px;
+                color: white;
+                text-decoration: none;
+                font-weight: 700;
+                background: rgba(255,255,255,0.1);
+            }
+
+                .menu a.active {
+                    background: rgba(255,255,255,0.3);
+                }
+
+        .main {
+            flex: 1;
+            padding: 20px;
+        }
+
+        .topbar {
+            background: white;
+            padding: 15px;
+            border-radius: 12px;
+            font-weight: bold;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logoutBtn {
+            border: none;
+            padding: 10px 14px;
+            border-radius: 12px;
+            font-weight: 900;
+            cursor: pointer;
+            background: #0b5cff;
+            color: #fff;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="layout">
+
+        <!-- SIDEBAR -->
+        <aside class="side">
+            <h2>🏛 Smart Nagar</h2>
+
+            <div class="menu">
+                <a class="@(active == "Home" ? "active" : "")" href="/Citizen/Dashboard">Home</a>
+                <a class="@(active == "MyComplaints" ? "active" : "")" href="/Citizen/MyComplaints">My Complaints</a>
+                <a class="@(active == "SubmitComplaint" ? "active" : "")" href="/Citizen/SubmitComplaint">Submit Complaint</a>
+                <a class="@(active == "TrackStatus" ? "active" : "")" href="/Citizen/TrackStatus">Track Status</a>
+            </div>
+
+            <div style="margin-top:30px;">
+                <strong>@fullName</strong>
+            </div>
+        </aside>
+
+        <!-- MAIN -->
+        <main class="main">
+            <div class="topbar">
+                <div>Welcome, @fullName 👋</div>
+
+                <form method="post" action="/Account/Logout" style="margin:0;">
+                    @Html.AntiForgeryToken()
+                    <button class="logoutBtn" type="submit">Logout</button>
+                </form>
+            </div>
+
+            <div style="margin-top:20px;">
+                @RenderBody()
+            </div>
+        </main>
+
+    </div>
+</body>
+</html>
