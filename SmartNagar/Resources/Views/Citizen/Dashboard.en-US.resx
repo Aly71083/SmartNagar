@@ -1,0 +1,67 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+	<data name="Quick Access">
+		<value>Quick Access to Services</value>
+	</data>
+	<data name="Quick Access Desc">
+		<value>Report issues, track complaints, and stay updated with municipal activities</value>
+	</data>
+
+	<data name="Total Complaints">
+		<value>Total Complaints</value>
+	</data>
+	<data name="In Progress">
+		<value>In Progress</value>
+	</data>
+	<data name="Pending">
+		<value>Pending</value>
+	</data>
+	<data name="Resolved">
+		<value>Resolved</value>
+	</data>
+
+	<data name="Submit Complaint">
+		<value>Submit Complaint</value>
+	</data>
+	<data name="Submit Complaint Desc">
+		<value>Report civic issues like roads, water, waste management instantly</value>
+	</data>
+
+	<data name="Track Status">
+		<value>Track Status</value>
+	</data>
+	<data name="Track Status Desc">
+		<value>Monitor real-time status updates of your submitted complaints</value>
+	</data>
+
+	<data name="Emergency">
+		<value>Emergency</value>
+	</data>
+	<data name="Emergency Desc">
+		<value>Quick access to police, ambulance, and fire services</value>
+	</data>
+
+	<data name="Garbage Schedule">
+		<value>Garbage Schedule</value>
+	</data>
+	<data name="Garbage Schedule Desc">
+		<value>View area-wise garbage collection days and timings</value>
+	</data>
+
+	<data name="Notices">
+		<value>Notices</value>
+	</data>
+	<data name="Notices Desc">
+		<value>Stay updated with latest municipal announcements</value>
+	</data>
+
+	<data name="My Location">
+		<value>My Location</value>
+	</data>
+	<data name="No Location">
+		<value>No location saved yet.</value>
+	</data>
+	<data name="Use Location">
+		<value>Use my location</value>
+	</data>
+</root>

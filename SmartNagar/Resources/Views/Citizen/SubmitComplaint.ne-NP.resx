@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+	<data name="SubmitYourComplaint" xml:space="preserve"><value>आफ्नो गुनासो दर्ता गर्नुहोस्</value></data>
+	<data name="HeroSubtitle" xml:space="preserve"><value>हामी तपाईंको समुदायका समस्याहरू समाधान गर्न यहाँ छौं</value></data>
+	<data name="Category" xml:space="preserve"><value>श्रेणी</value></data>
+	<data name="Details" xml:space="preserve"><value>विवरण</value></data>
+	<data name="Review" xml:space="preserve"><value>पुनरावलोकन</value></data>
+	<data name="SelectComplaintCategory" xml:space="preserve"><value>गुनासोको श्रेणी छान्नुहोस्</value></data>
+	<data name="ChooseCategoryDesc" xml:space="preserve"><value>तपाईंको समस्यासँग सबैभन्दा मिल्ने श्रेणी छान्नुहोस्</value></data>
+	<data name="RoadInfrastructure" xml:space="preserve"><value>सडक तथा पूर्वाधार</value></data>
+	<data name="WaterSupply" xml:space="preserve"><value>पानी आपूर्ति</value></data>
+	<data name="GarbageCollection" xml:space="preserve"><value>फोहोर संकलन</value></data>
+	<data name="StreetLights" xml:space="preserve"><value>सडक बत्ती</value></data>
+	<data name="DrainageSewage" xml:space="preserve"><value>ढल तथा निकास</value></data>
+	<data name="ParksGardens" xml:space="preserve"><value>पार्क तथा बगैंचा</value></data>
+	<data name="IllegalConstruction" xml:space="preserve"><value>अवैध निर्माण</value></data>
+	<data name="NoisePollution" xml:space="preserve"><value>ध्वनि प्रदूषण</value></data>
+	<data name="StrayAnimals" xml:space="preserve"><value>छाडा जनावर</value></data>
+	<data name="Electricity" xml:space="preserve"><value>विद्युत</value></data>
+	<data name="AirPollution" xml:space="preserve"><value>वायु प्रदूषण</value></data>
+	<data name="OtherIssues" xml:space="preserve"><value>अन्य समस्या</value></data>
+	<data name="SelectCategoryError" xml:space="preserve"><value>कृपया अगाडि बढ्न श्रेणी छान्नुहोस्।</value></data>
+	<data name="Cancel" xml:space="preserve"><value>रद्द गर्नुहोस्</value></data>
+	<data name="NextStep" xml:space="preserve"><value>अर्को चरण ➜</value></data>
+</root>

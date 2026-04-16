@@ -1,0 +1,64 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+	<resheader name="resmimetype">
+		<value>text/microsoft-resx</value>
+	</resheader>
+	<resheader name="version">
+		<value>2.0</value>
+	</resheader>
+	<resheader name="reader">
+		<value>System.Resources.ResXResourceReader, System.Windows.Forms, ...</value>
+	</resheader>
+	<resheader name="writer">
+		<value>System.Resources.ResXResourceWriter, System.Windows.Forms, ...</value>
+	</resheader>
+
+	<data name="Citizen Portal" xml:space="preserve">
+    <value>Citizen Portal</value>
+  </data>
+	<data name="Main" xml:space="preserve">
+    <value>Main</value>
+  </data>
+	<data name="Services" xml:space="preserve">
+    <value>Services</value>
+  </data>
+	<data name="Information" xml:space="preserve">
+    <value>Information</value>
+  </data>
+	<data name="Home" xml:space="preserve">
+    <value>Home</value>
+  </data>
+	<data name="My Complaints" xml:space="preserve">
+    <value>My Complaints</value>
+  </data>
+	<data name="Submit Complaint" xml:space="preserve">
+    <value>Submit Complaint</value>
+  </data>
+	<data name="Track Status" xml:space="preserve">
+    <value>Track Status</value>
+  </data>
+	<data name="Emergency" xml:space="preserve">
+    <value>Emergency</value>
+  </data>
+	<data name="Garbage Schedule" xml:space="preserve">
+    <value>Garbage Schedule</value>
+  </data>
+	<data name="Notices" xml:space="preserve">
+    <value>Notices</value>
+  </data>
+	<data name="My Profile" xml:space="preserve">
+    <value>My Profile</value>
+  </data>
+	<data name="Welcome Back" xml:space="preserve">
+    <value>Welcome Back</value>
+  </data>
+	<data name="Portal Subtitle" xml:space="preserve">
+    <value>Your one-stop portal for all municipal services</value>
+  </data>
+	<data name="Citizen" xml:space="preserve">
+    <value>Citizen</value>
+  </data>
+	<data name="Logout" xml:space="preserve">
+    <value>Logout</value>
+  </data>
+</root>

@@ -1,0 +1,58 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+	<resheader name="resmimetype">
+		<value>text/microsoft-resx</value>
+	</resheader>
+	<resheader name="version">
+		<value>2.0</value>
+	</resheader>
+	<resheader name="reader">
+		<value>System.Resources.ResXResourceReader, System.Windows.Forms, ...</value>
+	</resheader>
+	<resheader name="writer">
+		<value>System.Resources.ResXResourceWriter, System.Windows.Forms, ...</value>
+	</resheader>
+
+	<data name="Officer Portal" xml:space="preserve">
+    <value>Officer Portal</value>
+  </data>
+	<data name="Main" xml:space="preserve">
+    <value>Main</value>
+  </data>
+	<data name="Management" xml:space="preserve">
+    <value>Management</value>
+  </data>
+	<data name="Reports" xml:space="preserve">
+    <value>Reports</value>
+  </data>
+	<data name="Dashboard" xml:space="preserve">
+    <value>Dashboard</value>
+  </data>
+	<data name="Complaints" xml:space="preserve">
+    <value>Complaints</value>
+  </data>
+	<data name="My Assignments" xml:space="preserve">
+    <value>My Assignments</value>
+  </data>
+	<data name="Add Citizen" xml:space="preserve">
+    <value>Add Citizen</value>
+  </data>
+	<data name="Analytics" xml:space="preserve">
+    <value>Analytics</value>
+  </data>
+	<data name="Active Users Map" xml:space="preserve">
+    <value>Active Users Map</value>
+  </data>
+	<data name="Officer Dashboard" xml:space="preserve">
+    <value>Officer Dashboard</value>
+  </data>
+	<data name="Officer Subtitle" xml:space="preserve">
+    <value>Monitor complaints, assignments, and municipal operations</value>
+  </data>
+	<data name="Officer" xml:space="preserve">
+    <value>Officer</value>
+  </data>
+	<data name="Logout" xml:space="preserve">
+    <value>Logout</value>
+  </data>
+</root>

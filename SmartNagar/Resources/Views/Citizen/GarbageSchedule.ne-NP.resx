@@ -1,0 +1,30 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+	<data name="GarbageCollectionSchedule" xml:space="preserve"><value>फोहोर संकलन तालिका</value></data>
+	<data name="DhangadhiSubMetropolitanCity" xml:space="preserve"><value>धनगढी उप-महानगरपालिका</value></data>
+	<data name="WardWiseGarbageCollection" xml:space="preserve"><value>वडा अनुसार फोहोर संकलन</value></data>
+	<data name="SelectWardToView" xml:space="preserve"><value>संकलन विवरण हेर्न आफ्नो वडा छान्नुहोस्।</value></data>
+	<data name="CollectionTime" xml:space="preserve"><value>संकलन समय</value></data>
+	<data name="WasteType" xml:space="preserve"><value>फोहोरको प्रकार</value></data>
+	<data name="AllTypesOfWaste" xml:space="preserve"><value>सबै प्रकारका फोहोर</value></data>
+	<data name="SelectWardLabel" xml:space="preserve"><value>वडा छान्नुहोस् (१–१९)</value></data>
+	<data name="SelectWardOption" xml:space="preserve"><value>-- वडा छान्नुहोस् --</value></data>
+	<data name="Ward" xml:space="preserve"><value>वडा</value></data>
+	<data name="ImportantGuidelines" xml:space="preserve"><value>महत्त्वपूर्ण निर्देशनहरू</value></data>
+	<data name="GuidelinesSub" xml:space="preserve"><value>उचित फोहोर व्यवस्थापनका लागि यी नियमहरू पालना गर्नुहोस्</value></data>
+	<data name="SegregateWaste" xml:space="preserve"><value>फोहोर छुट्याउनुहोस्</value></data>
+	<data name="SegregateWasteDesc" xml:space="preserve"><value>भिजेको र सुक्खा फोहोर फरक डस्टबिनमा राख्नुहोस्। हरियो डस्टबिन भिजेको फोहोरका लागि र निलो डस्टबिन सुक्खा फोहोरका लागि प्रयोग गर्नुहोस्।</value></data>
+	<data name="BeOnTime" xml:space="preserve"><value>समयमै तयार राख्नुहोस्</value></data>
+	<data name="BeOnTimeDesc" xml:space="preserve"><value>संकलन समयभन्दा अघि आफ्नो डस्टबिन तयार राख्नुहोस्। ढिलो राख्दा संकलन छुट्न सक्छ।</value></data>
+	<data name="HazardousWaste" xml:space="preserve"><value>जोखिमयुक्त फोहोर</value></data>
+	<data name="HazardousWasteDesc" xml:space="preserve"><value>ब्याट्री, रसायन र विद्युतीय सामग्रीजस्ता जोखिमयुक्त वस्तुहरू छुट्टै तोकिएको केन्द्रमा फाल्नुहोस्।</value></data>
+	<data name="AvoidPenalties" xml:space="preserve"><value>जरिवाना बचाउनुहोस्</value></data>
+	<data name="AvoidPenaltiesDesc" xml:space="preserve"><value>फोहोर छुट्याउने नियम नमान्दा जरिवाना हुन सक्छ। हाम्रो सहर सफा र हरियो राख्न सहयोग गर्नुहोस्।</value></data>
+	<data name="PleaseSelectWard" xml:space="preserve"><value>तालिका हेर्न कृपया वडा छान्नुहोस्।</value></data>
+	<data name="CollectionDetails" xml:space="preserve"><value>संकलन विवरण</value></data>
+	<data name="CollectionDays" xml:space="preserve"><value>संकलन दिनहरू</value></data>
+	<data name="SundayFriday" xml:space="preserve"><value>आइतबार – शुक्रबार</value></data>
+	<data name="Time" xml:space="preserve"><value>समय</value></data>
+	<data name="RemindMe" xml:space="preserve"><value>मलाई सम्झाइदिनुहोस्</value></data>
+	<data name="MyReminders" xml:space="preserve"><value>मेरा रिमाइन्डरहरू</value></data>
+</root>

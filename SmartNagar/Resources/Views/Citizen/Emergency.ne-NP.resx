@@ -1,0 +1,48 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+	<data name="EmergencyServices" xml:space="preserve"><value>आपतकालीन सेवाहरू</value></data>
+	<data name="EmergencyHint" xml:space="preserve"><value>नेपाल आपतकालीन हटलाइन छिटो पहुँच</value></data>
+	<data name="EmergencyQuickActions" xml:space="preserve"><value>आपतकालीन छिटो कार्यहरू</value></data>
+	<data name="EmergencyHeroSub1" xml:space="preserve"><value>यदि तपाईं वा तपाईं नजिक कोही खतरामा हुनुहुन्छ भने तुरुन्तै आपतकालीन सेवामा फोन गर्नुहोस्।</value></data>
+	<data name="EmergencyHeroSub2" xml:space="preserve"><value>तलका बटनहरू प्रयोग गरेर फोन गर्नुहोस् वा नम्बर कपी गर्नुहोस्।</value></data>
+	<data name="EmergencyTipMobile" xml:space="preserve"><value>सुझाव: मोबाइलमा “Call” थिच्दा डायलर खुल्छ।</value></data>
+	<data name="Police" xml:space="preserve"><value>प्रहरी</value></data>
+	<data name="PoliceDesc" xml:space="preserve"><value>अपराध, धम्की, हिंसा, शंकास्पद गतिविधि, सार्वजनिक सुरक्षा।</value></data>
+	<data name="Ambulance" xml:space="preserve"><value>एम्बुलेन्स</value></data>
+	<data name="AmbulanceDesc" xml:space="preserve"><value>चिकित्सकीय आपतकाल, गम्भीर चोट, अचानक बिरामी।</value></data>
+	<data name="FireBrigade" xml:space="preserve"><value>दमकल</value></data>
+	<data name="FireBrigadeDesc" xml:space="preserve"><value>आगलागी, धुवाँ, विद्युतीय आगलागीको जोखिम, उद्धार सहयोग।</value></data>
+	<data name="ArmedPoliceForce" xml:space="preserve"><value>सशस्त्र प्रहरी बल</value></data>
+	<data name="ArmedPoliceForceDesc" xml:space="preserve"><value>उच्च जोखिमका घटना, विशेष सुरक्षा अवस्था।</value></data>
+	<data name="WomenChildrenSeniorService" xml:space="preserve"><value>महिला, बालबालिका तथा ज्येष्ठ नागरिक सेवा</value></data>
+	<data name="WomenChildrenSeniorServiceDesc" xml:space="preserve"><value>महिला, बालबालिका र ज्येष्ठ नागरिकको सुरक्षाका लागि सहयोग।</value></data>
+	<data name="ChildHelpline" xml:space="preserve"><value>बाल हेल्पलाइन</value></data>
+	<data name="ChildHelplineDesc" xml:space="preserve"><value>बाल संरक्षण, दुव्र्यवहार रिपोर्ट, उद्धार तथा सहयोग।</value></data>
+	<data name="TouristPolice" xml:space="preserve"><value>पर्यटक प्रहरी</value></data>
+	<data name="TouristPoliceDesc" xml:space="preserve"><value>पर्यटक सहायता, हराएका सामान, यात्रा सहयोग।</value></data>
+	<data name="TrafficPolice" xml:space="preserve"><value>ट्राफिक प्रहरी</value></data>
+	<data name="TrafficPoliceDesc" xml:space="preserve"><value>दुर्घटना, बाटो अवरोध, ट्राफिक आपतकाल तथा सहयोग।</value></data>
+	<data name="Call" xml:space="preserve"><value>फोन गर्नुहोस्</value></data>
+	<data name="Copy" xml:space="preserve"><value>कपी</value></data>
+	<data name="WhatToTellOperator" xml:space="preserve"><value>अपरेटरलाई के बताउने</value></data>
+	<data name="OperatorTip1" xml:space="preserve"><value>तपाईंको ठ्याक्कै स्थान (सडक, चिन्ह, वडा/क्षेत्र)।</value></data>
+	<data name="OperatorTip2" xml:space="preserve"><value>के भयो (छोटो र स्पष्ट)।</value></data>
+	<data name="OperatorTip3" xml:space="preserve"><value>कति मानिस संलग्न वा घाइते छन्।</value></data>
+	<data name="OperatorTip4" xml:space="preserve"><value>फेरि सम्पर्क गर्न मिल्ने तपाईंको नम्बर।</value></data>
+	<data name="QuickLocationHelper" xml:space="preserve"><value>छिटो स्थान सहयोग</value></data>
+	<data name="LocationTip1" xml:space="preserve"><value>ठ्याक्कै स्थानका लागि GPS खोल्नुहोस् (मोबाइलमा)।</value></data>
+	<data name="LocationTip2" xml:space="preserve"><value>नजिकको चिन्ह प्रयोग गर्नुहोस् (स्कूल, मन्दिर, चोक)।</value></data>
+	<data name="LocationTip3" xml:space="preserve"><value>शान्त रहनुहोस् र बिस्तारै बोल्नुहोस्।</value></data>
+	<data name="GetMyLocation" xml:space="preserve"><value>मेरो स्थान प्राप्त गर्नुहोस्</value></data>
+	<data name="CopyLocation" xml:space="preserve"><value>स्थान कपी गर्नुहोस्</value></data>
+	<data name="LocationNotFetchedYet" xml:space="preserve"><value>स्थान: अझै प्राप्त गरिएको छैन</value></data>
+	<data name="EmergencyNote1" xml:space="preserve"><value>यो पृष्ठ छिटो पहुँचका लागि मात्र हो। आपतकालीन नभएका नागरिक समस्याहरू (सडक, फोहोर, पानी) का लागि</value></data>
+	<data name="SubmitComplaint" xml:space="preserve"><value>गुनासो दर्ता गर्नुहोस्</value></data>
+	<data name="Copied" xml:space="preserve"><value>कपी भयो</value></data>
+	<data name="CopyFailed" xml:space="preserve"><value>कपी असफल भयो (ब्राउजरले clipboard रोकेको छ)।</value></data>
+	<data name="LocationUnsupported" xml:space="preserve"><value>तपाईंको ब्राउजरले Geolocation समर्थन गर्दैन।</value></data>
+	<data name="LocationFetching" xml:space="preserve"><value>प्राप्त हुँदैछ...</value></data>
+	<data name="LocationLabel" xml:space="preserve"><value>स्थान</value></data>
+	<data name="LocationDenied" xml:space="preserve"><value>अनुमति अस्वीकार भयो वा उपलब्ध छैन।</value></data>
+	<data name="FetchLocationFirst" xml:space="preserve"><value>पहिले स्थान प्राप्त गर्नुहोस्।</value></data>
+</root>

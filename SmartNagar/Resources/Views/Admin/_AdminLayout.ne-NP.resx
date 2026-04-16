@@ -1,0 +1,46 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+	<resheader name="resmimetype">
+		<value>text/microsoft-resx</value>
+	</resheader>
+	<resheader name="version">
+		<value>2.0</value>
+	</resheader>
+	<resheader name="reader">
+		<value>System.Resources.ResXResourceReader, System.Windows.Forms, ...</value>
+	</resheader>
+	<resheader name="writer">
+		<value>System.Resources.ResXResourceWriter, System.Windows.Forms, ...</value>
+	</resheader>
+
+	<data name="Admin Panel" xml:space="preserve">
+    <value>प्रशासक प्यानल</value>
+  </data>
+	<data name="Dashboard" xml:space="preserve">
+    <value>ड्यासबोर्ड</value>
+  </data>
+	<data name="Manage Users" xml:space="preserve">
+    <value>प्रयोगकर्ता व्यवस्थापन</value>
+  </data>
+	<data name="System Overview" xml:space="preserve">
+    <value>प्रणाली अवलोकन</value>
+  </data>
+	<data name="Publish Notice" xml:space="preserve">
+    <value>सूचना प्रकाशित गर्नुहोस्</value>
+  </data>
+	<data name="Notices" xml:space="preserve">
+    <value>सूचनाहरू</value>
+  </data>
+	<data name="System Admin" xml:space="preserve">
+    <value>प्रणाली प्रशासक</value>
+  </data>
+	<data name="Admin Subtitle" xml:space="preserve">
+    <value>स्मार्ट नगर प्रशासनिक नियन्त्रण प्यानल</value>
+  </data>
+	<data name="Admin" xml:space="preserve">
+    <value>प्रशासक</value>
+  </data>
+	<data name="Logout" xml:space="preserve">
+    <value>लगआउट</value>
+  </data>
+</root>

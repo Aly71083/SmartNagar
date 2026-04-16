@@ -1,0 +1,45 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+	<data name="Citizen" xml:space="preserve"><value>नागरिक</value></data>
+	<data name="MyProfile" xml:space="preserve"><value>मेरो प्रोफाइल</value></data>
+	<data name="ManageAccountAndUpdateDetails" xml:space="preserve"><value>आफ्नो खाता व्यवस्थापन गर्नुहोस् र विवरण अद्यावधिक गर्नुहोस्</value></data>
+	<data name="Edit" xml:space="preserve"><value>सम्पादन</value></data>
+	<data name="Logout" xml:space="preserve"><value>लगआउट</value></data>
+	<data name="Profile" xml:space="preserve"><value>प्रोफाइल</value></data>
+	<data name="VerifiedUser" xml:space="preserve"><value>प्रमाणित प्रयोगकर्ता</value></data>
+	<data name="Complaints" xml:space="preserve"><value>गुनासोहरू</value></data>
+	<data name="Resolved" xml:space="preserve"><value>समाधान</value></data>
+	<data name="Member" xml:space="preserve"><value>सदस्य</value></data>
+	<data name="PersonalInfo" xml:space="preserve"><value>व्यक्तिगत जानकारी</value></data>
+	<data name="Security" xml:space="preserve"><value>सुरक्षा</value></data>
+	<data name="Help" xml:space="preserve"><value>सहायता</value></data>
+	<data name="PersonalInformation" xml:space="preserve"><value>व्यक्तिगत जानकारी</value></data>
+	<data name="FullName" xml:space="preserve"><value>पूरा नाम</value></data>
+	<data name="EmailLocked" xml:space="preserve"><value>इमेल (लक गरिएको)</value></data>
+	<data name="Address" xml:space="preserve"><value>ठेगाना</value></data>
+	<data name="EnterAddressOptional" xml:space="preserve"><value>आफ्नो ठेगाना लेख्नुहोस् (वैकल्पिक)</value></data>
+	<data name="AddressTip" xml:space="preserve"><value>सुझाव: आफ्नो ठेगाना अद्यावधिक राख्नुहोस् ताकि नगर टोलीले तपाईंका गुनासोहरू छिटो भेट्टाउन सकोस्।</value></data>
+	<data name="SaveChanges" xml:space="preserve"><value>परिवर्तन सुरक्षित गर्नुहोस्</value></data>
+	<data name="Cancel" xml:space="preserve"><value>रद्द गर्नुहोस्</value></data>
+	<data name="FixErrorsAndTryAgain" xml:space="preserve"><value>कृपया माथिका त्रुटिहरू सच्याएर फेरि प्रयास गर्नुहोस्।</value></data>
+	<data name="DangerZone" xml:space="preserve"><value>जोखिम क्षेत्र</value></data>
+	<data name="DeactivateOrDelete" xml:space="preserve"><value>अस्थायी रूपमा निष्क्रिय गर्नुहोस् वा स्थायी रूपमा मेटाउनुहोस्।</value></data>
+	<data name="DeactivateAccount" xml:space="preserve"><value>खाता निष्क्रिय गर्नुहोस्</value></data>
+	<data name="DeleteAccount" xml:space="preserve"><value>खाता मेटाउनुहोस्</value></data>
+	<data name="BackToDashboard" xml:space="preserve"><value>ड्यासबोर्डमा फर्कनुहोस्</value></data>
+	<data name="DeleteIrreversible" xml:space="preserve"><value>मेटाएपछि फिर्ता ल्याउन मिल्दैन। निष्क्रिय भने पुनः सक्रिय गर्न सकिन्छ।</value></data>
+	<data name="HelpSupport" xml:space="preserve"><value>सहायता र समर्थन</value></data>
+	<data name="HelpTip1" xml:space="preserve"><value>गुनासोसम्बन्धी समस्या भए Track Status पृष्ठ हेर्नुहोस्।</value></data>
+	<data name="HelpTip2" xml:space="preserve"><value>ठेगाना परिवर्तन भएको छ भने यहाँ अद्यावधिक गर्नुहोस् ताकि अधिकारीहरूले तपाईंलाई छिटो भेट्टाउन सकून्।</value></data>
+	<data name="HelpTip3" xml:space="preserve"><value>खाता पुनःप्राप्तिका लागि प्रशासक/समर्थनसँग सम्पर्क गर्नुहोस्।</value></data>
+	<data name="ViewNotices" xml:space="preserve"><value>सूचनाहरू हेर्नुहोस्</value></data>
+	<data name="MyComplaints" xml:space="preserve"><value>मेरा गुनासोहरू</value></data>
+	<data name="TrackStatus" xml:space="preserve"><value>स्थिति ट्र्याक गर्नुहोस्</value></data>
+	<data name="Confirm" xml:space="preserve"><value>पुष्टि गर्नुहोस्</value></data>
+	<data name="AreYouSure" xml:space="preserve"><value>के तपाईं निश्चित हुनुहुन्छ?</value></data>
+	<data name="YesContinue" xml:space="preserve"><value>हो, जारी राख्नुहोस्</value></data>
+	<data name="DeactivateMessage" xml:space="preserve"><value>यसले तपाईंको खाता अस्थायी रूपमा निष्क्रिय बनाउनेछ। पुनः सक्रिय नभएसम्म तपाईं लगइन गर्न सक्नुहुने छैन।</value></data>
+	<data name="Deactivate" xml:space="preserve"><value>निष्क्रिय गर्नुहोस्</value></data>
+	<data name="DeleteMessage" xml:space="preserve"><value>यसले तपाईंको खाता स्थायी रूपमा मेटाउनेछ। यो कार्य फिर्ता गर्न सकिँदैन।</value></data>
+	<data name="DeletePermanently" xml:space="preserve"><value>स्थायी रूपमा मेटाउनुहोस्</value></data>
+</root>

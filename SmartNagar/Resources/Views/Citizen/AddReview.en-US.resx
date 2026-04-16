@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+	<data name="AddReview" xml:space="preserve"><value>Add Review</value></data>
+	<data name="AddYourReview" xml:space="preserve"><value>Add Your Review</value></data>
+	<data name="AddYourReviewSubtitle" xml:space="preserve"><value>Share your experience with Smart Nagar. Your review will appear on the public home page.</value></data>
+	<data name="StarRating" xml:space="preserve"><value>Star Rating</value></data>
+	<data name="SelectRating" xml:space="preserve"><value>-- Select Rating --</value></data>
+	<data name="Excellent" xml:space="preserve"><value>Excellent</value></data>
+	<data name="VeryGood" xml:space="preserve"><value>Very Good</value></data>
+	<data name="Good" xml:space="preserve"><value>Good</value></data>
+	<data name="Fair" xml:space="preserve"><value>Fair</value></data>
+	<data name="Poor" xml:space="preserve"><value>Poor</value></data>
+	<data name="YourReview" xml:space="preserve"><value>Your Review</value></data>
+	<data name="WriteExperienceHere" xml:space="preserve"><value>Write your experience here...</value></data>
+	<data name="SubmitReview" xml:space="preserve"><value>Submit Review</value></data>
+	<data name="Back" xml:space="preserve"><value>Back</value></data>
+</root>

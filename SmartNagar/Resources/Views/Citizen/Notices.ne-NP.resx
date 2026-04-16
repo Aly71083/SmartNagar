@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+	<data name="CitizenNotices" xml:space="preserve"><value>नागरिक सूचनाहरू</value></data>
+	<data name="CitizenNoticesSubtitle" xml:space="preserve"><value>प्रशासक र नगर अधिकारीद्वारा प्रकाशित सूचनाहरू</value></data>
+	<data name="Back" xml:space="preserve"><value>फिर्ता</value></data>
+	<data name="SearchByTitleOrText" xml:space="preserve"><value>शीर्षक वा पाठद्वारा खोज्नुहोस्...</value></data>
+	<data name="AllPriorities" xml:space="preserve"><value>सबै प्राथमिकताहरू</value></data>
+	<data name="High" xml:space="preserve"><value>उच्च</value></data>
+	<data name="Medium" xml:space="preserve"><value>मध्यम</value></data>
+	<data name="Low" xml:space="preserve"><value>कम</value></data>
+	<data name="Normal" xml:space="preserve"><value>सामान्य</value></data>
+	<data name="NoNoticesPublishedYet" xml:space="preserve"><value>अहिलेसम्म कुनै सूचना प्रकाशित भएको छैन।</value></data>
+	<data name="PublishedBy" xml:space="preserve"><value>प्रकाशित गर्ने</value></data>
+	<data name="AdminOfficer" xml:space="preserve"><value>प्रशासक/अधिकारी</value></data>
+</root>

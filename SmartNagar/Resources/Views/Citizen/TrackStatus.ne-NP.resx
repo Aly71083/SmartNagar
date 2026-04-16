@@ -1,0 +1,56 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+	<data name="TrackComplaintStatus" xml:space="preserve"><value>गुनासोको स्थिति ट्र्याक गर्नुहोस्</value></data>
+	<data name="MonitorComplaintProgress" xml:space="preserve"><value>आफ्नो गुनासोको प्रगति वास्तविक समयमा हेर्नुहोस्</value></data>
+	<data name="BackToComplaints" xml:space="preserve"><value>गुनासो सूचीमा फर्कनुहोस्</value></data>
+	<data name="NewComplaint" xml:space="preserve"><value>नयाँ गुनासो</value></data>
+	<data name="SearchByComplaintId" xml:space="preserve"><value>गुनासो आईडीद्वारा खोज्नुहोस्</value></data>
+	<data name="EnterComplaintId" xml:space="preserve"><value>गुनासो आईडी लेख्नुहोस्</value></data>
+	<data name="TrackNow" xml:space="preserve"><value>अहिले ट्र्याक गर्नुहोस्</value></data>
+	<data name="SearchComplaintToSeeStatus" xml:space="preserve"><value>स्थिति हेर्न गुनासो खोज्नुहोस्</value></data>
+	<data name="EnterComplaintIdToView" xml:space="preserve"><value>पूरा विवरण, टाइमलाइन र अपडेट हेर्न माथि आफ्नो गुनासो आईडी लेख्नुहोस्।</value></data>
+	<data name="Submitted" xml:space="preserve"><value>पेश गरिएको</value></data>
+	<data name="ComplaintId" xml:space="preserve"><value>गुनासो आईडी</value></data>
+	<data name="Status" xml:space="preserve"><value>स्थिति</value></data>
+	<data name="Priority" xml:space="preserve"><value>प्राथमिकता</value></data>
+	<data name="Category" xml:space="preserve"><value>श्रेणी</value></data>
+	<data name="AssignedTo" xml:space="preserve"><value>जिम्मा दिइएको</value></data>
+	<data name="ExpectedResolution" xml:space="preserve"><value>अपेक्षित समाधान</value></data>
+	<data name="LastUpdated" xml:space="preserve"><value>पछिल्लो अपडेट</value></data>
+	<data name="HighPriority" xml:space="preserve"><value>उच्च प्राथमिकता</value></data>
+	<data name="MunicipalOfficer" xml:space="preserve"><value>नगर अधिकारी</value></data>
+	<data name="NotAssignedYet" xml:space="preserve"><value>अहिलेसम्म जिम्मा दिइएको छैन</value></data>
+	<data name="Description" xml:space="preserve"><value>विवरण</value></data>
+	<data name="NoDescriptionProvided" xml:space="preserve"><value>कुनै विवरण दिइएको छैन।</value></data>
+	<data name="OfficerReviewRemarks" xml:space="preserve"><value>अधिकारी समीक्षा / टिप्पणी</value></data>
+	<data name="NoOfficerRemarksYet" xml:space="preserve"><value>अहिलेसम्म कुनै अधिकारी टिप्पणी थपिएको छैन।</value></data>
+	<data name="Attachments" xml:space="preserve"><value>संलग्न फाइलहरू</value></data>
+	<data name="NoImage" xml:space="preserve"><value>तस्बिर छैन</value></data>
+	<data name="NoImageUploaded" xml:space="preserve"><value>कुनै तस्बिर अपलोड गरिएको छैन</value></data>
+	<data name="QuickActions" xml:space="preserve"><value>छिटो कार्यहरू</value></data>
+	<data name="ViewComplaints" xml:space="preserve"><value>गुनासोहरू हेर्नुहोस्</value></data>
+	<data name="GoBackToComplaintList" xml:space="preserve"><value>गुनासो सूचीमा फर्कनुहोस्</value></data>
+	<data name="SubmitAnotherIssue" xml:space="preserve"><value>अर्को समस्या पेश गर्नुहोस्</value></data>
+	<data name="ShareStatus" xml:space="preserve"><value>स्थिति सेयर गर्नुहोस्</value></data>
+	<data name="SendViaEmailOrMessage" xml:space="preserve"><value>इमेल वा सन्देशमार्फत पठाउनुहोस्</value></data>
+	<data name="ContactOffice" xml:space="preserve"><value>कार्यालय सम्पर्क</value></data>
+	<data name="CheckNoticesAndUpdates" xml:space="preserve"><value>सूचना र अपडेट हेर्नुहोस्</value></data>
+	<data name="StatusTimeline" xml:space="preserve"><value>स्थिति टाइमलाइन</value></data>
+	<data name="ComplaintSubmitted" xml:space="preserve"><value>गुनासो पेश गरियो</value></data>
+	<data name="ComplaintSubmittedText" xml:space="preserve"><value>तपाईंको गुनासो सफलतापूर्वक पेश भयो र आईडी प्रदान गरियो।</value></data>
+	<data name="UnderReview" xml:space="preserve"><value>समीक्षामा</value></data>
+	<data name="UnderReviewText" xml:space="preserve"><value>गुनासोलाई नगर कार्यालयले समीक्षा गरी प्रक्रियामा पठाएको छ।</value></data>
+	<data name="AssignedToTeam" xml:space="preserve"><value>टोलीलाई जिम्मा दिइयो</value></data>
+	<data name="AssignedToTeamText" xml:space="preserve"><value>निरीक्षण र समाधानका लागि सम्बन्धित टोलीलाई गुनासो पठाइएको छ।</value></data>
+	<data name="OfficerUpdate" xml:space="preserve"><value>अधिकारी अपडेट</value></data>
+	<data name="FinalDecision" xml:space="preserve"><value>अन्तिम निर्णय</value></data>
+	<data name="Resolution" xml:space="preserve"><value>समाधान</value></data>
+	<data name="Expected" xml:space="preserve"><value>अपेक्षित</value></data>
+	<data name="ComplaintResolvedText" xml:space="preserve"><value>गुनासो समाधान भएको रूपमा चिन्ह लगाइएको छ।</value></data>
+	<data name="ComplaintRejectedText" xml:space="preserve"><value>गुनासो समाधान हुन सकेन र अस्वीकृत गरिएको छ। कारणका लागि अधिकारी टिप्पणी हेर्नुहोस्।</value></data>
+	<data name="ComplaintWillBeResolvedText" xml:space="preserve"><value>काम सफलतापूर्वक पूरा भएपछि गुनासो समाधान भएको रूपमा चिन्ह लगाइनेछ।</value></data>
+	<data name="Pending" xml:space="preserve"><value>पेन्डिङ</value></data>
+	<data name="InProgress" xml:space="preserve"><value>प्रगतिमा</value></data>
+	<data name="Resolved" xml:space="preserve"><value>समाधान भयो</value></data>
+	<data name="Rejected" xml:space="preserve"><value>अस्वीकृत</value></data>
+</root>

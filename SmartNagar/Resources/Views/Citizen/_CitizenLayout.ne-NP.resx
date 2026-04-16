@@ -1,0 +1,64 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+	<resheader name="resmimetype">
+		<value>text/microsoft-resx</value>
+	</resheader>
+	<resheader name="version">
+		<value>2.0</value>
+	</resheader>
+	<resheader name="reader">
+		<value>System.Resources.ResXResourceReader, System.Windows.Forms, ...</value>
+	</resheader>
+	<resheader name="writer">
+		<value>System.Resources.ResXResourceWriter, System.Windows.Forms, ...</value>
+	</resheader>
+
+	<data name="Citizen Portal" xml:space="preserve">
+    <value>नागरिक पोर्टल</value>
+  </data>
+	<data name="Main" xml:space="preserve">
+    <value>मुख्य</value>
+  </data>
+	<data name="Services" xml:space="preserve">
+    <value>सेवाहरू</value>
+  </data>
+	<data name="Information" xml:space="preserve">
+    <value>जानकारी</value>
+  </data>
+	<data name="Home" xml:space="preserve">
+    <value>गृहपृष्ठ</value>
+  </data>
+	<data name="My Complaints" xml:space="preserve">
+    <value>मेरो गुनासोहरू</value>
+  </data>
+	<data name="Submit Complaint" xml:space="preserve">
+    <value>गुनासो दर्ता गर्नुहोस्</value>
+  </data>
+	<data name="Track Status" xml:space="preserve">
+    <value>स्थिति हेर्नुहोस्</value>
+  </data>
+	<data name="Emergency" xml:space="preserve">
+    <value>आपतकालीन</value>
+  </data>
+	<data name="Garbage Schedule" xml:space="preserve">
+    <value>फोहोर संकलन तालिका</value>
+  </data>
+	<data name="Notices" xml:space="preserve">
+    <value>सूचनाहरू</value>
+  </data>
+	<data name="My Profile" xml:space="preserve">
+    <value>मेरो प्रोफाइल</value>
+  </data>
+	<data name="Welcome Back" xml:space="preserve">
+    <value>फेरि स्वागत छ</value>
+  </data>
+	<data name="Portal Subtitle" xml:space="preserve">
+    <value>तपाईंका सबै नगर सेवाहरूको एकीकृत पोर्टल</value>
+  </data>
+	<data name="Citizen" xml:space="preserve">
+    <value>नागरिक</value>
+  </data>
+	<data name="Logout" xml:space="preserve">
+    <value>लगआउट</value>
+  </data>
+</root>

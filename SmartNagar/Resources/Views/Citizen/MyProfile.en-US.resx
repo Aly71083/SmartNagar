@@ -1,0 +1,45 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+	<data name="Citizen" xml:space="preserve"><value>Citizen</value></data>
+	<data name="MyProfile" xml:space="preserve"><value>My Profile</value></data>
+	<data name="ManageAccountAndUpdateDetails" xml:space="preserve"><value>Manage your account and update your details</value></data>
+	<data name="Edit" xml:space="preserve"><value>Edit</value></data>
+	<data name="Logout" xml:space="preserve"><value>Logout</value></data>
+	<data name="Profile" xml:space="preserve"><value>Profile</value></data>
+	<data name="VerifiedUser" xml:space="preserve"><value>Verified User</value></data>
+	<data name="Complaints" xml:space="preserve"><value>Complaints</value></data>
+	<data name="Resolved" xml:space="preserve"><value>Resolved</value></data>
+	<data name="Member" xml:space="preserve"><value>Member</value></data>
+	<data name="PersonalInfo" xml:space="preserve"><value>Personal Info</value></data>
+	<data name="Security" xml:space="preserve"><value>Security</value></data>
+	<data name="Help" xml:space="preserve"><value>Help</value></data>
+	<data name="PersonalInformation" xml:space="preserve"><value>Personal Information</value></data>
+	<data name="FullName" xml:space="preserve"><value>Full Name</value></data>
+	<data name="EmailLocked" xml:space="preserve"><value>Email (locked)</value></data>
+	<data name="Address" xml:space="preserve"><value>Address</value></data>
+	<data name="EnterAddressOptional" xml:space="preserve"><value>Enter your address (optional)</value></data>
+	<data name="AddressTip" xml:space="preserve"><value>Tip: Keep your address updated so municipal team can locate your complaints faster.</value></data>
+	<data name="SaveChanges" xml:space="preserve"><value>Save Changes</value></data>
+	<data name="Cancel" xml:space="preserve"><value>Cancel</value></data>
+	<data name="FixErrorsAndTryAgain" xml:space="preserve"><value>Please fix the errors above and try again.</value></data>
+	<data name="DangerZone" xml:space="preserve"><value>Danger Zone</value></data>
+	<data name="DeactivateOrDelete" xml:space="preserve"><value>Deactivate temporarily or delete permanently.</value></data>
+	<data name="DeactivateAccount" xml:space="preserve"><value>Deactivate Account</value></data>
+	<data name="DeleteAccount" xml:space="preserve"><value>Delete Account</value></data>
+	<data name="BackToDashboard" xml:space="preserve"><value>Back to Dashboard</value></data>
+	<data name="DeleteIrreversible" xml:space="preserve"><value>Delete is irreversible. Deactivate is reversible (based on your reactivation flow).</value></data>
+	<data name="HelpSupport" xml:space="preserve"><value>Help &amp; Support</value></data>
+	<data name="HelpTip1" xml:space="preserve"><value>For complaint issues, check Track Status page.</value></data>
+	<data name="HelpTip2" xml:space="preserve"><value>If you changed address, update it here so officers can locate you faster.</value></data>
+	<data name="HelpTip3" xml:space="preserve"><value>For account recovery, contact admin/support.</value></data>
+	<data name="ViewNotices" xml:space="preserve"><value>View Notices</value></data>
+	<data name="MyComplaints" xml:space="preserve"><value>My Complaints</value></data>
+	<data name="TrackStatus" xml:space="preserve"><value>Track Status</value></data>
+	<data name="Confirm" xml:space="preserve"><value>Confirm</value></data>
+	<data name="AreYouSure" xml:space="preserve"><value>Are you sure?</value></data>
+	<data name="YesContinue" xml:space="preserve"><value>Yes, continue</value></data>
+	<data name="DeactivateMessage" xml:space="preserve"><value>This will temporarily disable your account. You will not be able to login until reactivated.</value></data>
+	<data name="Deactivate" xml:space="preserve"><value>Deactivate</value></data>
+	<data name="DeleteMessage" xml:space="preserve"><value>This will permanently delete your account. This action cannot be undone.</value></data>
+	<data name="DeletePermanently" xml:space="preserve"><value>Delete Permanently</value></data>
+</root>

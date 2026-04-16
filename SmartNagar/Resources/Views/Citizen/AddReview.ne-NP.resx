@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+	<data name="AddReview" xml:space="preserve"><value>समीक्षा थप्नुहोस्</value></data>
+	<data name="AddYourReview" xml:space="preserve"><value>आफ्नो समीक्षा थप्नुहोस्</value></data>
+	<data name="AddYourReviewSubtitle" xml:space="preserve"><value>Smart Nagar को अनुभव साझा गर्नुहोस्। तपाईंको समीक्षा सार्वजनिक गृहपृष्ठमा देखिनेछ।</value></data>
+	<data name="StarRating" xml:space="preserve"><value>स्टार मूल्याङ्कन</value></data>
+	<data name="SelectRating" xml:space="preserve"><value>-- मूल्याङ्कन छान्नुहोस् --</value></data>
+	<data name="Excellent" xml:space="preserve"><value>उत्कृष्ट</value></data>
+	<data name="VeryGood" xml:space="preserve"><value>धेरै राम्रो</value></data>
+	<data name="Good" xml:space="preserve"><value>राम्रो</value></data>
+	<data name="Fair" xml:space="preserve"><value>ठिकठाक</value></data>
+	<data name="Poor" xml:space="preserve"><value>कमजोर</value></data>
+	<data name="YourReview" xml:space="preserve"><value>तपाईंको समीक्षा</value></data>
+	<data name="WriteExperienceHere" xml:space="preserve"><value>यहाँ आफ्नो अनुभव लेख्नुहोस्...</value></data>
+	<data name="SubmitReview" xml:space="preserve"><value>समीक्षा पेश गर्नुहोस्</value></data>
+	<data name="Back" xml:space="preserve"><value>फिर्ता</value></data>
+</root>

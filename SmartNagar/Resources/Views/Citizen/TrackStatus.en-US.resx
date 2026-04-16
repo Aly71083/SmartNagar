@@ -1,0 +1,56 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+	<data name="TrackComplaintStatus" xml:space="preserve"><value>Track Complaint Status</value></data>
+	<data name="MonitorComplaintProgress" xml:space="preserve"><value>Monitor your complaint progress in real-time</value></data>
+	<data name="BackToComplaints" xml:space="preserve"><value>Back to Complaints</value></data>
+	<data name="NewComplaint" xml:space="preserve"><value>New Complaint</value></data>
+	<data name="SearchByComplaintId" xml:space="preserve"><value>Search by Complaint ID</value></data>
+	<data name="EnterComplaintId" xml:space="preserve"><value>Enter complaint ID</value></data>
+	<data name="TrackNow" xml:space="preserve"><value>Track Now</value></data>
+	<data name="SearchComplaintToSeeStatus" xml:space="preserve"><value>Search a complaint to see its status</value></data>
+	<data name="EnterComplaintIdToView" xml:space="preserve"><value>Enter your complaint ID above to view full complaint details, timeline, and updates.</value></data>
+	<data name="Submitted" xml:space="preserve"><value>Submitted</value></data>
+	<data name="ComplaintId" xml:space="preserve"><value>Complaint ID</value></data>
+	<data name="Status" xml:space="preserve"><value>Status</value></data>
+	<data name="Priority" xml:space="preserve"><value>Priority</value></data>
+	<data name="Category" xml:space="preserve"><value>Category</value></data>
+	<data name="AssignedTo" xml:space="preserve"><value>Assigned To</value></data>
+	<data name="ExpectedResolution" xml:space="preserve"><value>Expected Resolution</value></data>
+	<data name="LastUpdated" xml:space="preserve"><value>Last Updated</value></data>
+	<data name="HighPriority" xml:space="preserve"><value>High Priority</value></data>
+	<data name="MunicipalOfficer" xml:space="preserve"><value>Municipal Officer</value></data>
+	<data name="NotAssignedYet" xml:space="preserve"><value>Not assigned yet</value></data>
+	<data name="Description" xml:space="preserve"><value>Description</value></data>
+	<data name="NoDescriptionProvided" xml:space="preserve"><value>No description provided.</value></data>
+	<data name="OfficerReviewRemarks" xml:space="preserve"><value>Officer Review / Remarks</value></data>
+	<data name="NoOfficerRemarksYet" xml:space="preserve"><value>No officer remarks added yet.</value></data>
+	<data name="Attachments" xml:space="preserve"><value>Attachments</value></data>
+	<data name="NoImage" xml:space="preserve"><value>No image</value></data>
+	<data name="NoImageUploaded" xml:space="preserve"><value>No image uploaded</value></data>
+	<data name="QuickActions" xml:space="preserve"><value>Quick Actions</value></data>
+	<data name="ViewComplaints" xml:space="preserve"><value>View Complaints</value></data>
+	<data name="GoBackToComplaintList" xml:space="preserve"><value>Go back to complaint list</value></data>
+	<data name="SubmitAnotherIssue" xml:space="preserve"><value>Submit another issue</value></data>
+	<data name="ShareStatus" xml:space="preserve"><value>Share Status</value></data>
+	<data name="SendViaEmailOrMessage" xml:space="preserve"><value>Send via email or message</value></data>
+	<data name="ContactOffice" xml:space="preserve"><value>Contact Office</value></data>
+	<data name="CheckNoticesAndUpdates" xml:space="preserve"><value>Check notices and updates</value></data>
+	<data name="StatusTimeline" xml:space="preserve"><value>Status Timeline</value></data>
+	<data name="ComplaintSubmitted" xml:space="preserve"><value>Complaint Submitted</value></data>
+	<data name="ComplaintSubmittedText" xml:space="preserve"><value>Your complaint was successfully submitted and assigned an ID.</value></data>
+	<data name="UnderReview" xml:space="preserve"><value>Under Review</value></data>
+	<data name="UnderReviewText" xml:space="preserve"><value>Complaint reviewed by municipal office and moved into the processing queue.</value></data>
+	<data name="AssignedToTeam" xml:space="preserve"><value>Assigned to Team</value></data>
+	<data name="AssignedToTeamText" xml:space="preserve"><value>Complaint forwarded to the responsible municipal team for inspection and resolution.</value></data>
+	<data name="OfficerUpdate" xml:space="preserve"><value>Officer Update</value></data>
+	<data name="FinalDecision" xml:space="preserve"><value>Final Decision</value></data>
+	<data name="Resolution" xml:space="preserve"><value>Resolution</value></data>
+	<data name="Expected" xml:space="preserve"><value>Expected</value></data>
+	<data name="ComplaintResolvedText" xml:space="preserve"><value>Complaint has been marked as resolved.</value></data>
+	<data name="ComplaintRejectedText" xml:space="preserve"><value>Complaint could not be resolved and has been marked as rejected. Please review officer remarks for the reason.</value></data>
+	<data name="ComplaintWillBeResolvedText" xml:space="preserve"><value>Complaint will be marked resolved after successful completion.</value></data>
+	<data name="Pending" xml:space="preserve"><value>Pending</value></data>
+	<data name="InProgress" xml:space="preserve"><value>In Progress</value></data>
+	<data name="Resolved" xml:space="preserve"><value>Resolved</value></data>
+	<data name="Rejected" xml:space="preserve"><value>Rejected</value></data>
+</root>

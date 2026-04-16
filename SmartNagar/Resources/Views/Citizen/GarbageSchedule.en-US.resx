@@ -1,0 +1,30 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+	<data name="GarbageCollectionSchedule" xml:space="preserve"><value>Garbage Collection Schedule</value></data>
+	<data name="DhangadhiSubMetropolitanCity" xml:space="preserve"><value>Dhangadhi Sub-Metropolitan City</value></data>
+	<data name="WardWiseGarbageCollection" xml:space="preserve"><value>Ward-wise Garbage Collection</value></data>
+	<data name="SelectWardToView" xml:space="preserve"><value>Select your ward to view collection details.</value></data>
+	<data name="CollectionTime" xml:space="preserve"><value>Collection Time</value></data>
+	<data name="WasteType" xml:space="preserve"><value>Waste Type</value></data>
+	<data name="AllTypesOfWaste" xml:space="preserve"><value>All Types of Waste</value></data>
+	<data name="SelectWardLabel" xml:space="preserve"><value>Select Ward (1–19)</value></data>
+	<data name="SelectWardOption" xml:space="preserve"><value>-- Select Ward --</value></data>
+	<data name="Ward" xml:space="preserve"><value>Ward</value></data>
+	<data name="ImportantGuidelines" xml:space="preserve"><value>Important Guidelines</value></data>
+	<data name="GuidelinesSub" xml:space="preserve"><value>Follow these rules for proper waste management</value></data>
+	<data name="SegregateWaste" xml:space="preserve"><value>Segregate Waste</value></data>
+	<data name="SegregateWasteDesc" xml:space="preserve"><value>Separate wet and dry waste into different bins. Green bins for wet waste and blue bins for dry waste.</value></data>
+	<data name="BeOnTime" xml:space="preserve"><value>Be On Time</value></data>
+	<data name="BeOnTimeDesc" xml:space="preserve"><value>Keep your waste bins ready before collection time. Late placement may result in missed collection.</value></data>
+	<data name="HazardousWaste" xml:space="preserve"><value>Hazardous Waste</value></data>
+	<data name="HazardousWasteDesc" xml:space="preserve"><value>Dispose of hazardous materials like batteries, chemicals, and electronics separately at designated centers.</value></data>
+	<data name="AvoidPenalties" xml:space="preserve"><value>Avoid Penalties</value></data>
+	<data name="AvoidPenaltiesDesc" xml:space="preserve"><value>Non-compliance with segregation rules may result in fines. Help keep our city clean and green!</value></data>
+	<data name="PleaseSelectWard" xml:space="preserve"><value>Please select a ward to view the schedule.</value></data>
+	<data name="CollectionDetails" xml:space="preserve"><value>Collection Details</value></data>
+	<data name="CollectionDays" xml:space="preserve"><value>Collection Days</value></data>
+	<data name="SundayFriday" xml:space="preserve"><value>Sunday – Friday</value></data>
+	<data name="Time" xml:space="preserve"><value>Time</value></data>
+	<data name="RemindMe" xml:space="preserve"><value>Remind Me</value></data>
+	<data name="MyReminders" xml:space="preserve"><value>My Reminders</value></data>
+</root>

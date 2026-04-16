@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+	<data name="My Complaints" xml:space="preserve"><value>मेरो गुनासोहरू</value></data>
+	<data name="Submit New Complaint" xml:space="preserve"><value>नयाँ गुनासो दर्ता गर्नुहोस्</value></data>
+	<data name="No Complaints" xml:space="preserve"><value>तपाईंले अहिलेसम्म कुनै गुनासो दर्ता गर्नुभएको छैन।</value></data>
+	<data name="ID" xml:space="preserve"><value>आईडी</value></data>
+	<data name="Category" xml:space="preserve"><value>श्रेणी</value></data>
+	<data name="Title" xml:space="preserve"><value>शीर्षक</value></data>
+	<data name="Status" xml:space="preserve"><value>स्थिति</value></data>
+	<data name="Created" xml:space="preserve"><value>दर्ता मिति</value></data>
+	<data name="Resolved" xml:space="preserve"><value>समाधान मिति</value></data>
+	<data name="Action" xml:space="preserve"><value>कार्य</value></data>
+	<data name="Track" xml:space="preserve"><value>हेर्नुहोस्</value></data>
+	<data name="Pending" xml:space="preserve"><value>पेन्डिङ</value></data>
+	<data name="In Progress" xml:space="preserve"><value>प्रक्रियामा</value></data>
+</root>

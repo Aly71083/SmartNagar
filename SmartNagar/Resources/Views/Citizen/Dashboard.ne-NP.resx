@@ -1,0 +1,67 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+	<data name="Quick Access">
+		<value>सेवाहरूमा छिटो पहुँच</value>
+	</data>
+	<data name="Quick Access Desc">
+		<value>समस्या रिपोर्ट गर्नुहोस्, गुनासो ट्र्याक गर्नुहोस् र नगरपालिकाका गतिविधिहरूमा अपडेट रहनुहोस्</value>
+	</data>
+
+	<data name="Total Complaints">
+		<value>कुल गुनासो</value>
+	</data>
+	<data name="In Progress">
+		<value>प्रक्रियामा</value>
+	</data>
+	<data name="Pending">
+		<value>पेन्डिङ</value>
+	</data>
+	<data name="Resolved">
+		<value>समाधान भएको</value>
+	</data>
+
+	<data name="Submit Complaint">
+		<value>गुनासो दर्ता गर्नुहोस्</value>
+	</data>
+	<data name="Submit Complaint Desc">
+		<value>सडक, पानी, फोहोर व्यवस्थापन जस्ता समस्या तुरुन्त रिपोर्ट गर्नुहोस्</value>
+	</data>
+
+	<data name="Track Status">
+		<value>स्थिति ट्र्याक गर्नुहोस्</value>
+	</data>
+	<data name="Track Status Desc">
+		<value>आफ्नो गुनासोको स्थिति वास्तविक समयमा हेर्नुहोस्</value>
+	</data>
+
+	<data name="Emergency">
+		<value>आपतकालीन</value>
+	</data>
+	<data name="Emergency Desc">
+		<value>प्रहरी, एम्बुलेन्स र दमकल सेवामा छिटो पहुँच</value>
+	</data>
+
+	<data name="Garbage Schedule">
+		<value>फोहोर तालिका</value>
+	</data>
+	<data name="Garbage Schedule Desc">
+		<value>क्षेत्र अनुसार फोहोर संकलन समय हेर्नुहोस्</value>
+	</data>
+
+	<data name="Notices">
+		<value>सूचनाहरू</value>
+	</data>
+	<data name="Notices Desc">
+		<value>नगरपालिकाका नयाँ सूचनाहरू हेर्नुहोस्</value>
+	</data>
+
+	<data name="My Location">
+		<value>मेरो स्थान</value>
+	</data>
+	<data name="No Location">
+		<value>अहिलेसम्म स्थान सेभ गरिएको छैन</value>
+	</data>
+	<data name="Use Location">
+		<value>मेरो स्थान प्रयोग गर्नुहोस्</value>
+	</data>
+</root>

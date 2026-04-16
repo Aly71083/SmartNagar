@@ -1,0 +1,46 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+	<resheader name="resmimetype">
+		<value>text/microsoft-resx</value>
+	</resheader>
+	<resheader name="version">
+		<value>2.0</value>
+	</resheader>
+	<resheader name="reader">
+		<value>System.Resources.ResXResourceReader, System.Windows.Forms, ...</value>
+	</resheader>
+	<resheader name="writer">
+		<value>System.Resources.ResXResourceWriter, System.Windows.Forms, ...</value>
+	</resheader>
+
+	<data name="Admin Panel" xml:space="preserve">
+    <value>Admin Panel</value>
+  </data>
+	<data name="Dashboard" xml:space="preserve">
+    <value>Dashboard</value>
+  </data>
+	<data name="Manage Users" xml:space="preserve">
+    <value>Manage Users</value>
+  </data>
+	<data name="System Overview" xml:space="preserve">
+    <value>System Overview</value>
+  </data>
+	<data name="Publish Notice" xml:space="preserve">
+    <value>Publish Notice</value>
+  </data>
+	<data name="Notices" xml:space="preserve">
+    <value>Notices</value>
+  </data>
+	<data name="System Admin" xml:space="preserve">
+    <value>System Admin</value>
+  </data>
+	<data name="Admin Subtitle" xml:space="preserve">
+    <value>Smart Nagar administrative control panel</value>
+  </data>
+	<data name="Admin" xml:space="preserve">
+    <value>Admin</value>
+  </data>
+	<data name="Logout" xml:space="preserve">
+    <value>Logout</value>
+  </data>
+</root>

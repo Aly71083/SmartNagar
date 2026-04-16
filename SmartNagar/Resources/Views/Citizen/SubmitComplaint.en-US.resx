@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+	<data name="SubmitYourComplaint" xml:space="preserve"><value>Submit Your Complaint</value></data>
+	<data name="HeroSubtitle" xml:space="preserve"><value>We’re here to help resolve issues in your community</value></data>
+	<data name="Category" xml:space="preserve"><value>Category</value></data>
+	<data name="Details" xml:space="preserve"><value>Details</value></data>
+	<data name="Review" xml:space="preserve"><value>Review</value></data>
+	<data name="SelectComplaintCategory" xml:space="preserve"><value>Select Complaint Category</value></data>
+	<data name="ChooseCategoryDesc" xml:space="preserve"><value>Choose the category that best describes your issue</value></data>
+	<data name="RoadInfrastructure" xml:space="preserve"><value>Road &amp; Infrastructure</value></data>
+	<data name="WaterSupply" xml:space="preserve"><value>Water Supply</value></data>
+	<data name="GarbageCollection" xml:space="preserve"><value>Garbage Collection</value></data>
+	<data name="StreetLights" xml:space="preserve"><value>Street Lights</value></data>
+	<data name="DrainageSewage" xml:space="preserve"><value>Drainage &amp; Sewage</value></data>
+	<data name="ParksGardens" xml:space="preserve"><value>Parks &amp; Gardens</value></data>
+	<data name="IllegalConstruction" xml:space="preserve"><value>Illegal Construction</value></data>
+	<data name="NoisePollution" xml:space="preserve"><value>Noise Pollution</value></data>
+	<data name="StrayAnimals" xml:space="preserve"><value>Stray Animals</value></data>
+	<data name="Electricity" xml:space="preserve"><value>Electricity</value></data>
+	<data name="AirPollution" xml:space="preserve"><value>Air Pollution</value></data>
+	<data name="OtherIssues" xml:space="preserve"><value>Other Issues</value></data>
+	<data name="SelectCategoryError" xml:space="preserve"><value>Please select a category to continue.</value></data>
+	<data name="Cancel" xml:space="preserve"><value>Cancel</value></data>
+	<data name="NextStep" xml:space="preserve"><value>Next Step ➜</value></data>
+</root>
