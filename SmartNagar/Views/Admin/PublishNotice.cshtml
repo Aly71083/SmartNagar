@@ -1,0 +1,184 @@
+﻿@model SmartNagar.ViewModels.PublishNoticeVM
+@{
+    Layout = "~/Views/Admin/_AdminLayout.cshtml";
+    ViewBag.Active = "publish";
+    ViewBag.PageTitle = "Publish Notice";
+}
+
+@section Styles {
+    <style>
+        .wrap {
+            width: min(900px, 100%);
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 22px;
+            font-weight: 1000;
+            color: #2d1b4e;
+        }
+
+        .sub {
+            margin-top: 6px;
+            color: #7b6ca8;
+            font-weight: 750;
+        }
+
+        .card {
+            margin-top: 16px;
+            border-radius: 18px;
+            padding: 18px;
+            background: linear-gradient(180deg, #ffffff 0%, #f8f5ff 100%);
+            border: 1px solid #ddd6fe;
+            box-shadow: 0 10px 24px rgba(124, 58, 237, .08);
+        }
+
+        label {
+            display: block;
+            font-weight: 950;
+            margin: 12px 0 8px;
+            color: #2d1b4e;
+        }
+
+        input, textarea, select {
+            width: 100%;
+            padding: 12px 12px;
+            border-radius: 12px;
+            font-weight: 750;
+            border: 1px solid #ddd6fe;
+            background: #faf7ff;
+            color: #2d1b4e;
+        }
+
+        textarea {
+            min-height: 180px;
+            resize: vertical;
+        }
+
+        .btnRow {
+            display: flex;
+            gap: 12px;
+            margin-top: 16px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            border: none;
+            border-radius: 14px;
+            padding: 14px 16px;
+            font-weight: 1000;
+            cursor: pointer;
+            font-size: 14px;
+            color: #fff;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+        }
+
+        .btnSave {
+            flex: 1;
+            min-width: 220px;
+            background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+        }
+
+            .btnSave:hover {
+                background: linear-gradient(135deg, #7c3aed, #6d28d9);
+            }
+
+        .btnCancel {
+            flex: 1;
+            min-width: 220px;
+            background: #ede9fe;
+            color: #4c1d95;
+        }
+
+            .btnCancel:hover {
+                background: #ddd6fe;
+            }
+
+        .hint {
+            margin-top: 10px;
+            color: #7b6ca8;
+            font-size: 12px;
+            font-weight: 800;
+        }
+
+        .validation-summary-errors {
+            color: #b83d38;
+            font-weight: 800;
+            margin-bottom: 12px;
+        }
+
+        .field-validation-error {
+            color: #b83d38;
+            font-size: 13px;
+            font-weight: 700;
+            display: block;
+            margin-top: 6px;
+        }
+
+        .input-validation-error {
+            border: 1px solid #d45d41 !important;
+            background: #fff7f5 !important;
+        }
+
+        .msg {
+            margin-top: 14px;
+            padding: 12px 14px;
+            border-radius: 12px;
+            background: #f3edff;
+            border: 1px solid #ddd6fe;
+            color: #5b21b6;
+            font-weight: 800;
+        }
+    </style>
+}
+
+<div class="wrap">
+    <h1>Publish Notice</h1>
+    <div class="sub">Create and publish a new public notice</div>
+
+    @if (TempData["Msg"] != null)
+    {
+        <div class="msg">@TempData["Msg"]</div>
+    }
+
+    <div class="card">
+        <form asp-action="PublishNotice" asp-controller="Admin" method="post">
+            @Html.AntiForgeryToken()
+
+            @Html.ValidationSummary(false, "", new { @class = "validation-summary-errors" })
+
+            <label asp-for="Title">Notice Title</label>
+            <input asp-for="Title" placeholder="Enter notice title" />
+            <span asp-validation-for="Title" class="field-validation-error"></span>
+
+            <label asp-for="Description">Description</label>
+            <textarea asp-for="Description" placeholder="Write notice description"></textarea>
+            <span asp-validation-for="Description" class="field-validation-error"></span>
+
+            <label asp-for="Priority">Priority</label>
+            <select asp-for="Priority">
+                <option value="">-- Select Priority --</option>
+                <option value="Low">Low</option>
+                <option value="Normal">Normal</option>
+                <option value="High">High</option>
+                <option value="Urgent">Urgent</option>
+            </select>
+            <span asp-validation-for="Priority" class="field-validation-error"></span>
+
+            <div class="hint">
+                This notice will be visible to users after publishing.
+            </div>
+
+            <div class="btnRow">
+                <button class="btn btnSave" type="submit">Publish Notice</button>
+                <a class="btn btnCancel" href="/Admin/Notices">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

@@ -1,0 +1,517 @@
+﻿@model SmartNagar.ViewModels.AdminDashboardVM
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+@{
+    Layout = "~/Views/Admin/_AdminLayout.cshtml";
+    ViewBag.Active = "dashboard";
+    ViewBag.PageTitle = "Admin Dashboard";
+
+    var notifCount = Model?.RecentActivities?.Count(a => a.IsRead == false) ?? 0;
+    var adminName = User?.Identity?.Name ?? "Admin";
+}
+
+@section Styles {
+    <style>
+        .hero {
+            background: linear-gradient(135deg, #b79cff 0%, #9b7bff 45%, #7c3aed 100%);
+            border-radius: 26px;
+            padding: 26px;
+            color: #fffefc;
+            box-shadow: 0 18px 35px rgba(124, 58, 237, .18);
+            display: grid;
+            grid-template-columns: 1.4fr .9fr;
+            gap: 18px;
+            align-items: stretch;
+        }
+
+            .hero h2 {
+                margin: 0;
+                font-size: 30px;
+                font-weight: 950;
+                line-height: 1.15;
+            }
+
+            .hero p {
+                margin: 10px 0 0;
+                font-size: 14px;
+                line-height: 1.7;
+                opacity: .96;
+                max-width: 700px;
+                font-weight: 600;
+            }
+
+        .heroBadgeRow {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 16px;
+        }
+
+        .heroBadge {
+            padding: 10px 14px;
+            border-radius: 999px;
+            background: rgba(255,255,255,.16);
+            border: 1px solid rgba(255,255,255,.24);
+            font-weight: 850;
+            font-size: 13px;
+        }
+
+        .heroActions {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            align-self: center;
+        }
+
+        .heroBtn {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            min-height: 96px;
+            padding: 16px;
+            border-radius: 18px;
+            background: rgba(255,255,255,.14);
+            border: 1px solid rgba(255,255,255,.22);
+            color: #fffefc;
+            text-decoration: none;
+            transition: .2s ease;
+            backdrop-filter: blur(4px);
+        }
+
+            .heroBtn:hover {
+                transform: translateY(-2px);
+                background: rgba(255,255,255,.20);
+            }
+
+            .heroBtn strong {
+                font-size: 15px;
+                font-weight: 900;
+            }
+
+            .heroBtn span {
+                margin-top: 6px;
+                font-size: 12px;
+                opacity: .95;
+                line-height: 1.5;
+                font-weight: 600;
+            }
+
+        .statsGrid {
+            margin-top: 18px;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+        }
+
+        .statCard {
+            position: relative;
+            overflow: hidden;
+            border-radius: 22px;
+            padding: 18px;
+            background: linear-gradient(180deg, #fffefe 0%, #f7f3ff 100%);
+            border: 1px solid #e5dafd;
+            box-shadow: 0 12px 24px rgba(124, 58, 237, .08);
+        }
+
+            .statCard::after {
+                content: "";
+                position: absolute;
+                right: -18px;
+                top: -18px;
+                width: 88px;
+                height: 88px;
+                border-radius: 50%;
+                background: rgba(139, 92, 246, .10);
+            }
+
+        .statTop {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+        }
+
+        .statLabel {
+            color: #7c3aed;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: .6px;
+            font-weight: 900;
+        }
+
+        .statIcon {
+            width: 42px;
+            height: 42px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #f1eaff;
+            font-size: 18px;
+        }
+
+        .statValue {
+            margin-top: 14px;
+            font-size: 34px;
+            font-weight: 950;
+            color: #33214d;
+            line-height: 1;
+        }
+
+        .statMeta {
+            margin-top: 8px;
+            color: #7c6f98;
+            font-size: 13px;
+            font-weight: 700;
+            line-height: 1.5;
+        }
+
+        .contentGrid {
+            margin-top: 18px;
+            display: grid;
+            grid-template-columns: 1.35fr .95fr;
+            gap: 18px;
+        }
+
+        .sectionCard {
+            border-radius: 22px;
+            background: linear-gradient(180deg, #fffefe 0%, #fbf9ff 100%);
+            border: 1px solid #e5dafd;
+            box-shadow: 0 12px 24px rgba(124, 58, 237, .08);
+            overflow: hidden;
+        }
+
+        .sectionHead {
+            padding: 18px 20px;
+            border-bottom: 1px solid #ece4ff;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+        }
+
+            .sectionHead h3 {
+                margin: 0;
+                font-size: 20px;
+                font-weight: 900;
+                color: #3e1f76;
+            }
+
+            .sectionHead p {
+                margin: 5px 0 0;
+                color: #7c6f98;
+                font-size: 13px;
+                font-weight: 700;
+            }
+
+        .sectionLink {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: #f1eaff;
+            border: 1px solid #e5dafd;
+            color: #5b2db8;
+            padding: 10px 14px;
+            border-radius: 12px;
+            font-weight: 900;
+            white-space: nowrap;
+        }
+
+            .sectionLink:hover {
+                background: #eadfff;
+            }
+
+        .activityList {
+            padding: 18px;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .activityItem {
+            background: #fffefe;
+            border: 1px solid #ece4ff;
+            border-radius: 18px;
+            padding: 16px;
+            transition: .18s ease;
+        }
+
+            .activityItem:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 10px 20px rgba(124, 58, 237, .08);
+            }
+
+        .activityRow {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 12px;
+        }
+
+        .activityTitle {
+            font-size: 18px;
+            font-weight: 900;
+            color: #33214d;
+            line-height: 1.25;
+        }
+
+        .activityDesc {
+            margin-top: 6px;
+            color: #70628e;
+            font-size: 14px;
+            line-height: 1.6;
+            font-weight: 650;
+        }
+
+        .activityTime {
+            flex-shrink: 0;
+            background: #f3ecff;
+            color: #6e45c7;
+            border: 1px solid #e5dafd;
+            border-radius: 999px;
+            padding: 8px 12px;
+            font-size: 12px;
+            font-weight: 900;
+        }
+
+        .shortcutBody {
+            padding: 18px;
+            display: grid;
+            gap: 14px;
+        }
+
+        .shortcutCard {
+            display: block;
+            padding: 16px 18px;
+            border-radius: 18px;
+            border: 1px solid #e7ddff;
+            text-decoration: none;
+            transition: .18s ease;
+        }
+
+            .shortcutCard:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 10px 20px rgba(124, 58, 237, .08);
+            }
+
+            .shortcutCard strong {
+                display: block;
+                font-size: 17px;
+                font-weight: 900;
+                margin-bottom: 6px;
+            }
+
+            .shortcutCard span {
+                display: block;
+                font-size: 13px;
+                line-height: 1.5;
+                font-weight: 700;
+            }
+
+        .s1 {
+            background: #f5f2ff;
+            color: #5a36ba;
+        }
+
+        .s2 {
+            background: #eef4ff;
+            color: #3755b0;
+        }
+
+        .s3 {
+            background: #eefcff;
+            color: #15738c;
+        }
+
+        .s4 {
+            background: #faf3ff;
+            color: #9333b8;
+        }
+
+        .emptyState {
+            padding: 28px 20px;
+            text-align: center;
+            color: #7c6f98;
+            font-weight: 800;
+        }
+
+        @@media (max-width: 1200px) {
+            .hero {
+                grid-template-columns: 1fr;
+            }
+
+            .contentGrid {
+                grid-template-columns: 1fr;
+            }
+
+            .statsGrid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @@media (max-width: 700px) {
+            .heroActions {
+                grid-template-columns: 1fr;
+            }
+
+            .statsGrid {
+                grid-template-columns: 1fr;
+            }
+
+            .sectionHead {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .activityRow {
+                flex-direction: column;
+            }
+        }
+    </style>
+}
+
+<div class="hero">
+    <div>
+        <h2>Welcome back, @adminName 👋</h2>
+        <p>
+            Monitor platform health, manage users, publish important announcements,
+            and review recent administrative actions from one modern dashboard.
+        </p>
+
+        <div class="heroBadgeRow">
+            <div class="heroBadge">🏛 Smart Nagar Admin Panel</div>
+            <div class="heroBadge">📌 Centralized Control</div>
+            <div class="heroBadge">🔔 @notifCount Unread Activities</div>
+        </div>
+    </div>
+
+    <div class="heroActions">
+        <a class="heroBtn" href="/Admin/ManageUsers">
+            <strong>👥 Manage Users</strong>
+            <span>Activate, deactivate, and manage all registered accounts.</span>
+        </a>
+
+        <a class="heroBtn" href="/Admin/SystemOverview">
+            <strong>📊 View Reports</strong>
+            <span>Analyze complaint trends, status breakdown, and performance.</span>
+        </a>
+
+        <a class="heroBtn" href="/Admin/PublishNotice">
+            <strong>📣 Publish Notice</strong>
+            <span>Create announcements and share updates with citizens.</span>
+        </a>
+
+        <a class="heroBtn" href="/Admin/Notices">
+            <strong>🗂 Manage Notices</strong>
+            <span>Edit and maintain all public notice records from one place.</span>
+        </a>
+    </div>
+</div>
+
+<div class="statsGrid">
+    <div class="statCard">
+        <div class="statTop">
+            <div class="statLabel">Total Users</div>
+            <div class="statIcon">👤</div>
+        </div>
+        <div class="statValue">@Model.TotalUsers</div>
+        <div class="statMeta">Registered citizens, officers, and administrators in the system.</div>
+    </div>
+
+    <div class="statCard">
+        <div class="statTop">
+            <div class="statLabel">Total Complaints</div>
+            <div class="statIcon">📩</div>
+        </div>
+        <div class="statValue">@Model.TotalComplaints</div>
+        <div class="statMeta">All complaints submitted through the Smart Nagar platform.</div>
+    </div>
+
+    <div class="statCard">
+        <div class="statTop">
+            <div class="statLabel">Resolved</div>
+            <div class="statIcon">✅</div>
+        </div>
+        <div class="statValue">@Model.Resolved</div>
+        <div class="statMeta">Successfully completed issues handled by the municipality team.</div>
+    </div>
+
+    <div class="statCard">
+        <div class="statTop">
+            <div class="statLabel">Unread Activities</div>
+            <div class="statIcon">🔔</div>
+        </div>
+        <div class="statValue">@notifCount</div>
+        <div class="statMeta">Recent admin-side activities that still need your attention.</div>
+    </div>
+</div>
+
+<div class="contentGrid">
+    <div class="sectionCard">
+        <div class="sectionHead">
+            <div>
+                <h3>Recent Activity</h3>
+                <p>Latest administrative events and important system actions.</p>
+            </div>
+            <a class="sectionLink" href="/Admin/SystemOverview">Open Analytics →</a>
+        </div>
+
+        <div class="activityList">
+            @if (Model?.RecentActivities == null || !Model.RecentActivities.Any())
+            {
+                <div class="emptyState">
+                    No recent activity found.
+                </div>
+            }
+            else
+            {
+                foreach (var a in Model.RecentActivities.Take(6))
+                {
+                    <div class="activityItem">
+                        <div class="activityRow">
+                            <div>
+                                <div class="activityTitle">@a.Title</div>
+                                <div class="activityDesc">Recent system activity</div>
+                            </div>
+                            <div class="activityTime">
+                                @a.CreatedAt.ToLocalTime().ToString("dd MMM yyyy")
+                            </div>
+                        </div>
+                    </div>
+                }
+            }
+        </div>
+    </div>
+
+    <div class="sectionCard">
+        <div class="sectionHead">
+            <div>
+                <h3>Quick Shortcuts</h3>
+                <p>Fast access to the most important admin actions.</p>
+            </div>
+            <a class="sectionLink" href="/Admin/Notices">View Notices →</a>
+        </div>
+
+        <div class="shortcutBody">
+            <a class="shortcutCard s1" href="/Admin/PublishNotice">
+                <strong>📣 Publish New Announcement</strong>
+                <span>Create and publish important notices for all users.</span>
+            </a>
+
+            <a class="shortcutCard s2" href="/Admin/ManageUsers">
+                <strong>👥 Manage Users</strong>
+                <span>Review account status and control user access easily.</span>
+            </a>
+
+            <a class="shortcutCard s3" href="/Admin/GenerateReportPdf">
+                <strong>📄 Download PDF Report</strong>
+                <span>Export the latest system summary as a clean PDF report.</span>
+            </a>
+
+            <a class="shortcutCard s4" href="/">
+                <strong>🏠 Go to Homepage</strong>
+                <span>Return to the public Smart Nagar home page.</span>
+            </a>
+        </div>
+    </div>
+</div>

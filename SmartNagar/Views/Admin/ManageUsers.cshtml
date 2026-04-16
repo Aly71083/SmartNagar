@@ -1,0 +1,211 @@
+﻿@model SmartNagar.ViewModels.ManageUsersVM
+@{
+    Layout = "~/Views/Admin/_AdminLayout.cshtml";
+    ViewBag.Active = "users";
+    ViewBag.PageTitle = "Manage Users";
+}
+
+@section Styles {
+    <style>
+        .wrap {
+            width: 100%;
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 22px;
+            font-weight: 1000;
+            color: #2d1b4e;
+        }
+
+        .sub {
+            margin-top: 6px;
+            color: #7b6ca8;
+            font-weight: 750;
+            font-size: 14px;
+        }
+
+        .tableBox {
+            margin-top: 16px;
+            border-radius: 18px;
+            overflow: hidden;
+            background: linear-gradient(180deg, #ffffff 0%, #f8f5ff 100%);
+            border: 1px solid #ddd6fe;
+            box-shadow: 0 10px 24px rgba(124, 58, 237, .08);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 12px 14px;
+            font-size: 14px;
+            text-align: left;
+            vertical-align: middle;
+            color: #2d1b4e;
+        }
+
+        thead tr {
+            background: #f3edff;
+        }
+
+        th {
+            color: #5b21b6;
+            font-weight: 1000;
+        }
+
+        tbody tr {
+            border-top: 1px solid #e9e4ff;
+        }
+
+            tbody tr:hover {
+                background: #faf7ff;
+            }
+
+        .pill {
+            padding: 6px 10px;
+            border-radius: 999px;
+            font-weight: 900;
+            font-size: 12px;
+            display: inline-block;
+        }
+
+            .pill.active {
+                background: #ede9fe;
+                color: #5b21b6;
+                border: 1px solid #d8b4fe;
+            }
+
+            .pill.inactive {
+                background: #f3f4f6;
+                color: #6b7280;
+                border: 1px solid #d1d5db;
+            }
+
+        .actions {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            border: none;
+            border-radius: 10px;
+            padding: 9px 12px;
+            font-weight: 1000;
+            font-size: 12px;
+            cursor: pointer;
+            color: #fff;
+        }
+
+            .btn.b-gray {
+                background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+            }
+
+                .btn.b-gray:hover {
+                    background: linear-gradient(135deg, #7c3aed, #6d28d9);
+                }
+
+            .btn.b-red {
+                background: linear-gradient(135deg, #ef4444, #dc2626);
+            }
+
+                .btn.b-red:hover {
+                    background: linear-gradient(135deg, #dc2626, #b91c1c);
+                }
+
+        .msg {
+            margin-top: 14px;
+            padding: 12px 14px;
+            border-radius: 12px;
+            background: #f3edff;
+            border: 1px solid #ddd6fe;
+            color: #5b21b6;
+            font-weight: 800;
+        }
+
+        @@media (max-width: 820px) {
+            th:nth-child(1), td:nth-child(1) {
+                display: none;
+            }
+        }
+    </style>
+}
+
+<div class="wrap">
+    <h1>Manage Users</h1>
+    <div class="sub">View and manage all system users</div>
+
+    @if (TempData["Msg"] != null)
+    {
+        <div class="msg">@TempData["Msg"]</div>
+    }
+
+    <div class="tableBox">
+        <table>
+            <thead>
+                <tr>
+                    <th>USER ID</th>
+                    <th>NAME</th>
+                    <th>EMAIL</th>
+                    <th>USER TYPE</th>
+                    <th>STATUS</th>
+                    <th style="width:260px;">ACTION</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                @if (Model?.Users == null || Model.Users.Count == 0)
+                {
+                    <tr>
+                        <td colspan="6" style="padding:18px;color:#7b6ca8;font-weight:900;">
+                            No users found.
+                        </td>
+                    </tr>
+                }
+                else
+                {
+                    foreach (var u in Model.Users)
+                    {
+                        <tr>
+                            <td>@u.Id</td>
+                            <td>@u.Name</td>
+                            <td>@u.Email</td>
+                            <td>@u.Role</td>
+                            <td>
+                                @if (u.IsActive)
+                                {
+                                    <span class="pill active">Active</span>
+                                }
+                                else
+                                {
+                                    <span class="pill inactive">Inactive</span>
+                                }
+                            </td>
+
+                            <td>
+                                <div class="actions">
+                                    <form method="post" action="/Admin/ToggleActive">
+                                        @Html.AntiForgeryToken()
+                                        <input type="hidden" name="id" value="@u.Id" />
+                                        <button class="btn b-gray" type="submit">
+                                            @(u.IsActive ? "Deactivate" : "Activate")
+                                        </button>
+                                    </form>
+
+                                    <form method="post" action="/Admin/DeleteUser" onsubmit="return confirm('Delete this user?');">
+                                        @Html.AntiForgeryToken()
+                                        <input type="hidden" name="id" value="@u.Id" />
+                                        <button class="btn b-red" type="submit">Delete</button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

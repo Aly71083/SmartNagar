@@ -1,0 +1,418 @@
+﻿@model SmartNagar.ViewModels.SystemOverviewVM
+@using System.Text.Json
+@{
+    Layout = "~/Views/Admin/_AdminLayout.cshtml";
+    ViewBag.Active = "overview";
+    ViewBag.PageTitle = "System Overview";
+
+    var trendLabelsJson = JsonSerializer.Serialize(Model.TrendLabels ?? new List<string>());
+    var trendValuesJson = JsonSerializer.Serialize(Model.TrendValues ?? new List<int>());
+
+    var catLabelsJson = JsonSerializer.Serialize(Model.CategoryLabels ?? new List<string>());
+    var catValuesJson = JsonSerializer.Serialize(Model.CategoryValues ?? new List<int>());
+
+    var statusLabelsJson = JsonSerializer.Serialize(Model.StatusLabels ?? new List<string>());
+    var statusValuesJson = JsonSerializer.Serialize(Model.StatusValues ?? new List<int>());
+
+    var maxTop = (Model.TopCategories?.Count ?? 0) == 0 ? 1 : Model.TopCategories.Max(x => x.Count);
+}
+
+@section Styles {
+    <style>
+        .wrap {
+            width: 100%;
+        }
+
+        .top {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 12px;
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 26px;
+            font-weight: 950;
+            color: #2d1b4e;
+        }
+
+        .sub {
+            margin-top: 6px;
+            color: #7b6ca8;
+            font-weight: 650;
+        }
+
+        .filter {
+            background: #ffffff;
+            border: 1px solid #ddd6fe;
+            border-radius: 14px;
+            padding: 10px 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 10px 22px rgba(124, 58, 237, .08);
+            color: #5b21b6;
+        }
+
+        select {
+            border: none;
+            outline: none;
+            font-weight: 800;
+            background: transparent;
+            color: #2d1b4e;
+        }
+
+        .cards {
+            margin-top: 16px;
+            display: grid;
+            grid-template-columns: repeat(5,1fr);
+            gap: 14px;
+        }
+
+        .card {
+            border-radius: 18px;
+            padding: 16px;
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(180deg, #ffffff 0%, #f8f5ff 100%);
+            border: 1px solid #ddd6fe;
+            box-shadow: 0 10px 24px rgba(124, 58, 237, .08);
+        }
+
+            .card:before {
+                content: "";
+                position: absolute;
+                left: 0;
+                top: 0;
+                height: 4px;
+                width: 100%;
+                background: linear-gradient(90deg,#a78bfa,#7c3aed);
+            }
+
+        .t {
+            color: #7c3aed;
+            font-weight: 950;
+            font-size: 12px;
+            text-transform: uppercase;
+        }
+
+        .n {
+            font-size: 28px;
+            font-weight: 950;
+            margin-top: 10px;
+            color: #2d1b4e;
+        }
+
+        .s {
+            color: #7b6ca8;
+            font-weight: 750;
+            font-size: 12px;
+            margin-top: 4px;
+        }
+
+        .grid {
+            margin-top: 14px;
+            display: grid;
+            grid-template-columns: 1.2fr .8fr;
+            gap: 14px;
+        }
+
+        .panel {
+            border-radius: 18px;
+            background: linear-gradient(180deg, #ffffff 0%, #fbf9ff 100%);
+            border: 1px solid #ddd6fe;
+            box-shadow: 0 10px 24px rgba(124, 58, 237, .08);
+            overflow: hidden;
+        }
+
+        .pHead {
+            padding: 14px 16px;
+            border-bottom: 1px solid #e9e4ff;
+            font-weight: 950;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: #2d1b4e;
+        }
+
+        .pBody {
+            padding: 14px 16px;
+        }
+
+        .btns {
+            display: flex;
+            gap: 8px;
+        }
+
+        .chip {
+            background: #ede9fe;
+            border: 1px solid #ddd6fe;
+            color: #5b21b6;
+            padding: 7px 10px;
+            border-radius: 10px;
+            font-weight: 900;
+            font-size: 12px;
+        }
+
+        .grid2 {
+            margin-top: 14px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+        }
+
+        canvas {
+            width: 100% !important;
+            height: 300px !important;
+        }
+
+        .bars {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .barRow {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .barLabel {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            font-weight: 900;
+            color: #2d1b4e;
+        }
+
+        .progress {
+            flex: 1;
+            height: 10px;
+            background: #ede9fe;
+            border-radius: 999px;
+            overflow: hidden;
+        }
+
+        .fill {
+            height: 100%;
+            background: linear-gradient(90deg,#a78bfa,#7c3aed);
+        }
+
+        .count {
+            font-weight: 950;
+            color: #5b21b6;
+        }
+
+        .exportRow {
+            margin-top: 12px;
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        .linkBtn {
+            padding: 10px 14px;
+            border-radius: 12px;
+            display: inline-block;
+            text-decoration: none;
+            font-weight: 900;
+            background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+            color: #fff;
+        }
+
+            .linkBtn:hover {
+                background: linear-gradient(135deg, #7c3aed, #6d28d9);
+            }
+
+        @@media (max-width: 1100px) {
+            .cards {
+                grid-template-columns: repeat(2,1fr);
+            }
+
+            .grid, .grid2 {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @@media (max-width: 650px) {
+            .cards {
+                grid-template-columns: 1fr;
+            }
+
+            .top {
+                flex-direction: column;
+            }
+        }
+    </style>
+}
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        const trendLabels = @Html.Raw(trendLabelsJson);
+        const trendValues = @Html.Raw(trendValuesJson);
+
+        const catLabels = @Html.Raw(catLabelsJson);
+        const catValues = @Html.Raw(catValuesJson);
+
+        const statusLabels = @Html.Raw(statusLabelsJson);
+        const statusValues = @Html.Raw(statusValuesJson);
+
+        new Chart(document.getElementById('trendChart'), {
+            type: 'line',
+            data: {
+                labels: trendLabels,
+                datasets: [{
+                    label: 'Complaints',
+                    data: trendValues,
+                    fill: true,
+                    tension: 0.35
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: { legend: { display: false } }
+            }
+        });
+
+        new Chart(document.getElementById('catChart'), {
+            type: 'doughnut',
+            data: {
+                labels: catLabels,
+                datasets: [{
+                    data: catValues
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: { legend: { position: 'bottom' } }
+            }
+        });
+
+        new Chart(document.getElementById('statusChart'), {
+            type: 'bar',
+            data: {
+                labels: statusLabels,
+                datasets: [{
+                    label: 'Count',
+                    data: statusValues
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: { legend: { display: false } }
+            }
+        });
+    </script>
+}
+
+<div class="wrap">
+    <div class="top">
+        <div>
+            <h1>Dashboard</h1>
+            <div class="sub">Comprehensive insights and performance metrics</div>
+        </div>
+
+        <div class="filter">
+            📅
+            <select>
+                <option>Last 30 Days</option>
+                <option>Last 7 Days</option>
+                <option>Today</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="exportRow">
+        <a class="linkBtn" href="/Admin/GenerateReportPdf">📄 Export PDF</a>
+    </div>
+
+    <div class="cards">
+        <div class="card">
+            <div class="t">Total Users</div>
+            <div class="n">@Model.TotalUsers</div>
+            <div class="s">Live from database</div>
+        </div>
+        <div class="card">
+            <div class="t">Total Complaints</div>
+            <div class="n">@Model.TotalComplaints</div>
+            <div class="s">Live from database</div>
+        </div>
+        <div class="card">
+            <div class="t">Resolved Issues</div>
+            <div class="n">@Model.Resolved</div>
+            <div class="s">Status = Resolved</div>
+        </div>
+        <div class="card">
+            <div class="t">Pending Issues</div>
+            <div class="n">@Model.Pending</div>
+            <div class="s">Status = Pending</div>
+        </div>
+        <div class="card">
+            <div class="t">Avg Resolution Time</div>
+            <div class="n">@Model.AvgResolutionDays.ToString("0.0")</div>
+            <div class="s">Days to resolve</div>
+        </div>
+    </div>
+
+    <div class="grid">
+        <div class="panel">
+            <div class="pHead">
+                <span>📈 Complaints Trend</span>
+                <div class="btns">
+                    <span class="chip">7D</span>
+                    <span class="chip" style="opacity:.6">30D</span>
+                    <span class="chip" style="opacity:.6">90D</span>
+                </div>
+            </div>
+            <div class="pBody">
+                <canvas id="trendChart"></canvas>
+            </div>
+        </div>
+
+        <div class="panel">
+            <div class="pHead">
+                <span>🧩 Category Distribution</span>
+                <span class="chip">Top 5</span>
+            </div>
+            <div class="pBody">
+                <canvas id="catChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <div class="grid2">
+        <div class="panel">
+            <div class="pHead">📊 Status Breakdown</div>
+            <div class="pBody">
+                <canvas id="statusChart"></canvas>
+            </div>
+        </div>
+
+        <div class="panel">
+            <div class="pHead">🏷️ Top Categories by Volume</div>
+            <div class="pBody">
+                <div class="bars">
+                    @if (Model.TopCategories == null || Model.TopCategories.Count == 0)
+                    {
+                        <div style="color:#7b6ca8;font-weight:700">No complaints yet — categories will show once complaints are added.</div>
+                    }
+                    else
+                    {
+                        foreach (var c in Model.TopCategories)
+                        {
+                            var pct = (int)Math.Round((c.Count * 100.0) / maxTop);
+                            <div class="barRow">
+                                <div class="barLabel">📌 @c.Category</div>
+                                <div class="progress"><div class="fill" style="width:@pct%"></div></div>
+                                <div class="count">@c.Count</div>
+                            </div>
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

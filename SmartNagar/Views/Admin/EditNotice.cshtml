@@ -1,0 +1,142 @@
+﻿@model SmartNagar.Models.Notice
+@{
+    Layout = "~/Views/Admin/_AdminLayout.cshtml";
+    ViewBag.Active = "notices";
+    ViewBag.PageTitle = "Edit Notice";
+}
+
+@section Styles {
+    <style>
+        .wrap {
+            width: min(900px, 100%);
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 22px;
+            font-weight: 1000;
+            color: #2d1b4e;
+        }
+
+        .sub {
+            margin-top: 6px;
+            color: #7b6ca8;
+            font-weight: 750;
+        }
+
+        .card {
+            margin-top: 16px;
+            border-radius: 18px;
+            padding: 18px;
+            background: linear-gradient(180deg, #ffffff 0%, #f8f5ff 100%);
+            border: 1px solid #ddd6fe;
+            box-shadow: 0 10px 24px rgba(124, 58, 237, .08);
+        }
+
+        label {
+            display: block;
+            font-weight: 950;
+            margin: 12px 0 8px;
+            color: #2d1b4e;
+        }
+
+        input, textarea, select {
+            width: 100%;
+            padding: 12px 12px;
+            border-radius: 12px;
+            font-weight: 750;
+            border: 1px solid #ddd6fe;
+            background: #faf7ff;
+            color: #2d1b4e;
+        }
+
+        textarea {
+            min-height: 160px;
+            resize: vertical;
+        }
+
+        .btnRow {
+            display: flex;
+            gap: 12px;
+            margin-top: 14px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            border: none;
+            border-radius: 14px;
+            padding: 14px 16px;
+            font-weight: 1000;
+            cursor: pointer;
+            font-size: 14px;
+            color: #fff;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+        }
+
+        .btnSave {
+            flex: 1;
+            min-width: 220px;
+            background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+        }
+
+            .btnSave:hover {
+                background: linear-gradient(135deg, #7c3aed, #6d28d9);
+            }
+
+        .btnCancel {
+            flex: 1;
+            min-width: 220px;
+            background: #ede9fe;
+            color: #4c1d95;
+        }
+
+            .btnCancel:hover {
+                background: #ddd6fe;
+            }
+
+        .metaHint {
+            margin-top: 10px;
+            color: #7b6ca8;
+            font-weight: 850;
+            font-size: 12px;
+        }
+    </style>
+}
+
+<div class="wrap">
+    <h1>Edit Notice</h1>
+    <div class="sub">Update published notice</div>
+
+    <div class="card">
+        <form method="post" action="/Admin/EditNotice">
+            @Html.AntiForgeryToken()
+
+            <input type="hidden" name="Id" value="@Model.Id" />
+
+            <label>Notice Title</label>
+            <input name="Title" value="@Model.Title" />
+
+            <label>Description</label>
+            <textarea name="Description">@Model.Description</textarea>
+
+            <label>Priority</label>
+            <select name="Priority">
+                <option value="Low" selected="@(Model.Priority == "Low")">Low</option>
+                <option value="Normal" selected="@(Model.Priority == "Normal")">Normal</option>
+                <option value="High" selected="@(Model.Priority == "High")">High</option>
+                <option value="Urgent" selected="@(Model.Priority == "Urgent")">Urgent</option>
+            </select>
+
+            <div class="metaHint">
+                Published: @Model.CreatedAt.ToLocalTime().ToString("yyyy-MM-dd hh:mm tt")
+            </div>
+
+            <div class="btnRow">
+                <button class="btn btnSave" type="submit">Save Changes</button>
+                <a class="btn btnCancel" href="/Admin/Notices">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>

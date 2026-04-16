@@ -1,0 +1,210 @@
+﻿@model List<SmartNagar.Models.ActivityLog>
+
+@{
+    Layout = "~/Views/Admin/_AdminLayout.cshtml";
+    ViewBag.PageTitle = "Admin Notifications";
+}
+
+@section Styles {
+    <style>
+        .pageWrap {
+            display: grid;
+            gap: 16px;
+        }
+
+        .hero {
+            background: linear-gradient(135deg, #b79cff 0%, #9b7bff 45%, #7c3aed 100%);
+            border-radius: 24px;
+            padding: 24px;
+            color: #fff;
+            box-shadow: 0 18px 35px rgba(124, 58, 237, .16);
+        }
+
+            .hero h2 {
+                margin: 0;
+                font-size: 28px;
+                font-weight: 950;
+            }
+
+            .hero p {
+                margin: 8px 0 0;
+                font-size: 14px;
+                line-height: 1.6;
+                opacity: .96;
+                font-weight: 600;
+            }
+
+        .topRow {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .pageBtn {
+            border: none;
+            background: rgba(255,255,255,.18);
+            color: #fff;
+            padding: 10px 14px;
+            border-radius: 12px;
+            font-weight: 900;
+            cursor: pointer;
+        }
+
+            .pageBtn:hover {
+                background: rgba(255,255,255,.24);
+            }
+
+        .list {
+            display: grid;
+            gap: 14px;
+        }
+
+        .card {
+            background: #fff;
+            border: 1px solid #e7ddff;
+            border-radius: 20px;
+            padding: 18px;
+            box-shadow: 0 8px 22px rgba(95, 85, 160, .06);
+        }
+
+            .card.unread {
+                background: #faf7ff;
+                border-color: #d9c7ff;
+            }
+
+        .typeTag {
+            display: inline-block;
+            margin-bottom: 10px;
+            padding: 5px 10px;
+            border-radius: 999px;
+            font-size: 11px;
+            font-weight: 900;
+            background: #ede4ff;
+            color: #6d28d9;
+        }
+
+            .typeTag.notice {
+                background: #e0f2fe;
+                color: #0369a1;
+            }
+
+            .typeTag.complaint {
+                background: #fef3c7;
+                color: #b45309;
+            }
+
+            .typeTag.user {
+                background: #dcfce7;
+                color: #166534;
+            }
+
+            .typeTag.garbage {
+                background: #f3e8ff;
+                color: #7e22ce;
+            }
+
+            .typeTag.emergency {
+                background: #fee2e2;
+                color: #b91c1c;
+            }
+
+        .title {
+            font-size: 20px;
+            font-weight: 950;
+            color: #2d1b4f;
+            margin-bottom: 6px;
+        }
+
+        .detail {
+            color: #6c5f88;
+            font-size: 14px;
+            font-weight: 700;
+            line-height: 1.6;
+            margin-bottom: 10px;
+        }
+
+        .meta {
+            color: #8a7ca8;
+            font-size: 12px;
+            font-weight: 800;
+        }
+
+        .empty {
+            background: #fff;
+            border: 1px solid #e6dcf7;
+            border-radius: 20px;
+            padding: 28px;
+            text-align: center;
+            color: #7c6f98;
+            font-weight: 800;
+        }
+
+        @@media (max-width: 700px) {
+            .topRow {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+    </style>
+}
+
+<div class="pageWrap">
+    <div class="hero">
+        <div class="topRow">
+            <div>
+                <h2>Admin Notifications</h2>
+                <p>Review all municipal activities, notices, complaint updates, garbage updates, and user actions from one place.</p>
+            </div>
+
+            <form method="post" action="/Admin/MarkAllReadFromPage">
+                @Html.AntiForgeryToken()
+                <button type="submit" class="pageBtn">Mark all read</button>
+            </form>
+        </div>
+    </div>
+
+    @if (Model == null || !Model.Any())
+    {
+        <div class="empty">No notifications found.</div>
+    }
+    else
+    {
+        <div class="list">
+            @foreach (var item in Model)
+            {
+                var typeClass = "";
+                var typeLower = (item.Type ?? "").ToLower();
+
+                if (typeLower.Contains("notice"))
+                {
+                    typeClass = "notice";
+                }
+                else if (typeLower.Contains("complaint"))
+                {
+                    typeClass = "complaint";
+                }
+                else if (typeLower.Contains("user"))
+                {
+                    typeClass = "user";
+                }
+                else if (typeLower.Contains("garbage"))
+                {
+                    typeClass = "garbage";
+                }
+                else if (typeLower.Contains("emergency"))
+                {
+                    typeClass = "emergency";
+                }
+
+                <div class="card @(item.IsRead ? "" : "unread")">
+                    <div class="typeTag @typeClass">@item.Type</div>
+                    <div class="title">@item.Title</div>
+                    <div class="detail">@item.Detail</div>
+                    <div class="meta">@item.CreatedAt.ToLocalTime().ToString("dd MMM, yyyy hh:mm tt")</div>
+                </div>
+            }
+        </div>
+    }
+</div>

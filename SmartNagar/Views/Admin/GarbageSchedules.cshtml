@@ -1,0 +1,313 @@
+﻿@model SmartNagar.ViewModels.GarbageSchedulePageVM
+@{
+    Layout = "~/Views/Admin/_AdminLayout.cshtml";
+    ViewBag.Active = "garbage";
+    ViewBag.PageTitle = "Garbage Schedules";
+}
+
+@section Styles {
+    <style>
+        .wrap {
+            width: 100%;
+        }
+
+        .head {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-bottom: 18px;
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 24px;
+            font-weight: 1000;
+            color: #4d2c7a;
+        }
+
+        .sub {
+            margin-top: 6px;
+            color: #7b6f95;
+            font-size: 14px;
+            font-weight: 700;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: 360px 1fr;
+            gap: 18px;
+            align-items: start;
+        }
+
+        .card {
+            background: #fff;
+            border: 1px solid #e9ddfb;
+            border-radius: 20px;
+            box-shadow: 0 10px 24px rgba(95, 85, 160, .10);
+            overflow: hidden;
+        }
+
+        .cardHead {
+            padding: 18px 18px 8px;
+            font-size: 18px;
+            font-weight: 900;
+            color: #5b21b6;
+        }
+
+        .cardSub {
+            padding: 0 18px 16px;
+            color: #7b6f95;
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .body {
+            padding: 0 18px 18px;
+        }
+
+        .group {
+            margin-bottom: 14px;
+        }
+
+            .group label {
+                display: block;
+                margin-bottom: 7px;
+                font-size: 13px;
+                font-weight: 900;
+                color: #4c1d95;
+            }
+
+        .input, .textarea {
+            width: 100%;
+            border: 1px solid #ddd6fe;
+            background: #fcfbff;
+            border-radius: 12px;
+            padding: 12px 14px;
+            font-size: 14px;
+            outline: none;
+        }
+
+            .input:focus, .textarea:focus {
+                border-color: #8b5cf6;
+                box-shadow: 0 0 0 4px rgba(139,92,246,.12);
+            }
+
+        .textarea {
+            min-height: 90px;
+            resize: vertical;
+        }
+
+        .text-danger {
+            color: #dc2626;
+            font-size: 12px;
+            font-weight: 700;
+            margin-top: 6px;
+            display: block;
+        }
+
+        .btnRow {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 14px;
+        }
+
+        .btnMain, .btnAlt, .btnEdit, .btnDelete {
+            border: none;
+            border-radius: 12px;
+            padding: 10px 14px;
+            font-size: 14px;
+            font-weight: 900;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btnMain {
+            background: linear-gradient(135deg, #8b5cf6, #6d28d9);
+            color: #fff;
+        }
+
+        .btnAlt {
+            background: #f3f4f6;
+            color: #374151;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 14px 16px;
+            text-align: left;
+            border-bottom: 1px solid #f1ebff;
+            vertical-align: middle;
+            font-size: 14px;
+        }
+
+        th {
+            background: #faf7ff;
+            color: #5b21b6;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: .5px;
+            font-weight: 1000;
+        }
+
+        .muted {
+            color: #6b7280;
+            font-weight: 600;
+        }
+
+        .actionRow {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .btnEdit {
+            background: #ede9fe;
+            color: #5b21b6;
+        }
+
+        .btnDelete {
+            background: #fee2e2;
+            color: #b91c1c;
+        }
+
+        .alertBox {
+            margin-bottom: 16px;
+            padding: 12px 14px;
+            border-radius: 12px;
+            font-weight: 800;
+            background: #ecfdf5;
+            color: #166534;
+            border: 1px solid #bbf7d0;
+        }
+
+        .empty {
+            padding: 28px;
+            text-align: center;
+            color: #7b6f95;
+            font-weight: 700;
+        }
+
+        @@media (max-width: 980px) {
+            .grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+}
+
+<div class="wrap">
+    <div class="head">
+        <div>
+            <h1>Garbage Schedule Management</h1>
+            <div class="sub">Manage ward-wise garbage collection days and time in one page.</div>
+        </div>
+    </div>
+
+    @if (TempData["Msg"] != null)
+    {
+        <div class="alertBox">@TempData["Msg"]</div>
+    }
+
+    <div class="grid">
+        <div class="card">
+            <div class="cardHead">@(Model.IsEdit ? "Edit Schedule" : "Add Schedule")</div>
+            <div class="cardSub">@(Model.IsEdit ? "Update selected ward schedule." : "Create a new official garbage schedule.")</div>
+
+            <div class="body">
+                <form asp-action="SaveGarbageSchedule" asp-controller="Admin" method="post">
+                    @Html.AntiForgeryToken()
+                    <input asp-for="Form.Id" type="hidden" />
+
+                    <div class="group">
+                        <label asp-for="Form.WardNumber"></label>
+                        <input asp-for="Form.WardNumber" class="input" placeholder="Enter ward number" />
+                        <span asp-validation-for="Form.WardNumber" class="text-danger"></span>
+                    </div>
+
+                    <div class="group">
+                        <label asp-for="Form.CollectionDays"></label>
+                        <input asp-for="Form.CollectionDays" class="input" placeholder="Example: Sunday – Friday" />
+                        <span asp-validation-for="Form.CollectionDays" class="text-danger"></span>
+                    </div>
+
+                    <div class="group">
+                        <label asp-for="Form.CollectionTime"></label>
+                        <input asp-for="Form.CollectionTime" class="input" placeholder="Example: 6:00 AM – 10:00 AM" />
+                        <span asp-validation-for="Form.CollectionTime" class="text-danger"></span>
+                    </div>
+
+                    <div class="group">
+                        <label asp-for="Form.Notes"></label>
+                        <textarea asp-for="Form.Notes" class="textarea" placeholder="Optional notes"></textarea>
+                        <span asp-validation-for="Form.Notes" class="text-danger"></span>
+                    </div>
+
+                    <div class="btnRow">
+                        <button type="submit" class="btnMain">@(Model.IsEdit ? "Update Schedule" : "Save Schedule")</button>
+                        @if (Model.IsEdit)
+                        {
+                            <a asp-action="CancelGarbageEdit" asp-controller="Admin" class="btnAlt">Cancel</a>
+                        }
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="card">
+            @if (Model.Schedules != null && Model.Schedules.Any())
+            {
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Ward</th>
+                            <th>Days</th>
+                            <th>Time</th>
+                            <th>Notes</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.Schedules)
+                        {
+                            <tr>
+                                <td><strong>@item.WardNumber</strong></td>
+                                <td>@item.CollectionDays</td>
+                                <td>@item.CollectionTime</td>
+                                <td class="muted">@(!string.IsNullOrWhiteSpace(item.Notes) ? item.Notes : "-")</td>
+                                <td>
+                                    <div class="actionRow">
+                                        <a asp-action="GarbageSchedules" asp-controller="Admin" asp-route-editId="@item.Id" class="btnEdit">Edit</a>
+
+                                        <form asp-action="DeleteGarbageSchedule" asp-controller="Admin" method="post" style="display:inline;" onsubmit="return confirm('Delete this schedule?');">
+                                            @Html.AntiForgeryToken()
+                                            <input type="hidden" name="id" value="@item.Id" />
+                                            <button type="submit" class="btnDelete">Delete</button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+            else
+            {
+                <div class="empty">No garbage schedules added yet.</div>
+            }
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

@@ -1,0 +1,158 @@
+﻿@model List<SmartNagar.Models.Notice>
+@{
+    Layout = "~/Views/Admin/_AdminLayout.cshtml";
+    ViewBag.Active = "notices";
+    ViewBag.PageTitle = "All Notices";
+}
+
+@section Styles {
+    <style>
+        .wrap {
+            width: 100%;
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 22px;
+            font-weight: 1000;
+            color: #2d1b4e;
+        }
+
+        .sub {
+            margin-top: 6px;
+            color: #7b6ca8;
+            font-weight: 750;
+        }
+
+        .card {
+            margin-top: 14px;
+            border-radius: 18px;
+            padding: 16px;
+            background: linear-gradient(180deg, #ffffff 0%, #f8f5ff 100%);
+            border: 1px solid #ddd6fe;
+            box-shadow: 0 10px 24px rgba(124, 58, 237, .08);
+        }
+
+        .row {
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .title {
+            font-weight: 1000;
+            font-size: 16px;
+            color: #2d1b4e;
+        }
+
+        .meta {
+            color: #7b6ca8;
+            font-weight: 850;
+            font-size: 12px;
+            margin-top: 6px;
+        }
+
+        .desc {
+            margin-top: 10px;
+            color: #5f4b8b;
+            font-weight: 650;
+            line-height: 1.6;
+        }
+
+        .btnDel, .btnEdit, .btnNew {
+            border: none;
+            border-radius: 12px;
+            padding: 10px 14px;
+            font-weight: 1000;
+            cursor: pointer;
+            color: #fff;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btnNew {
+            margin-top: 14px;
+            background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+        }
+
+            .btnNew:hover {
+                background: linear-gradient(135deg, #7c3aed, #6d28d9);
+            }
+
+        .btnEdit {
+            background: linear-gradient(135deg, #a78bfa, #8b5cf6);
+        }
+
+            .btnEdit:hover {
+                background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+            }
+
+        .btnDel {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+        }
+
+            .btnDel:hover {
+                background: linear-gradient(135deg, #dc2626, #b91c1c);
+            }
+
+        .btnGroup {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .msg {
+            margin-top: 14px;
+            padding: 12px 14px;
+            border-radius: 12px;
+            background: #f3edff;
+            border: 1px solid #ddd6fe;
+            color: #5b21b6;
+            font-weight: 800;
+        }
+    </style>
+}
+
+<div class="wrap">
+    <h1>All Notices</h1>
+    <div class="sub">Published notices</div>
+
+    <a class="btnNew" href="/Admin/PublishNotice">+ Publish New Notice</a>
+
+    @if (TempData["Msg"] != null)
+    {
+        <div class="msg">@TempData["Msg"]</div>
+    }
+
+    @if (Model == null || Model.Count == 0)
+    {
+        <div class="card" style="color:#7b6ca8;font-weight:900;">No notices found yet.</div>
+    }
+    else
+    {
+        foreach (var n in Model)
+        {
+            <div class="card">
+                <div class="row">
+                    <div>
+                        <div class="title">@n.Title</div>
+                        <div class="meta">@n.Priority • @n.CreatedAt.ToLocalTime().ToString("yyyy-MM-dd hh:mm tt")</div>
+                    </div>
+
+                    <div class="btnGroup">
+                        <a class="btnEdit" href="/Admin/EditNotice/@n.Id">Edit</a>
+
+                        <form method="post" action="/Admin/DeleteNotice" onsubmit="return confirm('Delete this notice?');">
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" name="id" value="@n.Id" />
+                            <button class="btnDel" type="submit">Delete</button>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="desc">@n.Description</div>
+            </div>
+        }
+    }
+</div>

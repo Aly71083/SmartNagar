@@ -1,0 +1,46 @@
+﻿@model SmartNagar.ViewModels.SystemOverviewVM
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>System Report</title>
+    <style>
+        body {
+            font-family: Arial;
+            background: #fffef4;
+            color: #4d4300;
+        }
+
+        h1 {
+            text-align: center;
+            color: #5f5200;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            background: #fffdf0;
+        }
+
+        td, th {
+            border: 1px solid #cdbf63;
+            padding: 10px;
+            text-align: left;
+        }
+
+        th {
+            background: #f9f6c4;
+        }
+    </style>
+</head>
+<body>
+    <h1>Smart Nagar System Report</h1>
+    <table>
+        <tr><th>Total Users</th><td>@Model.TotalUsers</td></tr>
+        <tr><th>Total Complaints</th><td>@Model.TotalComplaints</td></tr>
+        <tr><th>Resolved</th><td>@Model.Resolved</td></tr>
+        <tr><th>Pending</th><td>@Model.Pending</td></tr>
+    </table>
+</body>
+</html>
