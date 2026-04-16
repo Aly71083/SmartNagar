@@ -1,0 +1,670 @@
+﻿@model SmartNagar.ViewModels.CitizenDashboardVM
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+
+@{
+    Layout = "~/Views/Citizen/_CitizenLayout.cshtml";
+    ViewBag.Active = "Home";
+    ViewBag.FullName = Model?.FullName ?? "Citizen";
+    ViewBag.ChatbotMode = "citizen";
+
+    double? lat = ViewBag.LastLat as double?;
+    double? lng = ViewBag.LastLng as double?;
+    DateTime? lastAt = ViewBag.LastLocationAt as DateTime?;
+}
+
+<style>
+    .banner {
+        background: linear-gradient(90deg,#7c4dff,#a78bfa);
+        border-radius: 16px;
+        padding: 22px;
+        color: #fff;
+        box-shadow: 0 14px 30px rgba(124,77,255,.22);
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        margin-bottom: 16px;
+    }
+
+        .banner h3 {
+            margin: 0;
+            font-size: 22px;
+            font-weight: 1000;
+        }
+
+        .banner p {
+            margin: 6px 0 0;
+            opacity: .95;
+            font-size: 13px;
+            font-weight: 750;
+        }
+
+    .stats {
+        display: grid;
+        grid-template-columns: repeat(4,1fr);
+        gap: 14px;
+        margin: 14px 0 18px;
+    }
+
+    .stat {
+        background: #fff;
+        border-radius: 14px;
+        padding: 16px;
+        box-shadow: 0 10px 22px rgba(124,77,255,.08);
+        position: relative;
+        overflow: hidden;
+        border: 1px solid #eadffd;
+        min-height: 82px;
+    }
+
+        .stat:before {
+            content: "";
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: var(--c, #7c4dff);
+        }
+
+        .stat h2 {
+            margin: 0;
+            font-size: 24px;
+            font-weight: 1000;
+        }
+
+        .stat small {
+            color: #64748b;
+            font-weight: 800;
+            font-size: 12px;
+        }
+
+    .cards {
+        display: grid;
+        grid-template-columns: repeat(5,1fr);
+        gap: 14px;
+        margin-top: 16px;
+    }
+
+    .card {
+        background: #fff;
+        border-radius: 16px;
+        padding: 18px;
+        box-shadow: 0 12px 24px rgba(124,77,255,.08);
+        text-decoration: none;
+        color: #111827;
+        transition: .15s transform ease, .15s box-shadow ease;
+        border: 1px solid #eadffd;
+        min-height: 130px;
+    }
+
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 18px 36px rgba(124,77,255,.12);
+        }
+
+    .ico {
+        width: 52px;
+        height: 52px;
+        border-radius: 14px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #fff;
+        font-size: 18px;
+        margin-bottom: 12px;
+        box-shadow: 0 14px 28px rgba(124,77,255,.18);
+    }
+
+    .card h4 {
+        margin: 0 0 6px;
+        font-weight: 1000;
+    }
+
+    .card p {
+        margin: 0;
+        font-size: 12px;
+        color: #6b7280;
+        line-height: 1.4;
+        font-weight: 700;
+    }
+
+    .locCard {
+        margin-top: 18px;
+        background: #fff;
+        border: 1px solid #eadffd;
+        border-radius: 16px;
+        padding: 16px;
+        box-shadow: 0 12px 24px rgba(124,77,255,.08);
+    }
+
+    /* CHATBOT */
+    .chatFab {
+        position: fixed;
+        right: 24px;
+        bottom: 24px;
+        width: 64px;
+        height: 64px;
+        border-radius: 50%;
+        border: none;
+        background: linear-gradient(135deg,#7c4dff,#ec4899);
+        color: #fff;
+        font-size: 24px;
+        cursor: pointer;
+        box-shadow: 0 20px 40px rgba(124,77,255,.28);
+        z-index: 2000;
+    }
+
+    .chatWindow {
+        position: fixed;
+        right: 24px;
+        bottom: 100px;
+        width: 370px;
+        max-width: calc(100vw - 28px);
+        height: 560px;
+        background: #fff;
+        border: 1px solid #efe7ff;
+        border-radius: 26px;
+        box-shadow: 0 24px 60px rgba(25, 22, 51, .18);
+        overflow: hidden;
+        z-index: 2000;
+        display: none;
+        flex-direction: column;
+    }
+
+        .chatWindow.open {
+            display: flex;
+        }
+
+    .chatHeader {
+        padding: 16px 18px;
+        background: linear-gradient(135deg,#7c4dff,#ec4899);
+        color: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+    }
+
+    .chatHeaderLeft {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .chatBotIcon {
+        width: 42px;
+        height: 42px;
+        border-radius: 14px;
+        background: rgba(255,255,255,.18);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 18px;
+    }
+
+    .chatHeaderTitle strong {
+        display: block;
+        font-size: 15px;
+        font-weight: 1000;
+    }
+
+    .chatHeaderTitle span {
+        display: block;
+        font-size: 12px;
+        opacity: .92;
+        margin-top: 2px;
+    }
+
+    .chatClose {
+        width: 38px;
+        height: 38px;
+        border-radius: 12px;
+        border: none;
+        background: rgba(255,255,255,.18);
+        color: #fff;
+        cursor: pointer;
+        font-size: 15px;
+    }
+
+    .chatBody {
+        flex: 1;
+        padding: 16px;
+        background: #fcfbff;
+        overflow-y: auto;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .chatMsg {
+        max-width: 85%;
+        padding: 12px 14px;
+        border-radius: 18px;
+        font-size: 14px;
+        line-height: 1.7;
+        white-space: pre-wrap;
+        word-break: break-word;
+    }
+
+        .chatMsg.bot {
+            background: #fff;
+            border: 1px solid #efe7ff;
+            color: #334155;
+            align-self: flex-start;
+        }
+
+        .chatMsg.user {
+            background: linear-gradient(135deg,#7c4dff,#ec4899);
+            color: #fff;
+            align-self: flex-end;
+        }
+
+    .chatQuickRow {
+        padding: 0 16px 14px;
+        background: #fcfbff;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        border-top: 1px solid #f4edff;
+    }
+
+    .chatQuickBtn {
+        border: 1px solid #e8ddff;
+        background: #fff;
+        color: #7c4dff;
+        border-radius: 999px;
+        padding: 9px 12px;
+        font-size: 12px;
+        font-weight: 900;
+        cursor: pointer;
+    }
+
+    .chatForm {
+        padding: 14px;
+        border-top: 1px solid #efe7ff;
+        background: #fff;
+        display: flex;
+        gap: 10px;
+        align-items: center;
+    }
+
+    .chatInput {
+        flex: 1;
+        height: 50px;
+        border-radius: 16px;
+        border: 1px solid #e5e7eb;
+        outline: none;
+        padding: 0 16px;
+        font-size: 14px;
+    }
+
+        .chatInput:focus {
+            border-color: #a855f7;
+            box-shadow: 0 0 0 4px rgba(168,85,247,.12);
+        }
+
+    .chatSend {
+        width: 50px;
+        height: 50px;
+        border-radius: 16px;
+        border: none;
+        background: linear-gradient(135deg,#7c4dff,#ec4899);
+        color: #fff;
+        cursor: pointer;
+        font-size: 16px;
+        flex-shrink: 0;
+    }
+
+    .chatTyping {
+        display: none;
+        align-self: flex-start;
+        background: #fff;
+        border: 1px solid #efe7ff;
+        color: #64748b;
+    }
+
+        .chatTyping.show {
+            display: block;
+        }
+
+    @@media (max-width: 1100px) {
+        .cards {
+            grid-template-columns: repeat(3,1fr);
+        }
+
+        .stats {
+            grid-template-columns: repeat(2,1fr);
+        }
+    }
+
+    @@media (max-width: 720px) {
+        .cards {
+            grid-template-columns: repeat(2,1fr);
+        }
+
+        .chatWindow {
+            right: 12px;
+            bottom: 88px;
+            left: 12px;
+            width: auto;
+            max-width: none;
+            height: 72vh;
+        }
+
+        .chatFab {
+            right: 16px;
+            bottom: 16px;
+        }
+    }
+
+    @@media (max-width: 520px) {
+        .cards {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+
+<div class="banner">
+    <div style="font-size:26px">🌟</div>
+    <div>
+        <h3>@Localizer["Quick Access"]</h3>
+        <p>@Localizer["Quick Access Desc"]</p>
+    </div>
+</div>
+
+<div class="stats">
+    <div class="stat" style="--c:#7c4dff">
+        <h2>@Model.TotalComplaints</h2>
+        <small>@Localizer["Total Complaints"]</small>
+    </div>
+    <div class="stat" style="--c:#8b5cf6">
+        <h2>@Model.InProgress</h2>
+        <small>@Localizer["In Progress"]</small>
+    </div>
+    <div class="stat" style="--c:#a78bfa">
+        <h2>@Model.Pending</h2>
+        <small>@Localizer["Pending"]</small>
+    </div>
+    <div class="stat" style="--c:#c4b5fd">
+        <h2>@Model.Resolved</h2>
+        <small>@Localizer["Resolved"]</small>
+    </div>
+</div>
+
+<div class="cards">
+    <a class="card" href="/Citizen/SubmitComplaint">
+        <div class="ico" style="background:#7c4dff"><i class="fa-solid fa-pen-to-square"></i></div>
+        <h4>@Localizer["Submit Complaint"]</h4>
+        <p>@Localizer["Submit Complaint Desc"]</p>
+    </a>
+
+    <a class="card" href="/Citizen/TrackStatus">
+        <div class="ico" style="background:#8b5cf6"><i class="fa-solid fa-magnifying-glass"></i></div>
+        <h4>@Localizer["Track Status"]</h4>
+        <p>@Localizer["Track Status Desc"]</p>
+    </a>
+
+    <a class="card" href="/Citizen/Emergency">
+        <div class="ico" style="background:#a78bfa"><i class="fa-solid fa-triangle-exclamation"></i></div>
+        <h4>@Localizer["Emergency"]</h4>
+        <p>@Localizer["Emergency Desc"]</p>
+    </a>
+
+    <a class="card" href="/Citizen/GarbageSchedule">
+        <div class="ico" style="background:#c4b5fd"><i class="fa-solid fa-trash"></i></div>
+        <h4>@Localizer["Garbage Schedule"]</h4>
+        <p>@Localizer["Garbage Schedule Desc"]</p>
+    </a>
+
+    <a class="card" href="/Citizen/Notices">
+        <div class="ico" style="background:#9333ea"><i class="fa-solid fa-bullhorn"></i></div>
+        <h4>@Localizer["Notices"]</h4>
+        <p>@Localizer["Notices Desc"]</p>
+    </a>
+</div>
+
+<div class="locCard">
+    <div style="display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:10px;">
+        <div>
+            <div style="font-weight:1000; font-size:16px;">📍 @Localizer["My Location"]</div>
+            <div style="color:#64748b; font-weight:800; font-size:12px;">
+                @if (lat.HasValue && lng.HasValue)
+                {
+                    <text>
+                        @Localizer["Saved"]: @lat.Value.ToString("0.000000"), @lng.Value.ToString("0.000000")
+                        @if (lastAt != null)
+                        {
+                            <text> ( @lastAt.Value.ToLocalTime().ToString("yyyy-MM-dd HH:mm") )</text>
+                        }
+                    </text>
+                }
+                else
+                {
+                    <text>@Localizer["No Location"]</text>
+                }
+            </div>
+        </div>
+
+        <button id="btnLoc" class="btn btn-primary" type="button">@Localizer["Use Location"]</button>
+    </div>
+
+    <small id="locStatus" style="display:block; margin-bottom:10px; font-weight:800; color:#0f172a;"></small>
+
+    <div id="map" style="height:320px; border-radius:14px; overflow:hidden; border:1px solid #e5e7eb;"></div>
+
+    @Html.AntiForgeryToken()
+</div>
+
+<!-- CHATBOT BUTTON -->
+<button type="button" class="chatFab" id="chatFab" title="Open Smart Nagar Assistant">
+    <i class="fa-solid fa-comment-dots"></i>
+</button>
+
+<!-- CHATBOT WINDOW -->
+<div class="chatWindow" id="chatWindow">
+    <div class="chatHeader">
+        <div class="chatHeaderLeft">
+            <div class="chatBotIcon">
+                <i class="fa-solid fa-robot"></i>
+            </div>
+            <div class="chatHeaderTitle">
+                <strong>Smart Nagar Assistant</strong>
+                <span>Citizen help for complaints, reminders, notices, and account support</span>
+            </div>
+        </div>
+
+        <button type="button" class="chatClose" id="chatClose">
+            <i class="fa-solid fa-xmark"></i>
+        </button>
+    </div>
+
+    <div class="chatBody" id="chatBody">
+        <div class="chatMsg bot">
+            Hello 👋 I am Smart Nagar Assistant. I can help you with submitting complaints, tracking status, garbage reminders, emergency help, notices, and password support.
+        </div>
+        <div class="chatMsg bot">
+            Try asking: “How do I submit a complaint?” or “How do I save a garbage reminder?”
+        </div>
+        <div class="chatMsg bot chatTyping" id="chatTyping">Typing...</div>
+    </div>
+
+    <div class="chatQuickRow">
+        <button type="button" class="chatQuickBtn" data-message="How do I submit a complaint?">Submit Complaint</button>
+        <button type="button" class="chatQuickBtn" data-message="How do I track my complaint?">Track Complaint</button>
+        <button type="button" class="chatQuickBtn" data-message="How do I save a garbage reminder?">Garbage Reminder</button>
+        <button type="button" class="chatQuickBtn" data-message="How do I reset my password?">Reset Password</button>
+    </div>
+
+    <form class="chatForm" id="chatForm">
+        <input type="text" id="chatInput" class="chatInput" placeholder="Ask Smart Nagar Assistant..." autocomplete="off" />
+        <button type="submit" class="chatSend">
+            <i class="fa-solid fa-paper-plane"></i>
+        </button>
+    </form>
+</div>
+
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+<script>
+    const savedLat = @(lat.HasValue? lat.Value.ToString(System.Globalization.CultureInfo.InvariantCulture) : "null");
+    const savedLng = @(lng.HasValue? lng.Value.ToString(System.Globalization.CultureInfo.InvariantCulture) : "null");
+
+    const tSavedLocation = "@Localizer["Your saved location"]";
+    const tClickUseLocation = "@Localizer["Click Use Location"]";
+    const tRequestingPermission = "@Localizer["Requesting location permission..."]";
+    const tGeolocationNotSupported = "@Localizer["Geolocation not supported by your browser."]";
+    const tLocationFoundSaving = "@Localizer["Location found saving"]";
+    const tLocationSaved = "@Localizer["Location saved"]";
+    const tCurrentLocation = "@Localizer["Your current location"]";
+    const tCouldNotSave = "@Localizer["Could not save location."]";
+    const tPermissionDenied = "@Localizer["Permission denied. Please allow location."]";
+    const tLocationUnavailable = "@Localizer["Location unavailable. Turn on location services."]";
+    const tLocationTimedOut = "@Localizer["Location timed out. Try again."]";
+
+    let map, marker;
+
+    function initMap(firstLat, firstLng) {
+        map = L.map('map').setView([firstLat, firstLng], 14);
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19
+        }).addTo(map);
+
+        marker = L.marker([firstLat, firstLng]).addTo(map);
+    }
+
+    function setMarker(lat, lng, text) {
+        if (!map) initMap(lat, lng);
+        marker.setLatLng([lat, lng]).bindPopup(text).openPopup();
+        map.setView([lat, lng], 15);
+    }
+
+    window.addEventListener("load", () => {
+        if (savedLat !== null && savedLng !== null) {
+            initMap(savedLat, savedLng);
+            setMarker(savedLat, savedLng, tSavedLocation);
+        } else {
+            initMap(27.7172, 85.3240);
+            setMarker(27.7172, 85.3240, tClickUseLocation);
+        }
+    });
+
+    document.getElementById("btnLoc").addEventListener("click", () => {
+        const status = document.getElementById("locStatus");
+        status.textContent = tRequestingPermission;
+
+        if (!navigator.geolocation) {
+            status.textContent = tGeolocationNotSupported;
+            return;
+        }
+
+        navigator.geolocation.getCurrentPosition(async (pos) => {
+            const lat = pos.coords.latitude;
+            const lng = pos.coords.longitude;
+
+            status.textContent = `${tLocationFoundSaving}: ${lat.toFixed(6)}, ${lng.toFixed(6)}`;
+
+            const token = document.querySelector('input[name="__RequestVerificationToken"]').value;
+
+            const res = await fetch("/Citizen/SaveMyLocation", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "RequestVerificationToken": token
+                },
+                body: JSON.stringify({ lat, lng })
+            });
+
+            if (res.ok) {
+                status.textContent = `✅ ${tLocationSaved}`;
+                setMarker(lat, lng, tCurrentLocation);
+            } else {
+                status.textContent = `❌ ${tCouldNotSave}`;
+            }
+
+        }, (err) => {
+            if (err.code === 1) status.textContent = tPermissionDenied;
+            else if (err.code === 2) status.textContent = tLocationUnavailable;
+            else status.textContent = tLocationTimedOut;
+        }, {
+            enableHighAccuracy: true,
+            timeout: 10000
+        });
+    });
+
+    // CHATBOT
+    const chatFab = document.getElementById("chatFab");
+    const chatWindow = document.getElementById("chatWindow");
+    const chatClose = document.getElementById("chatClose");
+    const chatBody = document.getElementById("chatBody");
+    const chatForm = document.getElementById("chatForm");
+    const chatInput = document.getElementById("chatInput");
+    const chatTyping = document.getElementById("chatTyping");
+    const quickButtons = document.querySelectorAll(".chatQuickBtn");
+    const antiForgeryToken = document.querySelector('input[name="__RequestVerificationToken"]')?.value ?? "";
+
+    chatFab.addEventListener("click", () => {
+        chatWindow.classList.toggle("open");
+    });
+
+    chatClose.addEventListener("click", () => {
+        chatWindow.classList.remove("open");
+    });
+
+    quickButtons.forEach(btn => {
+        btn.addEventListener("click", () => {
+            chatInput.value = btn.getAttribute("data-message") || "";
+            chatForm.requestSubmit();
+        });
+    });
+
+    function appendMessage(text, type) {
+        const msg = document.createElement("div");
+        msg.className = `chatMsg ${type}`;
+        msg.textContent = text;
+        chatBody.insertBefore(msg, chatTyping);
+        chatBody.scrollTop = chatBody.scrollHeight;
+    }
+
+    async function sendChatMessage(message) {
+        appendMessage(message, "user");
+        chatTyping.classList.add("show");
+        chatBody.scrollTop = chatBody.scrollHeight;
+
+        try {
+            const response = await fetch("/Chatbot/Ask", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "RequestVerificationToken": antiForgeryToken
+                },
+                body: JSON.stringify({ message: message })
+            });
+
+            if (!response.ok) {
+                throw new Error("Request failed.");
+            }
+
+            const data = await response.json();
+            const reply = data.reply || "Sorry, I could not generate a response right now.";
+
+            chatTyping.classList.remove("show");
+            appendMessage(reply, "bot");
+        } catch (error) {
+            chatTyping.classList.remove("show");
+            appendMessage("Sorry, the chatbot is unavailable right now. Please try again.", "bot");
+        }
+    }
+
+    chatForm.addEventListener("submit", async function (e) {
+        e.preventDefault();
+
+        const message = chatInput.value.trim();
+        if (!message) return;
+
+        chatInput.value = "";
+        await sendChatMessage(message);
+    });
+</script>

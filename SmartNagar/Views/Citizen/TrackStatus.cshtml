@@ -1,0 +1,926 @@
+﻿@model SmartNagar.Models.Complaint
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+
+@{
+    Layout = "_CitizenLayout";
+    ViewBag.Active = "trackstatus";
+
+    var status = (Model?.Status ?? "").Trim().ToLower();
+
+    var statusText =
+        status == "resolved" ? Localizer["Resolved"].Value :
+        status == "in progress" ? Localizer["InProgress"].Value :
+        status == "rejected" ? Localizer["Rejected"].Value :
+        Localizer["Pending"].Value;
+
+    var statusClass =
+        status == "resolved" ? "resolved" :
+        status == "in progress" ? "progress" :
+        status == "rejected" ? "rejected" :
+        "pending";
+
+    var complaintDate = Model?.CreatedAt.ToLocalTime().ToString("MMM dd, yyyy");
+    var complaintTime = Model?.CreatedAt.ToLocalTime().ToString("hh:mm tt");
+    var resolvedDate = Model?.ResolvedAt?.ToLocalTime().ToString("MMM dd, yyyy");
+    var resolvedTime = Model?.ResolvedAt?.ToLocalTime().ToString("hh:mm tt");
+
+    var expectedResolution = Model?.ResolvedAt != null
+        ? Model.ResolvedAt.Value.ToLocalTime().ToString("MMM dd, yyyy")
+        : Model != null
+            ? Model.CreatedAt.ToLocalTime().AddDays(3).ToString("MMM dd, yyyy")
+            : "--";
+
+    var lastUpdated = Model?.UpdatedAt != null
+        ? Model.UpdatedAt.Value.ToLocalTime().ToString("MMM dd, yyyy hh:mm tt")
+        : Model != null
+            ? Model.CreatedAt.ToLocalTime().ToString("MMM dd, yyyy hh:mm tt")
+            : "--";
+
+    var complaintCode = Model != null ? $"CN-{Model.CreatedAt.Year}-{Model.Id.ToString("D3")}" : "CN-2026-001";
+
+    var officerRemarks = string.IsNullOrWhiteSpace(Model?.OfficerRemarks)
+        ? Localizer["NoOfficerRemarksYet"].Value
+        : Model.OfficerRemarks;
+}
+
+<style>
+    * {
+        box-sizing: border-box;
+    }
+
+    .trackPage {
+        max-width: 1180px;
+        margin: 0 auto;
+    }
+
+    .heroCard,
+    .searchCard,
+    .detailsCard,
+    .timelineCard,
+    .mapCard {
+        background: rgba(255,255,255,0.82);
+        border: 1px solid #e8defa;
+        border-radius: 24px;
+        box-shadow: 0 18px 45px rgba(104, 78, 199, 0.08);
+        backdrop-filter: blur(6px);
+    }
+
+    .heroCard {
+        padding: 28px 34px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 18px;
+        flex-wrap: wrap;
+        margin-bottom: 24px;
+    }
+
+    .heroTitle {
+        margin: 0;
+        font-size: 28px;
+        font-weight: 900;
+        color: #744be7;
+    }
+
+    .heroSub {
+        margin: 8px 0 0;
+        font-size: 14px;
+        color: #70678f;
+        font-weight: 500;
+    }
+
+    .heroActions {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+    }
+
+    .actionBtn,
+    .actionBtnOutline {
+        border: none;
+        text-decoration: none;
+        padding: 12px 22px;
+        border-radius: 14px;
+        font-weight: 800;
+        font-size: 14px;
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        transition: .2s ease;
+        cursor: pointer;
+    }
+
+    .actionBtn {
+        background: linear-gradient(135deg, #7c4dff, #9b7bff);
+        color: #fff;
+        box-shadow: 0 12px 28px rgba(124, 77, 255, .28);
+    }
+
+        .actionBtn:hover {
+            transform: translateY(-1px);
+        }
+
+    .actionBtnOutline {
+        background: #fff;
+        color: #7a52ee;
+        border: 1px solid #d8c8fa;
+    }
+
+        .actionBtnOutline:hover {
+            background: #f8f3ff;
+        }
+
+    .searchCard {
+        padding: 28px 34px;
+        margin-bottom: 24px;
+    }
+
+    .sectionHeading {
+        margin: 0 0 18px;
+        font-size: 17px;
+        font-weight: 900;
+        color: #22223b;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+        .sectionHeading i {
+            color: #7c4dff;
+            font-size: 15px;
+        }
+
+    .searchForm {
+        display: grid;
+        grid-template-columns: 1fr 140px;
+        gap: 14px;
+        align-items: center;
+    }
+
+    .searchInputWrap {
+        position: relative;
+    }
+
+        .searchInputWrap i {
+            position: absolute;
+            left: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #7c4dff;
+            font-size: 15px;
+        }
+
+    .searchInput {
+        width: 100%;
+        height: 48px;
+        border-radius: 14px;
+        border: 1px solid #dacbfa;
+        background: #fff;
+        padding: 0 16px 0 44px;
+        font-size: 15px;
+        font-weight: 700;
+        color: #2c2349;
+        outline: none;
+    }
+
+        .searchInput:focus {
+            border-color: #8b5cf6;
+            box-shadow: 0 0 0 4px rgba(139,92,246,.10);
+        }
+
+    .searchBtn {
+        height: 48px;
+        border: none;
+        border-radius: 14px;
+        background: linear-gradient(135deg, #7c4dff, #9b7bff);
+        color: #fff;
+        font-weight: 900;
+        cursor: pointer;
+        box-shadow: 0 12px 28px rgba(124, 77, 255, .22);
+    }
+
+        .searchBtn:hover {
+            filter: brightness(1.03);
+        }
+
+    .errorBox {
+        margin-bottom: 24px;
+        background: #fff1f2;
+        border: 1px solid #fecdd3;
+        color: #9f1239;
+        padding: 14px 16px;
+        border-radius: 16px;
+        font-weight: 800;
+    }
+
+    .mainGrid {
+        display: grid;
+        grid-template-columns: 2fr 1fr;
+        gap: 22px;
+        align-items: start;
+    }
+
+    .detailsCard {
+        overflow: hidden;
+    }
+
+    .detailsTop {
+        background: linear-gradient(135deg, #7c4dff, #9a7bff);
+        padding: 26px 24px 72px;
+        color: #fff;
+    }
+
+    .complaintCode {
+        margin: 0 0 8px;
+        font-size: 22px;
+        font-weight: 900;
+    }
+
+    .complaintTitle {
+        margin: 0 0 14px;
+        font-size: 18px;
+        font-weight: 850;
+    }
+
+    .metaRow {
+        display: flex;
+        gap: 22px;
+        flex-wrap: wrap;
+        font-size: 13px;
+        font-weight: 700;
+        color: rgba(255,255,255,.94);
+    }
+
+        .metaRow span {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+    .detailsBody {
+        padding: 24px;
+        margin-top: -42px;
+    }
+
+    .floatingPanel {
+        background: #fff;
+        border: 1px solid #ece2ff;
+        border-radius: 22px;
+        padding: 20px;
+        box-shadow: 0 16px 34px rgba(108, 72, 198, 0.10);
+    }
+
+    .statsGrid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 22px 18px;
+        margin-top: 4px;
+    }
+
+    .label {
+        font-size: 11px;
+        font-weight: 900;
+        letter-spacing: .7px;
+        text-transform: uppercase;
+        color: #7a7297;
+        margin-bottom: 8px;
+    }
+
+    .value {
+        font-size: 18px;
+        font-weight: 800;
+        color: #231942;
+    }
+
+    .chipRow {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        align-items: center;
+    }
+
+    .statusChip,
+    .priorityChip {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        border-radius: 999px;
+        padding: 9px 16px;
+        font-size: 13px;
+        font-weight: 900;
+    }
+
+        .statusChip.pending {
+            background: #fff7ed;
+            color: #b45309;
+        }
+
+        .statusChip.progress {
+            background: #e8f0ff;
+            color: #1d4ed8;
+        }
+
+        .statusChip.resolved {
+            background: #ecfdf3;
+            color: #15803d;
+        }
+
+        .statusChip.rejected {
+            background: #fef2f2;
+            color: #b91c1c;
+        }
+
+    .priorityChip {
+        background: #ffe8e8;
+        color: #d14343;
+    }
+
+    .descTitle,
+    .attachmentsTitle,
+    .quickTitle,
+    .reviewTitle {
+        margin: 28px 0 14px;
+        font-size: 15px;
+        font-weight: 900;
+        color: #231942;
+    }
+
+    .descBox {
+        background: #f6f0ff;
+        border-left: 4px solid #7c4dff;
+        border-radius: 14px;
+        padding: 16px 18px;
+        color: #4c4668;
+        line-height: 1.8;
+        font-weight: 500;
+    }
+
+    .reviewBox {
+        background: linear-gradient(180deg, #faf7ff, #f6f0ff);
+        border: 1px solid #e6dbff;
+        border-left: 4px solid #8b5cf6;
+        border-radius: 14px;
+        padding: 16px 18px;
+        color: #4c4668;
+        line-height: 1.8;
+        font-weight: 600;
+        white-space: pre-line;
+    }
+
+    .attachmentGrid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 14px;
+    }
+
+    .attachmentItem {
+        border: 1px solid #dccdfa;
+        border-radius: 14px;
+        background: #fff;
+        overflow: hidden;
+        min-height: 126px;
+    }
+
+        .attachmentItem img {
+            width: 100%;
+            height: 126px;
+            object-fit: cover;
+            display: block;
+        }
+
+    .attachmentPlaceholder {
+        height: 126px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #faf7ff;
+        color: #9a8bc8;
+        font-weight: 800;
+        text-align: center;
+        padding: 12px;
+    }
+
+    .quickGrid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+    }
+
+    .quickBtn {
+        background: #fff;
+        border: 1px solid #dbcdfa;
+        border-radius: 16px;
+        padding: 14px;
+        text-decoration: none;
+        display: flex;
+        gap: 12px;
+        align-items: flex-start;
+        color: inherit;
+        transition: .2s ease;
+    }
+
+        .quickBtn:hover {
+            background: #fbf8ff;
+            transform: translateY(-1px);
+        }
+
+    .quickIcon {
+        width: 42px;
+        height: 42px;
+        border-radius: 14px;
+        background: #9b7bff;
+        color: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex: 0 0 42px;
+    }
+
+    .quickText strong {
+        display: block;
+        font-size: 15px;
+        font-weight: 850;
+        color: #272044;
+        margin-bottom: 4px;
+    }
+
+    .quickText span {
+        font-size: 12px;
+        color: #7f7898;
+        font-weight: 600;
+    }
+
+    .timelineCard {
+        padding: 24px 22px;
+        margin-bottom: 22px;
+    }
+
+    .timeline {
+        position: relative;
+        margin-top: 16px;
+        padding-left: 42px;
+    }
+
+        .timeline::before {
+            content: "";
+            position: absolute;
+            left: 19px;
+            top: 8px;
+            bottom: 8px;
+            width: 3px;
+            background: #8b5cf6;
+            opacity: .6;
+        }
+
+    .timelineItem {
+        position: relative;
+        margin-bottom: 28px;
+    }
+
+    .timelineIcon {
+        position: absolute;
+        left: -42px;
+        top: 0;
+        width: 36px;
+        height: 36px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #fff;
+        font-size: 14px;
+        font-weight: 900;
+        box-shadow: 0 10px 18px rgba(0,0,0,.10);
+    }
+
+        .timelineIcon.done {
+            background: linear-gradient(135deg, #22c55e, #34d399);
+        }
+
+        .timelineIcon.progress {
+            background: linear-gradient(135deg, #f59e0b, #fbbf24);
+        }
+
+        .timelineIcon.wait {
+            background: #d8dbe6;
+            color: #fff;
+            box-shadow: none;
+        }
+
+    .timelineContent {
+        background: #f7f1ff;
+        border-left: 2px solid #8b5cf6;
+        border-radius: 14px;
+        padding: 14px 16px;
+    }
+
+        .timelineContent.muted {
+            opacity: .7;
+        }
+
+        .timelineContent strong {
+            display: block;
+            font-size: 15px;
+            color: #2a2342;
+            margin-bottom: 6px;
+        }
+
+    .timelineDate {
+        font-size: 12px;
+        color: #7c4dff;
+        font-weight: 700;
+        margin-bottom: 8px;
+    }
+
+    .timelineText {
+        font-size: 14px;
+        color: #5f5879;
+        line-height: 1.6;
+        white-space: pre-line;
+    }
+
+    .mapCard {
+        min-height: 290px;
+        padding: 0;
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(180deg, #d9c5ff, #c9adff);
+    }
+
+    .mapInner {
+        text-align: center;
+        color: #744be7;
+        font-weight: 800;
+    }
+
+        .mapInner i {
+            font-size: 32px;
+            display: block;
+            margin-bottom: 14px;
+        }
+
+    .emptyState {
+        background: rgba(255,255,255,0.82);
+        border: 1px solid #e8defa;
+        border-radius: 24px;
+        padding: 50px 24px;
+        text-align: center;
+        color: #7a7297;
+        box-shadow: 0 18px 45px rgba(104, 78, 199, 0.08);
+    }
+
+        .emptyState i {
+            font-size: 34px;
+            color: #8b5cf6;
+            margin-bottom: 14px;
+            display: block;
+        }
+
+    @@media (max-width: 1100px) {
+        .mainGrid {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    @@media (max-width: 768px) {
+        .heroCard,
+        .searchCard {
+            padding: 22px 18px;
+        }
+
+        .searchForm {
+            grid-template-columns: 1fr;
+        }
+
+        .statsGrid,
+        .quickGrid,
+        .attachmentGrid {
+            grid-template-columns: 1fr;
+        }
+
+        .detailsBody {
+            padding: 16px;
+        }
+
+        .floatingPanel {
+            padding: 16px;
+        }
+
+        .heroTitle {
+            font-size: 24px;
+        }
+    }
+</style>
+
+<div class="trackPage">
+
+    <div class="heroCard">
+        <div>
+            <h2 class="heroTitle">@Localizer["TrackComplaintStatus"]</h2>
+            <p class="heroSub">@Localizer["MonitorComplaintProgress"]</p>
+        </div>
+
+        <div class="heroActions">
+            <a href="/Citizen/MyComplaints" class="actionBtnOutline">
+                <i class="fa-solid fa-arrow-left"></i> @Localizer["BackToComplaints"]
+            </a>
+            <a href="/Citizen/SubmitComplaint" class="actionBtn">
+                <i class="fa-solid fa-plus"></i> @Localizer["NewComplaint"]
+            </a>
+        </div>
+    </div>
+
+    <div class="searchCard">
+        <h3 class="sectionHeading">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            @Localizer["SearchByComplaintId"]
+        </h3>
+
+        <form class="searchForm" method="get" action="/Citizen/TrackStatus">
+            <div class="searchInputWrap">
+                <i class="fa-solid fa-hashtag"></i>
+                <input class="searchInput"
+                       type="number"
+                       name="id"
+                       min="1"
+                       required
+                       placeholder="@Localizer["EnterComplaintId"]"
+                       value="@(Model?.Id)" />
+            </div>
+            <button class="searchBtn" type="submit">
+                <i class="fa-solid fa-location-arrow"></i> @Localizer["TrackNow"]
+            </button>
+        </form>
+    </div>
+
+    @if (ViewBag.Error != null)
+    {
+        <div class="errorBox">@ViewBag.Error</div>
+    }
+
+    @if (Model == null && ViewBag.Error == null)
+    {
+        <div class="emptyState">
+            <i class="fa-solid fa-file-circle-question"></i>
+            <h3 style="margin:0 0 8px; color:#2c2349;">@Localizer["SearchComplaintToSeeStatus"]</h3>
+            <p style="margin:0;">@Localizer["EnterComplaintIdToView"]</p>
+        </div>
+    }
+
+    @if (Model != null)
+    {
+        <div class="mainGrid">
+
+            <div class="leftColumn">
+                <div class="detailsCard">
+                    <div class="detailsTop">
+                        <h3 class="complaintCode">#@complaintCode</h3>
+                        <h4 class="complaintTitle">@Model.Title</h4>
+
+                        <div class="metaRow">
+                            <span><i class="fa-regular fa-calendar"></i> @Localizer["Submitted"]: @complaintDate</span>
+                            <span><i class="fa-solid fa-location-dot"></i> @Localizer["ComplaintId"] @Model.Id</span>
+                        </div>
+                    </div>
+
+                    <div class="detailsBody">
+                        <div class="floatingPanel">
+                            <div class="statsGrid">
+                                <div>
+                                    <div class="label">@Localizer["Status"]</div>
+                                    <div class="chipRow">
+                                        <span class="statusChip @statusClass">
+                                            <i class="fa-solid fa-circle-info"></i> @statusText
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <div class="label">@Localizer["Priority"]</div>
+                                    <div class="chipRow">
+                                        <span class="priorityChip">
+                                            <i class="fa-solid fa-flag"></i> @Localizer["HighPriority"]
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <div class="label">@Localizer["Category"]</div>
+                                    <div class="value">@(!string.IsNullOrWhiteSpace(Model.Category) ? Model.Category : "-")</div>
+                                </div>
+
+                                <div>
+                                    <div class="label">@Localizer["AssignedTo"]</div>
+                                    <div class="value">@(!string.IsNullOrWhiteSpace(Model.AssignedOfficerId) ? Localizer["MunicipalOfficer"].Value : Localizer["NotAssignedYet"].Value)</div>
+                                </div>
+
+                                <div>
+                                    <div class="label">@Localizer["ExpectedResolution"]</div>
+                                    <div class="value">@expectedResolution</div>
+                                </div>
+
+                                <div>
+                                    <div class="label">@Localizer["LastUpdated"]</div>
+                                    <div class="value">@lastUpdated</div>
+                                </div>
+                            </div>
+
+                            <h4 class="descTitle">@Localizer["Description"]</h4>
+                            <div class="descBox">
+                                @(string.IsNullOrWhiteSpace(Model.Description) ? Localizer["NoDescriptionProvided"].Value : Model.Description)
+                            </div>
+
+                            <h4 class="reviewTitle">@Localizer["OfficerReviewRemarks"]</h4>
+                            <div class="reviewBox">
+                                @officerRemarks
+                            </div>
+
+                            <h4 class="attachmentsTitle">@Localizer["Attachments"]</h4>
+                            <div class="attachmentGrid">
+                                @if (Model.Photos != null && Model.Photos.Any())
+                                {
+                                    foreach (var photo in Model.Photos.Take(3))
+                                    {
+                                        <div class="attachmentItem">
+                                            <img src="@photo.FilePath" alt="Complaint photo" />
+                                        </div>
+                                    }
+
+                                    var remaining = 3 - Model.Photos.Take(3).Count();
+                                    for (int i = 0; i < remaining; i++)
+                                    {
+                                        <div class="attachmentItem">
+                                            <div class="attachmentPlaceholder">
+                                                @Localizer["NoImage"]
+                                            </div>
+                                        </div>
+                                    }
+                                }
+                                else
+                                {
+                                    <div class="attachmentItem">
+                                        <div class="attachmentPlaceholder">@Localizer["NoImageUploaded"]</div>
+                                    </div>
+                                    <div class="attachmentItem">
+                                        <div class="attachmentPlaceholder">@Localizer["NoImageUploaded"]</div>
+                                    </div>
+                                    <div class="attachmentItem">
+                                        <div class="attachmentPlaceholder">@Localizer["NoImageUploaded"]</div>
+                                    </div>
+                                }
+                            </div>
+
+                            <h4 class="quickTitle">@Localizer["QuickActions"]</h4>
+                            <div class="quickGrid">
+                                <a href="/Citizen/MyComplaints" class="quickBtn">
+                                    <div class="quickIcon"><i class="fa-regular fa-bell"></i></div>
+                                    <div class="quickText">
+                                        <strong>@Localizer["ViewComplaints"]</strong>
+                                        <span>@Localizer["GoBackToComplaintList"]</span>
+                                    </div>
+                                </a>
+
+                                <a href="/Citizen/SubmitComplaint" class="quickBtn">
+                                    <div class="quickIcon"><i class="fa-solid fa-download"></i></div>
+                                    <div class="quickText">
+                                        <strong>@Localizer["NewComplaint"]</strong>
+                                        <span>@Localizer["SubmitAnotherIssue"]</span>
+                                    </div>
+                                </a>
+
+                                <a href="mailto:" class="quickBtn">
+                                    <div class="quickIcon"><i class="fa-solid fa-share-nodes"></i></div>
+                                    <div class="quickText">
+                                        <strong>@Localizer["ShareStatus"]</strong>
+                                        <span>@Localizer["SendViaEmailOrMessage"]</span>
+                                    </div>
+                                </a>
+
+                                <a href="/Citizen/Notices" class="quickBtn">
+                                    <div class="quickIcon"><i class="fa-regular fa-comment-dots"></i></div>
+                                    <div class="quickText">
+                                        <strong>@Localizer["ContactOffice"]</strong>
+                                        <span>@Localizer["CheckNoticesAndUpdates"]</span>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="rightColumn">
+                <div class="timelineCard">
+                    <h3 class="sectionHeading">
+                        <i class="fa-regular fa-clock"></i>
+                        @Localizer["StatusTimeline"]
+                    </h3>
+
+                    <div class="timeline">
+                        <div class="timelineItem">
+                            <div class="timelineIcon done">
+                                <i class="fa-solid fa-check"></i>
+                            </div>
+                            <div class="timelineContent">
+                                <strong>@Localizer["ComplaintSubmitted"]</strong>
+                                <div class="timelineDate">@complaintDate - @complaintTime</div>
+                                <div class="timelineText">
+                                    @Localizer["ComplaintSubmittedText"] #@complaintCode.
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="timelineItem">
+                            <div class="timelineIcon @(status == "pending" ? "progress" : "done")">
+                                <i class="fa-solid fa-file-lines"></i>
+                            </div>
+                            <div class="timelineContent">
+                                <strong>@Localizer["UnderReview"]</strong>
+                                <div class="timelineDate">@complaintDate - @complaintTime</div>
+                                <div class="timelineText">
+                                    @Localizer["UnderReviewText"]
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="timelineItem">
+                            <div class="timelineIcon @((status == "in progress" || status == "resolved" || status == "rejected") ? "done" : "wait")">
+                                <i class="fa-solid fa-user-check"></i>
+                            </div>
+                            <div class="timelineContent @((status == "in progress" || status == "resolved" || status == "rejected") ? "" : "muted")">
+                                <strong>@Localizer["AssignedToTeam"]</strong>
+                                <div class="timelineDate">@complaintDate</div>
+                                <div class="timelineText">
+                                    @Localizer["AssignedToTeamText"]
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="timelineItem">
+                            <div class="timelineIcon @((status == "in progress") ? "progress" : (status == "resolved" || status == "rejected" ? "done" : "wait"))">
+                                <i class="fa-solid fa-screwdriver-wrench"></i>
+                            </div>
+                            <div class="timelineContent @((status == "in progress" || status == "resolved" || status == "rejected") ? "" : "muted")">
+                                <strong>@Localizer["OfficerUpdate"]</strong>
+                                <div class="timelineDate">
+                                    @(Model.UpdatedAt != null ? Model.UpdatedAt.Value.ToLocalTime().ToString("MMM dd, yyyy - hh:mm tt") : Localizer["Pending"].Value)
+                                </div>
+                                <div class="timelineText">
+                                    @officerRemarks
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="timelineItem" style="margin-bottom:0;">
+                            <div class="timelineIcon @(status == "resolved" ? "done" : status == "rejected" ? "done" : "wait")">
+                                <i class="fa-solid fa-flag-checkered"></i>
+                            </div>
+                            <div class="timelineContent @(status == "resolved" || status == "rejected" ? "" : "muted")">
+                                <strong>@(status == "rejected" ? Localizer["FinalDecision"] : Localizer["Resolution"])</strong>
+                                <div class="timelineDate">
+                                    @if (Model.ResolvedAt != null)
+                                    {
+                                        @($"{resolvedDate} - {resolvedTime}")
+                                    }
+                                    else if (status == "rejected" && Model.UpdatedAt != null)
+                                    {
+                                        @(Model.UpdatedAt.Value.ToLocalTime().ToString("MMM dd, yyyy - hh:mm tt"))
+                                    }
+                                    else
+                                    {
+                                        @($"{Localizer["Expected"]}: {expectedResolution}")
+                                    }
+                                </div>
+                                <div class="timelineText">
+                                    @if (status == "resolved")
+                                    {
+                                        @Localizer["ComplaintResolvedText"]
+                                    }
+                                    else if (status == "rejected")
+                                    {
+                                        @Localizer["ComplaintRejectedText"]
+                                    }
+                                    else
+                                    {
+                                        @Localizer["ComplaintWillBeResolvedText"]
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mapCard">
+                    <div class="mapInner">
+                        <i class="fa-regular fa-map"></i>
+                        <div>@Localizer["LocationMap"]</div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    }
+</div>

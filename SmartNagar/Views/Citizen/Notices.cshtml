@@ -1,0 +1,369 @@
+﻿@model List<SmartNagar.Models.Notice>
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+
+@{
+    Layout = "_CitizenLayout";
+    ViewBag.Active = "notices";
+    ViewBag.Title = Localizer["CitizenNotices"].Value;
+}
+
+<style>
+    * {
+        box-sizing: border-box;
+    }
+
+    .noticePage {
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    .heroCard,
+    .filterCard,
+    .empty,
+    .card {
+        background: rgba(255,255,255,.84);
+        border: 1px solid #eadffd;
+        border-radius: 24px;
+        box-shadow: 0 18px 45px rgba(124, 77, 255, 0.08);
+        backdrop-filter: blur(6px);
+    }
+
+    .heroCard {
+        padding: 28px 30px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        flex-wrap: wrap;
+        margin-bottom: 22px;
+    }
+
+    .heroLeft {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+    }
+
+    .heroIcon {
+        width: 54px;
+        height: 54px;
+        border-radius: 18px;
+        background: linear-gradient(135deg, #7c4dff, #b197fc);
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 21px;
+        box-shadow: 0 12px 28px rgba(124,77,255,.22);
+    }
+
+    .heroText h2 {
+        margin: 0;
+        font-size: 28px;
+        font-weight: 900;
+        color: #7c4dff;
+    }
+
+    .heroText p {
+        margin: 7px 0 0;
+        color: #7b7198;
+        font-size: 14px;
+        font-weight: 600;
+    }
+
+    .backBtn {
+        text-decoration: none;
+        border: 1px solid #dccdfa;
+        background: #fff;
+        color: #7c4dff;
+        padding: 12px 18px;
+        border-radius: 14px;
+        font-weight: 900;
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        transition: .2s ease;
+    }
+
+        .backBtn:hover {
+            background: #faf7ff;
+        }
+
+    .filterCard {
+        padding: 20px;
+        margin-bottom: 20px;
+    }
+
+    .filters {
+        display: grid;
+        grid-template-columns: 1fr 220px;
+        gap: 14px;
+    }
+
+    .inputWrap {
+        position: relative;
+    }
+
+        .inputWrap i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #8b78c9;
+        }
+
+    .input,
+    .select {
+        width: 100%;
+        border-radius: 14px;
+        border: 1px solid #dccdfa;
+        padding: 13px 14px;
+        background: #fff;
+        font-weight: 700;
+        outline: none;
+        color: #2f2347;
+    }
+
+    .input {
+        padding-left: 42px;
+    }
+
+        .input:focus,
+        .select:focus {
+            border-color: #8b5cf6;
+            box-shadow: 0 0 0 4px rgba(139,92,246,.10);
+        }
+
+    .grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 16px;
+    }
+
+    .card {
+        padding: 18px;
+        position: relative;
+        overflow: hidden;
+        transition: .2s ease;
+    }
+
+        .card:hover {
+            transform: translateY(-2px);
+        }
+
+        .card::before {
+            content: "";
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 6px;
+            background: linear-gradient(180deg, #8b5cf6, #c4b5fd);
+        }
+
+    .cardHead {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 12px;
+    }
+
+    .title {
+        margin: 0;
+        font-size: 17px;
+        font-weight: 900;
+        line-height: 1.3;
+        color: #241b3d;
+    }
+
+    .meta {
+        margin-top: 10px;
+        font-size: 12px;
+        color: #756d91;
+        font-weight: 700;
+        line-height: 1.6;
+    }
+
+    .desc {
+        margin-top: 14px;
+        color: #4b4565;
+        font-weight: 600;
+        font-size: 13px;
+        line-height: 1.7;
+        white-space: pre-line;
+    }
+
+    .badge {
+        padding: 6px 10px;
+        border-radius: 999px;
+        font-size: 12px;
+        font-weight: 900;
+        white-space: nowrap;
+        border: 1px solid transparent;
+    }
+
+    .bHigh {
+        background: #fce7f3;
+        color: #be185d;
+        border-color: #f9c5df;
+    }
+
+    .bMedium {
+        background: #f3e8ff;
+        color: #9333ea;
+        border-color: #e9d5ff;
+    }
+
+    .bLow {
+        background: #ede9fe;
+        color: #6d28d9;
+        border-color: #ddd6fe;
+    }
+
+    .bNormal {
+        background: #f5f3ff;
+        color: #7c3aed;
+        border-color: #e9ddff;
+    }
+
+    .empty {
+        padding: 28px;
+        text-align: center;
+        color: #756d91;
+        font-weight: 800;
+    }
+
+        .empty i {
+            font-size: 30px;
+            color: #8b5cf6;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+    @@media (max-width: 1050px) {
+        .grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        .filters {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    @@media (max-width: 650px) {
+        .grid {
+            grid-template-columns: 1fr;
+        }
+
+        .heroCard {
+            padding: 22px 18px;
+        }
+
+        .heroText h2 {
+            font-size: 24px;
+        }
+    }
+</style>
+
+<div class="noticePage">
+    <div class="heroCard">
+        <div class="heroLeft">
+            <div class="heroIcon">
+                <i class="fa-solid fa-bullhorn"></i>
+            </div>
+            <div class="heroText">
+                <h2>@Localizer["CitizenNotices"]</h2>
+                <p>@Localizer["CitizenNoticesSubtitle"]</p>
+            </div>
+        </div>
+
+        <a class="backBtn" href="/Citizen/Dashboard">
+            <i class="fa-solid fa-arrow-left"></i> @Localizer["Back"]
+        </a>
+    </div>
+
+    <div class="filterCard">
+        <div class="filters">
+            <div class="inputWrap">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input class="input" id="searchBox" placeholder="@Localizer["SearchByTitleOrText"]" />
+            </div>
+
+            <select class="select" id="priorityFilter">
+                <option value="">@Localizer["AllPriorities"]</option>
+                <option value="High">@Localizer["High"]</option>
+                <option value="Medium">@Localizer["Medium"]</option>
+                <option value="Low">@Localizer["Low"]</option>
+                <option value="Normal">@Localizer["Normal"]</option>
+            </select>
+        </div>
+    </div>
+
+    @if (Model == null || Model.Count == 0)
+    {
+        <div class="empty">
+            <i class="fa-regular fa-bell-slash"></i>
+            @Localizer["NoNoticesPublishedYet"]
+        </div>
+    }
+    else
+    {
+        <div class="grid" id="noticeGrid">
+            @foreach (var n in Model)
+            {
+                var pr = (n.Priority ?? "Normal").Trim();
+                var badgeClass = pr == "High" ? "bHigh"
+                : pr == "Medium" ? "bMedium"
+                : pr == "Low" ? "bLow"
+                : "bNormal";
+
+                var priorityText = pr == "High" ? Localizer["High"].Value
+                : pr == "Medium" ? Localizer["Medium"].Value
+                : pr == "Low" ? Localizer["Low"].Value
+                : Localizer["Normal"].Value;
+
+                <div class="card noticeCard"
+                     data-priority="@pr"
+                     data-search="@($"{n.Title} {n.Description} {n.CreatedByRole} {n.CreatedByName}".ToLower())">
+
+                    <div class="cardHead">
+                        <h3 class="title">@n.Title</h3>
+                        <span class="badge @badgeClass">@priorityText</span>
+                    </div>
+
+                    <div class="meta">
+                        @Localizer["PublishedBy"]
+                        <b>@(string.IsNullOrWhiteSpace(n.CreatedByRole) ? Localizer["AdminOfficer"].Value : n.CreatedByRole)</b>
+                        @(string.IsNullOrWhiteSpace(n.CreatedByName) ? "" : $"({n.CreatedByName})")
+                        • @n.CreatedAt.ToLocalTime().ToString("dd MMM yyyy, hh:mm tt")
+                    </div>
+
+                    <div class="desc">@n.Description</div>
+                </div>
+            }
+        </div>
+    }
+</div>
+
+<script>
+    const searchBox = document.getElementById("searchBox");
+    const priorityFilter = document.getElementById("priorityFilter");
+    const cards = document.querySelectorAll(".noticeCard");
+
+    function applyFilters() {
+        const q = (searchBox.value || "").trim().toLowerCase();
+        const p = (priorityFilter.value || "").trim();
+
+        cards.forEach(card => {
+            const matchesText = card.getAttribute("data-search").includes(q);
+            const cardPriority = card.getAttribute("data-priority");
+            const matchesPriority = !p || cardPriority === p;
+
+            card.style.display = (matchesText && matchesPriority) ? "" : "none";
+        });
+    }
+
+    if (searchBox) searchBox.addEventListener("input", applyFilters);
+    if (priorityFilter) priorityFilter.addEventListener("change", applyFilters);
+</script>

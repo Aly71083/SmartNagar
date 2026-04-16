@@ -1,0 +1,544 @@
+﻿@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+
+@{
+    Layout = "~/Views/Citizen/_CitizenLayout.cshtml";
+    ViewBag.Active = "Emergency";
+    ViewBag.FullName = ViewBag.FullName ?? "Citizen";
+}
+
+<style>
+    .pageTitle {
+        font-size: 22px;
+        font-weight: 1000;
+        margin: 0 0 14px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        flex-wrap: wrap;
+    }
+
+    .hint {
+        color: #64748b;
+        font-weight: 800;
+        font-size: 13px;
+        margin-top: 6px;
+    }
+
+    .heroCard {
+        background: linear-gradient(135deg,#7c4dff,#a78bfa);
+        color: #fff;
+        border-radius: 18px;
+        padding: 18px;
+        box-shadow: 0 18px 55px rgba(124,68,255,.22);
+        border: 1px solid rgba(255,255,255,.2);
+    }
+
+    .heroTop {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 14px;
+        flex-wrap: wrap;
+    }
+
+    .heroTitle {
+        font-size: 20px;
+        font-weight: 1000;
+        margin: 0;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .heroSub {
+        margin: 8px 0 0;
+        opacity: .95;
+        font-weight: 750;
+        line-height: 1.6;
+        max-width: 820px;
+        font-size: 13px;
+    }
+
+    .statusText {
+        margin-top: 14px;
+        font-size: 13px;
+        font-weight: 900;
+        color: #fff;
+    }
+
+    .grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 14px;
+        margin-top: 14px;
+    }
+
+    .card {
+        background: #fff;
+        border: 1px solid #eef2f7;
+        border-radius: 18px;
+        padding: 16px;
+        box-shadow: 0 10px 24px rgba(15,23,42,.06);
+    }
+
+    .svcRow {
+        display: flex;
+        gap: 12px;
+        align-items: flex-start;
+    }
+
+    .ico {
+        width: 52px;
+        height: 52px;
+        border-radius: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #fff;
+        font-size: 20px;
+        font-weight: 1000;
+        flex: 0 0 auto;
+        box-shadow: 0 12px 30px rgba(0,0,0,.08);
+    }
+
+    .svcTitle {
+        margin: 0;
+        font-size: 16px;
+        font-weight: 1000;
+        color: #0f172a;
+    }
+
+    .svcDesc {
+        margin: 6px 0 0;
+        color: #64748b;
+        font-weight: 750;
+        font-size: 12px;
+        line-height: 1.55;
+    }
+
+    .btnRow {
+        display: flex;
+        gap: 10px;
+        margin-top: 14px;
+        flex-wrap: wrap;
+    }
+
+    .btn {
+        border: none;
+        cursor: pointer;
+        font-weight: 1000;
+        border-radius: 14px;
+        padding: 10px 12px;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        color: #0f172a;
+        background: #e2e8f0;
+    }
+
+    .btnPrimary {
+        background: #7c4dff;
+        color: #fff;
+        box-shadow: 0 16px 40px rgba(124,68,255,.22);
+    }
+
+    .btnBlue {
+        background: #8b5cf6;
+        color: #fff;
+        box-shadow: 0 16px 40px rgba(139,92,246,.18);
+    }
+
+    .btnGreen {
+        background: #a78bfa;
+        color: #fff;
+        box-shadow: 0 16px 40px rgba(167,139,250,.18);
+    }
+
+    .btnDanger {
+        background: linear-gradient(135deg, #ef4444, #dc2626);
+        color: #fff;
+        box-shadow: 0 18px 42px rgba(239,68,68,.28);
+    }
+
+    .btnAlert {
+        background: #fee2e2;
+        color: #b91c1c;
+        border: 1px solid #fecaca;
+    }
+
+    .mini {
+        font-size: 12px;
+        font-weight: 900;
+        color: #64748b;
+        margin-top: 10px;
+    }
+
+    .tipsGrid {
+        display: grid;
+        grid-template-columns: 1.2fr .8fr;
+        gap: 14px;
+        margin-top: 14px;
+    }
+
+    .tip {
+        background: #fff;
+        border: 1px solid #eef2f7;
+        border-radius: 18px;
+        padding: 16px;
+        box-shadow: 0 10px 24px rgba(15,23,42,.06);
+    }
+
+        .tip h4 {
+            margin: 0 0 8px;
+            font-size: 15px;
+            font-weight: 1000;
+            color: #0f172a;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .tip ul {
+            margin: 0 0 0 18px;
+            padding: 0;
+            color: #64748b;
+            font-weight: 750;
+            font-size: 13px;
+            line-height: 1.7;
+        }
+
+    .note {
+        margin-top: 14px;
+        padding: 14px;
+        border-radius: 16px;
+        background: #f3edff;
+        border: 1px solid #ddd6fe;
+        color: #6d28d9;
+        font-weight: 850;
+        font-size: 13px;
+    }
+
+    @@media(max-width:1100px) {
+        .grid {
+            grid-template-columns: 1fr;
+        }
+
+        .tipsGrid {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+
+<div class="pageTitle">
+    <div>🆘 @Localizer["EmergencyServices"]</div>
+    <div class="hint">@Localizer["EmergencyHint"]</div>
+</div>
+
+<div class="heroCard">
+    <div class="heroTop">
+        <div>
+            <p class="heroTitle">⚠️ @Localizer["EmergencyQuickActions"]</p>
+            <p class="heroSub">
+                Choose the exact emergency type before sending the alert. This helps Admin and Officer know what kind of emergency response is needed.
+            </p>
+        </div>
+        <div class="mini">@Localizer["EmergencyTipMobile"]</div>
+    </div>
+
+    <div class="btnRow">
+        <button class="btn btnGreen" type="button" onclick="getLocation()">
+            <i class="fa-solid fa-location-crosshairs"></i> @Localizer["GetMyLocation"]
+        </button>
+    </div>
+
+    <div class="statusText" id="alertStatus"></div>
+</div>
+
+<div class="grid">
+    <div class="card">
+        <div class="svcRow">
+            <div class="ico" style="background:#8b5cf6;">🚓</div>
+            <div>
+                <h3 class="svcTitle">@Localizer["Police"]</h3>
+                <p class="svcDesc">@Localizer["PoliceDesc"]</p>
+                <div class="btnRow">
+                    <a class="btn btnBlue" href="tel:100"><i class="fa-solid fa-phone"></i> @Localizer["Call"] 100</a>
+                    <button class="btn btnAlert" type="button" onclick="sendEmergencyAlert('Police')">
+                        <i class="fa-solid fa-bell"></i> Send Police Alert
+                    </button>
+                    <button class="btn" type="button" onclick="copyText('100')"><i class="fa-regular fa-copy"></i> @Localizer["Copy"]</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="svcRow">
+            <div class="ico" style="background:#7c4dff;">🚑</div>
+            <div>
+                <h3 class="svcTitle">@Localizer["Ambulance"]</h3>
+                <p class="svcDesc">@Localizer["AmbulanceDesc"]</p>
+                <div class="btnRow">
+                    <a class="btn btnPrimary" href="tel:102"><i class="fa-solid fa-phone"></i> @Localizer["Call"] 102</a>
+                    <button class="btn btnAlert" type="button" onclick="sendEmergencyAlert('Ambulance')">
+                        <i class="fa-solid fa-bell"></i> Send Ambulance Alert
+                    </button>
+                    <button class="btn" type="button" onclick="copyText('102')"><i class="fa-regular fa-copy"></i> @Localizer["Copy"]</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="svcRow">
+            <div class="ico" style="background:#a78bfa;">🔥</div>
+            <div>
+                <h3 class="svcTitle">@Localizer["FireBrigade"]</h3>
+                <p class="svcDesc">@Localizer["FireBrigadeDesc"]</p>
+                <div class="btnRow">
+                    <a class="btn" style="background:#a78bfa;color:#fff;" href="tel:101"><i class="fa-solid fa-phone"></i> @Localizer["Call"] 101</a>
+                    <button class="btn btnAlert" type="button" onclick="sendEmergencyAlert('Fire')">
+                        <i class="fa-solid fa-bell"></i> Send Fire Alert
+                    </button>
+                    <button class="btn" type="button" onclick="copyText('101')"><i class="fa-regular fa-copy"></i> @Localizer["Copy"]</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="svcRow">
+            <div class="ico" style="background:#6d28d9;">🚨</div>
+            <div>
+                <h3 class="svcTitle">@Localizer["ArmedPoliceForce"]</h3>
+                <p class="svcDesc">@Localizer["ArmedPoliceForceDesc"]</p>
+                <div class="btnRow">
+                    <a class="btn" style="background:#6d28d9;color:#fff;" href="tel:1114"><i class="fa-solid fa-phone"></i> @Localizer["Call"] 1114</a>
+                    <button class="btn btnAlert" type="button" onclick="sendEmergencyAlert('ArmedPolice')">
+                        <i class="fa-solid fa-bell"></i> Send Armed Police Alert
+                    </button>
+                    <button class="btn" type="button" onclick="copyText('1114')"><i class="fa-regular fa-copy"></i> @Localizer["Copy"]</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="svcRow">
+            <div class="ico" style="background:#9333ea;">👩‍🦰</div>
+            <div>
+                <h3 class="svcTitle">@Localizer["WomenChildrenSeniorService"]</h3>
+                <p class="svcDesc">@Localizer["WomenChildrenSeniorServiceDesc"]</p>
+                <div class="btnRow">
+                    <a class="btn" style="background:#9333ea;color:#fff;" href="tel:104"><i class="fa-solid fa-phone"></i> @Localizer["Call"] 104</a>
+                    <button class="btn btnAlert" type="button" onclick="sendEmergencyAlert('WomenChildrenSenior')">
+                        <i class="fa-solid fa-bell"></i> Send Women/Child/Senior Alert
+                    </button>
+                    <button class="btn" type="button" onclick="copyText('104')"><i class="fa-regular fa-copy"></i> @Localizer["Copy"]</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="svcRow">
+            <div class="ico" style="background:#a78bfa;">🧒</div>
+            <div>
+                <h3 class="svcTitle">@Localizer["ChildHelpline"]</h3>
+                <p class="svcDesc">@Localizer["ChildHelplineDesc"]</p>
+                <div class="btnRow">
+                    <a class="btn btnGreen" href="tel:1098"><i class="fa-solid fa-phone"></i> @Localizer["Call"] 1098</a>
+                    <button class="btn btnAlert" type="button" onclick="sendEmergencyAlert('WomenChildrenSenior')">
+                        <i class="fa-solid fa-bell"></i> Send Child Alert
+                    </button>
+                    <button class="btn" type="button" onclick="copyText('1098')"><i class="fa-regular fa-copy"></i> @Localizer["Copy"]</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="svcRow">
+            <div class="ico" style="background:#8b5cf6;">🛫</div>
+            <div>
+                <h3 class="svcTitle">@Localizer["TouristPolice"]</h3>
+                <p class="svcDesc">@Localizer["TouristPoliceDesc"]</p>
+                <div class="btnRow">
+                    <a class="btn" style="background:#8b5cf6;color:#fff;" href="tel:1144"><i class="fa-solid fa-phone"></i> @Localizer["Call"] 1144</a>
+                    <button class="btn btnAlert" type="button" onclick="sendEmergencyAlert('TouristPolice')">
+                        <i class="fa-solid fa-bell"></i> Send Tourist Police Alert
+                    </button>
+                    <button class="btn" type="button" onclick="copyText('1144')"><i class="fa-regular fa-copy"></i> @Localizer["Copy"]</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="svcRow">
+            <div class="ico" style="background:#c4b5fd;">☎️</div>
+            <div>
+                <h3 class="svcTitle">@Localizer["TrafficPolice"]</h3>
+                <p class="svcDesc">@Localizer["TrafficPoliceDesc"]</p>
+                <div class="btnRow">
+                    <a class="btn" style="background:#c4b5fd;color:#fff;" href="tel:103"><i class="fa-solid fa-phone"></i> @Localizer["Call"] 103</a>
+                    <button class="btn btnAlert" type="button" onclick="sendEmergencyAlert('Traffic')">
+                        <i class="fa-solid fa-bell"></i> Send Traffic Alert
+                    </button>
+                    <button class="btn" type="button" onclick="copyText('103')"><i class="fa-regular fa-copy"></i> @Localizer["Copy"]</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="tipsGrid">
+    <div class="tip">
+        <h4>✅ @Localizer["WhatToTellOperator"]</h4>
+        <ul>
+            <li>@Localizer["OperatorTip1"]</li>
+            <li>@Localizer["OperatorTip2"]</li>
+            <li>@Localizer["OperatorTip3"]</li>
+            <li>@Localizer["OperatorTip4"]</li>
+        </ul>
+    </div>
+
+    <div class="tip">
+        <h4>📍 @Localizer["QuickLocationHelper"]</h4>
+        <ul>
+            <li>@Localizer["LocationTip1"]</li>
+            <li>@Localizer["LocationTip2"]</li>
+            <li>@Localizer["LocationTip3"]</li>
+        </ul>
+
+        <div class="btnRow" style="margin-top:12px;">
+            <button class="btn btnGreen" type="button" onclick="getLocation()">
+                <i class="fa-solid fa-location-crosshairs"></i> @Localizer["GetMyLocation"]
+            </button>
+            <button class="btn" type="button" onclick="copyLocation()">
+                <i class="fa-regular fa-copy"></i> @Localizer["CopyLocation"]
+            </button>
+        </div>
+
+        <div class="mini" id="locText" style="margin-top:10px;">@Localizer["LocationNotFetchedYet"]</div>
+    </div>
+</div>
+
+<div class="note">
+    ⚠️ @Localizer["EmergencyNote1"]
+    <b>@Localizer["SubmitComplaint"]</b>.
+</div>
+
+@Html.AntiForgeryToken()
+
+<script>
+    let lastLocationText = "";
+
+    const txtCopied = '@Localizer["Copied"]';
+    const txtCopyFailed = '@Localizer["CopyFailed"]';
+    const txtLocationUnsupported = '@Localizer["LocationUnsupported"]';
+    const txtLocationFetching = '@Localizer["LocationFetching"]';
+    const txtLocationLabel = '@Localizer["LocationLabel"]';
+    const txtLocationDenied = '@Localizer["LocationDenied"]';
+    const txtFetchLocationFirst = '@Localizer["FetchLocationFirst"]';
+
+    function getAntiForgeryToken() {
+        return document.querySelector('input[name="__RequestVerificationToken"]').value;
+    }
+
+    function copyText(t) {
+        navigator.clipboard.writeText(t)
+            .then(() => alert(txtCopied + ": " + t))
+            .catch(() => alert(txtCopyFailed));
+    }
+
+    function getLocation() {
+        const el = document.getElementById("locText");
+
+        if (!navigator.geolocation) {
+            el.innerText = txtLocationLabel + ": " + txtLocationUnsupported;
+            return;
+        }
+
+        el.innerText = txtLocationLabel + ": " + txtLocationFetching;
+
+        navigator.geolocation.getCurrentPosition(
+            async (pos) => {
+                const lat = pos.coords.latitude.toFixed(6);
+                const lng = pos.coords.longitude.toFixed(6);
+                lastLocationText = `Lat: ${lat}, Lng: ${lng}`;
+                el.innerText = txtLocationLabel + ": " + lastLocationText;
+
+                try {
+                    await fetch('/Citizen/SaveMyLocation', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'RequestVerificationToken': getAntiForgeryToken()
+                        },
+                        body: JSON.stringify({
+                            lat: parseFloat(lat),
+                            lng: parseFloat(lng)
+                        })
+                    });
+                } catch (e) {
+                    console.log("Location save failed.");
+                }
+            },
+            () => {
+                el.innerText = txtLocationLabel + ": " + txtLocationDenied;
+            },
+            { enableHighAccuracy: true, timeout: 8000 }
+        );
+    }
+
+    function copyLocation() {
+        if (!lastLocationText) {
+            alert(txtFetchLocationFirst);
+            return;
+        }
+
+        navigator.clipboard.writeText(lastLocationText)
+            .then(() => alert(txtCopied + ": " + lastLocationText))
+            .catch(() => alert(txtCopyFailed));
+    }
+
+    async function sendEmergencyAlert(alertType) {
+        const statusEl = document.getElementById("alertStatus");
+
+        const ok = confirm(`Are you sure you want to send ${alertType} alert?`);
+        if (!ok) return;
+
+        statusEl.innerText = `Sending ${alertType} alert...`;
+
+        try {
+            const formData = new URLSearchParams();
+            formData.append("alertType", alertType);
+
+            const response = await fetch('/Citizen/SendEmergencyAlert', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'RequestVerificationToken': getAntiForgeryToken()
+                },
+                body: formData.toString()
+            });
+
+            const data = await response.json();
+
+            if (response.ok && data.ok) {
+                statusEl.innerText = `✅ ${data.message}`;
+                alert(data.message);
+            } else {
+                statusEl.innerText = "❌ Failed to send alert.";
+                alert(data.message || "Failed to send alert.");
+            }
+        } catch (err) {
+            statusEl.innerText = "❌ Error while sending alert.";
+            alert("Error while sending alert.");
+        }
+    }
+</script>
