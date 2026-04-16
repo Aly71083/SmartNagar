@@ -1,0 +1,151 @@
+﻿@model SmartNagar.ViewModels.SendNoticeVM
+@{
+    Layout = "~/Views/Officer/_OfficerLayout.cshtml";
+    ViewBag.Title = "Send Notice";
+    ViewBag.Active = "Dashboard";
+}
+
+<style>
+    .wrap {
+        max-width: 900px;
+        margin: auto;
+    }
+
+    .card {
+        background: #fff;
+        border: 1px solid #ece7ff;
+        border-radius: 18px;
+        box-shadow: 0 14px 40px rgba(16,24,40,.08);
+        padding: 18px;
+    }
+
+    .title {
+        font-size: 22px;
+        font-weight: 1000;
+        margin-bottom: 6px;
+    }
+
+    .muted {
+        color: #667085;
+        font-weight: 800;
+        font-size: 13px;
+        margin-bottom: 16px;
+    }
+
+    label {
+        font-weight: 900;
+        font-size: 13px;
+        display: block;
+        margin-bottom: 6px;
+    }
+
+    input, select, textarea {
+        width: 100%;
+        padding: 10px;
+        border-radius: 12px;
+        border: 1px solid #e5e7eb;
+        font-weight: 800;
+        outline: none;
+    }
+
+    textarea {
+        min-height: 140px;
+        resize: vertical;
+    }
+
+    .grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+    }
+
+    @@media(max-width:900px) {
+        .grid {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    .btn {
+        border: none;
+        border-radius: 12px;
+        padding: 10px 14px;
+        font-weight: 1000;
+        cursor: pointer;
+        background: linear-gradient(135deg,#f59e0b,#ea580c);
+        color: #fff;
+    }
+
+    .msgOk {
+        background: #dcfce7;
+        border: 1px solid #bbf7d0;
+        color: #166534;
+        padding: 10px 12px;
+        border-radius: 12px;
+        font-weight: 900;
+        margin-bottom: 12px;
+    }
+
+    .msgErr {
+        background: #fee2e2;
+        border: 1px solid #fecaca;
+        color: #991b1b;
+        padding: 10px 12px;
+        border-radius: 12px;
+        font-weight: 900;
+        margin-bottom: 12px;
+    }
+</style>
+
+<div class="wrap">
+    <div class="card">
+        <div class="title">Send Notice</div>
+        <div class="muted">Create a notice that will be visible to citizens.</div>
+
+        @if (TempData["ok"] != null)
+        {
+            <div class="msgOk">@TempData["ok"]</div>
+        }
+
+        @if (!ViewData.ModelState.IsValid)
+        {
+            <div class="msgErr">
+                @foreach (var e in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+                {
+                    <div>• @e.ErrorMessage</div>
+                }
+            </div>
+        }
+
+        <form method="post" action="/Officer/SendNotice">
+            @Html.AntiForgeryToken()
+
+            <div class="grid">
+                <div>
+                    <label>Title</label>
+                    <input asp-for="Title" placeholder="e.g., Water supply maintenance today" />
+                </div>
+
+                <div>
+                    <label>Priority</label>
+                    <select asp-for="Priority">
+                        <option value="Normal">Normal</option>
+                        <option value="Low">Low</option>
+                        <option value="Medium">Medium</option>
+                        <option value="High">High</option>
+                    </select>
+                </div>
+            </div>
+
+            <div style="height:10px;"></div>
+
+            <div>
+                <label>Description</label>
+                <textarea asp-for="Description" placeholder="Write the full notice details..."></textarea>
+            </div>
+
+            <div style="height:14px;"></div>
+
+            <button class="btn" type="submit">Send Notice</button>
+        </form>
+    </div>
+</div>

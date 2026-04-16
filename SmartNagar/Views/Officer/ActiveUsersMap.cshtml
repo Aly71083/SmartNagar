@@ -1,0 +1,810 @@
+﻿@model List<SmartNagar.ViewModels.ActiveUserLocationVM>
+@{
+    Layout = "~/Views/Officer/_OfficerLayout.cshtml";
+    ViewBag.Active = "ActiveUsersMap";
+
+    var totalUsers = Model?.Count ?? 0;
+    var onlineNow = Model?.Count ?? 0;
+    var activeToday = Model?.Count ?? 0;
+    var avgSession = 2;
+}
+
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+<style>
+    .active-users-page {
+        padding: 18px;
+        background: #f3e8ff;
+        min-height: 100vh;
+    }
+
+    .hero-card {
+        background: #fff;
+        border-radius: 28px;
+        padding: 28px 34px;
+        box-shadow: 0 12px 35px rgba(124, 58, 237, 0.08);
+        border: 1px solid #efe7ff;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 18px;
+        flex-wrap: wrap;
+        margin-bottom: 22px;
+    }
+
+    .hero-title {
+        margin: 0;
+        font-size: 32px;
+        font-weight: 1000;
+        color: #7c4dff;
+        line-height: 1.1;
+    }
+
+    .hero-sub {
+        margin-top: 8px;
+        color: #64748b;
+        font-size: 15px;
+        font-weight: 500;
+    }
+
+    .hero-actions {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+    }
+
+    .hero-btn {
+        border: none;
+        border-radius: 14px;
+        padding: 12px 20px;
+        font-weight: 800;
+        font-size: 14px;
+        cursor: pointer;
+        transition: .2s ease;
+    }
+
+        .hero-btn:hover {
+            transform: translateY(-1px);
+        }
+
+    .hero-btn-outline {
+        background: #fff;
+        color: #7c3aed;
+        border: 1px solid #d9c6ff;
+    }
+
+    .hero-btn-fill {
+        background: linear-gradient(135deg, #7c4dff, #9b5cff);
+        color: #fff;
+        box-shadow: 0 12px 30px rgba(124, 77, 255, .22);
+    }
+
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+        gap: 16px;
+        margin-bottom: 24px;
+    }
+
+    .stat-card {
+        position: relative;
+        background: #fff;
+        border-radius: 22px;
+        padding: 20px 22px;
+        box-shadow: 0 12px 30px rgba(124, 58, 237, 0.08);
+        border: 1px solid #efe7ff;
+        overflow: hidden;
+        min-height: 130px;
+    }
+
+        .stat-card::after {
+            content: "";
+            position: absolute;
+            width: 90px;
+            height: 90px;
+            border-radius: 50%;
+            background: rgba(124, 77, 255, 0.05);
+            right: -20px;
+            top: -20px;
+        }
+
+    .stat-icon {
+        width: 42px;
+        height: 42px;
+        border-radius: 14px;
+        background: #8b5cf6;
+        color: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 18px;
+        font-weight: 900;
+        margin-bottom: 14px;
+        position: relative;
+        z-index: 1;
+    }
+
+    .stat-badge {
+        position: absolute;
+        top: 16px;
+        right: 16px;
+        background: #dcfce7;
+        color: #15803d;
+        font-size: 11px;
+        font-weight: 900;
+        padding: 6px 10px;
+        border-radius: 999px;
+        z-index: 1;
+    }
+
+    .stat-value {
+        font-size: 26px;
+        font-weight: 1000;
+        color: #1e293b;
+        line-height: 1;
+        position: relative;
+        z-index: 1;
+    }
+
+    .stat-label {
+        margin-top: 8px;
+        color: #64748b;
+        font-size: 14px;
+        font-weight: 700;
+        position: relative;
+        z-index: 1;
+    }
+
+    .main-grid {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) 290px;
+        gap: 22px;
+        align-items: start;
+    }
+
+    .panel {
+        background: #fff;
+        border-radius: 24px;
+        box-shadow: 0 12px 30px rgba(124, 58, 237, 0.08);
+        border: 1px solid #efe7ff;
+        overflow: hidden;
+    }
+
+    .panel-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 12px;
+        flex-wrap: wrap;
+        padding: 18px 20px;
+        border-bottom: 1px solid #f1e8ff;
+    }
+
+    .panel-title {
+        font-size: 16px;
+        font-weight: 1000;
+        color: #172554;
+        margin: 0;
+    }
+
+    .chip-row {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+    }
+
+    .chip {
+        border: 1px solid #ddd6fe;
+        background: #fff;
+        color: #334155;
+        border-radius: 999px;
+        padding: 7px 14px;
+        font-size: 12px;
+        font-weight: 800;
+        cursor: pointer;
+        transition: .2s ease;
+    }
+
+        .chip.active {
+            background: #8b5cf6;
+            color: #fff;
+            border-color: #8b5cf6;
+        }
+
+    .map-wrap {
+        position: relative;
+        min-height: 620px;
+        background: #ede9fe;
+    }
+
+    #map {
+        width: 100%;
+        height: 620px;
+        z-index: 1;
+    }
+
+    .map-legend {
+        position: absolute;
+        left: 24px;
+        bottom: 24px;
+        z-index: 500;
+        background: rgba(255,255,255,.96);
+        border-radius: 18px;
+        padding: 16px 18px;
+        box-shadow: 0 14px 34px rgba(124,77,255,.16);
+        min-width: 150px;
+    }
+
+        .map-legend h4 {
+            margin: 0 0 10px;
+            font-size: 15px;
+            font-weight: 1000;
+            color: #1e293b;
+        }
+
+    .legend-item {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 10px;
+        color: #334155;
+        font-size: 13px;
+        font-weight: 700;
+    }
+
+        .legend-item:last-child {
+            margin-bottom: 0;
+        }
+
+    .legend-dot {
+        width: 16px;
+        height: 16px;
+        border-radius: 50%;
+        box-shadow: 0 0 0 3px rgba(255,255,255,.7);
+    }
+
+    .dot-online {
+        background: #10b981;
+    }
+
+    .dot-active {
+        background: #3b82f6;
+    }
+
+    .dot-idle {
+        background: #d946ef;
+    }
+
+    .side-stack {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .side-card {
+        background: #fff;
+        border-radius: 24px;
+        padding: 18px;
+        box-shadow: 0 12px 30px rgba(124, 58, 237, 0.08);
+        border: 1px solid #efe7ff;
+    }
+
+    .side-title {
+        margin: 0 0 16px;
+        color: #172554;
+        font-size: 16px;
+        font-weight: 1000;
+    }
+
+    .activity-list {
+        max-height: 320px;
+        overflow-y: auto;
+        padding-right: 6px;
+    }
+
+    .activity-item {
+        display: flex;
+        gap: 12px;
+        align-items: flex-start;
+        background: #f6f1ff;
+        border-radius: 16px;
+        padding: 12px;
+        margin-bottom: 12px;
+    }
+
+    .activity-avatar {
+        width: 34px;
+        height: 34px;
+        flex: 0 0 34px;
+        border-radius: 50%;
+        background: #8b5cf6;
+        color: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 900;
+        font-size: 13px;
+    }
+
+    .activity-text {
+        color: #0f172a;
+        font-size: 13px;
+        line-height: 1.35;
+    }
+
+    .activity-time {
+        display: block;
+        margin-top: 4px;
+        font-size: 12px;
+        color: #7c3aed;
+        font-weight: 800;
+    }
+
+    .user-rank-item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        background: #f6f1ff;
+        border-radius: 16px;
+        padding: 12px;
+        margin-bottom: 12px;
+    }
+
+    .rank-no {
+        width: 30px;
+        height: 30px;
+        border-radius: 10px;
+        background: #8b5cf6;
+        color: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 1000;
+        font-size: 13px;
+        flex: 0 0 30px;
+    }
+
+    .rank-avatar {
+        width: 38px;
+        height: 38px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #8b5cf6, #ec4899);
+        color: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 1000;
+        flex: 0 0 38px;
+    }
+
+    .rank-meta {
+        flex: 1;
+        min-width: 0;
+    }
+
+    .rank-name {
+        font-size: 14px;
+        font-weight: 900;
+        color: #0f172a;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .rank-sub {
+        font-size: 12px;
+        color: #64748b;
+        margin-top: 2px;
+        font-weight: 700;
+    }
+
+    .rank-score {
+        color: #7c3aed;
+        font-weight: 1000;
+        font-size: 20px;
+    }
+
+    .empty-box {
+        padding: 20px;
+        background: #faf5ff;
+        border: 1px dashed #d8b4fe;
+        color: #6b7280;
+        border-radius: 16px;
+        font-weight: 700;
+        text-align: center;
+    }
+
+    .leaflet-popup-content-wrapper {
+        border-radius: 16px;
+    }
+
+    .leaflet-popup-content {
+        margin: 12px 14px;
+    }
+
+    @@media (max-width: 1200px) {
+        .stats-grid {
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+        }
+
+        .main-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    @@media (max-width: 768px) {
+        .stats-grid {
+            grid-template-columns: repeat(1, minmax(0, 1fr));
+        }
+
+        .hero-title {
+            font-size: 25px;
+        }
+
+        .map-wrap, #map {
+            height: 500px;
+            min-height: 500px;
+        }
+    }
+</style>
+
+<div class="active-users-page">
+    <div class="hero-card">
+        <div>
+            <h1 class="hero-title">Active Users Map</h1>
+            <div class="hero-sub">Real-time visualization of active users across Smart Nagar</div>
+        </div>
+
+        <div class="hero-actions">
+            <button type="button" class="hero-btn hero-btn-outline" onclick="refreshMap()">↻ Refresh</button>
+            <button type="button" class="hero-btn hero-btn-fill" onclick="exportUsers()">⤓ Export Data</button>
+        </div>
+    </div>
+
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-icon">👥</div>
+            <div class="stat-badge">↑ 12%</div>
+            <div class="stat-value">@totalUsers</div>
+            <div class="stat-label">Total Users</div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon">🟢</div>
+            <div class="stat-badge">↑ 8%</div>
+            <div class="stat-value">@onlineNow</div>
+            <div class="stat-label">Online Now</div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon">📍</div>
+            <div class="stat-badge">↑ 15%</div>
+            <div class="stat-value">@activeToday</div>
+            <div class="stat-label">Active Today</div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon">🧭</div>
+            <div class="stat-value">@totalUsers</div>
+            <div class="stat-label">Tracked Users</div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon">⏱</div>
+            <div class="stat-value">@avgSession</div>
+            <div class="stat-label">Avg Session</div>
+        </div>
+    </div>
+
+    <div class="main-grid">
+        <div class="panel">
+            <div class="panel-head">
+                <h3 class="panel-title">📡 Live User Distribution</h3>
+
+                <div class="chip-row">
+                    <button type="button" class="chip active" data-filter="all" onclick="applyFilter('all', this)">All Users</button>
+                    <button type="button" class="chip" data-filter="online" onclick="applyFilter('online', this)">Online</button>
+                    <button type="button" class="chip" data-filter="active" onclick="applyFilter('active', this)">Active</button>
+                    <button type="button" class="chip" data-filter="live" onclick="applyFilter('live', this)">Live View</button>
+                </div>
+            </div>
+
+            <div class="map-wrap">
+                <div id="map"></div>
+
+                <div class="map-legend">
+                    <h4>User Status</h4>
+                    <div class="legend-item">
+                        <span class="legend-dot dot-online"></span>
+                        <span>Online</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-dot dot-active"></span>
+                        <span>Active</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="legend-dot dot-idle"></span>
+                        <span>Idle</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="side-stack">
+            <div class="side-card">
+                <h3 class="side-title">📋 Live Activity</h3>
+
+                <div class="activity-list">
+                    @if (Model != null && Model.Any())
+                    {
+                        foreach (var user in Model.Take(5))
+                        {
+                            var initials = string.IsNullOrWhiteSpace(user.FullName)
+                            ? "U"
+                            : string.Concat(user.FullName
+                            .Split(' ', StringSplitOptions.RemoveEmptyEntries)
+                            .Take(2)
+                            .Select(x => x[0]))
+                            .ToUpper();
+
+                            <div class="activity-item">
+                                <div class="activity-avatar">@initials</div>
+                                <div class="activity-text">
+                                    <strong>@user.FullName</strong> is active on the map
+                                    <span class="activity-time">
+                                        @(user.LastAt.HasValue? user.LastAt.Value.ToString("dd MMM yyyy hh:mm tt") : "Recently active")
+                                    </span>
+                                </div>
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <div class="empty-box">No live activity found.</div>
+                    }
+                </div>
+            </div>
+
+            <div class="side-card">
+                <h3 class="side-title">🏆 Most Active Users</h3>
+
+                @if (Model != null && Model.Any())
+                {
+                    var rankedUsers = Model.Take(5).ToList();
+                    int rank = 1;
+
+                    foreach (var user in rankedUsers)
+                    {
+                        var initials = string.IsNullOrWhiteSpace(user.FullName)
+                        ? "U"
+                        : string.Concat(user.FullName
+                        .Split(' ', StringSplitOptions.RemoveEmptyEntries)
+                        .Take(2)
+                        .Select(x => x[0]))
+                        .ToUpper();
+
+                        <div class="user-rank-item">
+                            <div class="rank-no">@rank</div>
+                            <div class="rank-avatar">@initials</div>
+                            <div class="rank-meta">
+                                <div class="rank-name">@user.FullName</div>
+                                <div class="rank-sub">User ID: @user.UserId</div>
+                            </div>
+                            <div class="rank-score">@(30 - rank)</div>
+                        </div>
+
+                        rank++;
+                    }
+                }
+                else
+                {
+                    <div class="empty-box">No active users available.</div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const users = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model ?? new List<SmartNagar.ViewModels.ActiveUserLocationVM>()));
+
+    let map;
+    let allMarkers = [];
+    let currentFilter = "all";
+
+    function getInitials(name) {
+        return (name || "U")
+            .split(' ')
+            .filter(x => x.trim() !== '')
+            .slice(0, 2)
+            .map(x => x[0].toUpperCase())
+            .join('') || 'U';
+    }
+
+    function getUserType(index) {
+        if (index % 3 === 0) return "online";
+        if (index % 3 === 1) return "active";
+        return "idle";
+    }
+
+    function getMarkerColor(type) {
+        if (type === "online") return "#10b981";
+        if (type === "active") return "#3b82f6";
+        return "#d946ef";
+    }
+
+    function createMarker(user, index) {
+        const lat = user.Lat ?? user.lat;
+        const lng = user.Lng ?? user.lng;
+
+        if (lat === null || lat === undefined || lng === null || lng === undefined) {
+            return null;
+        }
+
+        const type = getUserType(index);
+        const color = getMarkerColor(type);
+        const initials = getInitials(user.FullName ?? user.fullName);
+
+        const icon = L.divIcon({
+            className: '',
+            html: `
+                <div style="
+                    width:42px;
+                    height:42px;
+                    border-radius:50%;
+                    display:flex;
+                    align-items:center;
+                    justify-content:center;
+                    background:${color};
+                    color:#fff;
+                    font-size:13px;
+                    font-weight:900;
+                    border:3px solid rgba(255,255,255,.95);
+                    box-shadow:0 8px 20px rgba(124,77,255,.28);">
+                    ${initials}
+                </div>
+            `,
+            iconSize: [42, 42],
+            iconAnchor: [21, 21],
+            popupAnchor: [0, -18]
+        });
+
+        const marker = L.marker([lat, lng], { icon: icon });
+
+        const rawLastAt = user.LastAt ?? user.lastAt;
+        const when = rawLastAt ? new Date(rawLastAt).toLocaleString() : "Recently active";
+
+        marker.bindPopup(`
+            <div style="font-family:Segoe UI, Arial; min-width:180px;">
+                <div style="font-weight:900; font-size:15px; color:#111827;">
+                    ${user.FullName ?? user.fullName ?? "Unknown User"}
+                </div>
+                <div style="margin-top:6px; color:#6b7280; font-size:13px;">
+                    User ID: ${user.UserId ?? user.userId ?? "-"}
+                </div>
+                <div style="margin-top:6px; color:#7c3aed; font-size:12px; font-weight:700;">
+                    ${when}
+                </div>
+                <div style="margin-top:6px; color:#334155; font-size:12px;">
+                    ${Number(lat).toFixed(6)}, ${Number(lng).toFixed(6)}
+                </div>
+                <div style="margin-top:6px; font-size:12px; font-weight:800; color:${color}; text-transform:capitalize;">
+                    ${type}
+                </div>
+            </div>
+        `);
+
+        return {
+            marker: marker,
+            type: type,
+            user: user,
+            lat: lat,
+            lng: lng
+        };
+    }
+
+    function buildMap() {
+        map = L.map('map').setView([27.7172, 85.3240], 12);
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '&copy; OpenStreetMap contributors'
+        }).addTo(map);
+
+        allMarkers = [];
+
+        if (users && users.length > 0) {
+            users.forEach((u, index) => {
+                const markerData = createMarker(u, index);
+                if (markerData) {
+                    allMarkers.push(markerData);
+                }
+            });
+        }
+
+        renderMarkers("all");
+
+        setTimeout(function () {
+            map.invalidateSize();
+        }, 300);
+
+        setTimeout(function () {
+            map.invalidateSize();
+        }, 800);
+    }
+
+    function renderMarkers(filter) {
+        currentFilter = filter;
+
+        allMarkers.forEach(x => {
+            if (map.hasLayer(x.marker)) {
+                map.removeLayer(x.marker);
+            }
+        });
+
+        let filtered = allMarkers;
+
+        if (filter === "online") {
+            filtered = allMarkers.filter(x => x.type === "online");
+        }
+        else if (filter === "active") {
+            filtered = allMarkers.filter(x => x.type === "active");
+        }
+        else if (filter === "live") {
+            filtered = allMarkers.filter(x => x.type === "online" || x.type === "active");
+        }
+
+        const bounds = [];
+
+        filtered.forEach(x => {
+            x.marker.addTo(map);
+            bounds.push([x.lat, x.lng]);
+        });
+
+        if (bounds.length > 0) {
+            map.fitBounds(bounds, { padding: [40, 40] });
+        } else {
+            map.setView([27.7172, 85.3240], 12);
+        }
+    }
+
+    function applyFilter(filter, btn) {
+        document.querySelectorAll(".chip").forEach(x => x.classList.remove("active"));
+        btn.classList.add("active");
+        renderMarkers(filter);
+    }
+
+    function refreshMap() {
+        location.reload();
+    }
+
+    function exportUsers() {
+        let csv = "UserId,FullName,Latitude,Longitude,LastActive\n";
+
+        users.forEach(u => {
+            const userId = (u.UserId ?? u.userId ?? "").toString().replaceAll(",", " ");
+            const fullName = (u.FullName ?? u.fullName ?? "").toString().replaceAll(",", " ");
+            const lat = u.Lat ?? u.lat ?? "";
+            const lng = u.Lng ?? u.lng ?? "";
+            const lastAt = u.LastAt ?? u.lastAt ?? "";
+
+            csv += `${userId},${fullName},${lat},${lng},${lastAt}\n`;
+        });
+
+        const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+        const link = document.createElement("a");
+        const url = URL.createObjectURL(blob);
+
+        link.setAttribute("href", url);
+        link.setAttribute("download", "active-users.csv");
+        link.style.visibility = "hidden";
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    }
+
+    document.addEventListener("DOMContentLoaded", function () {
+        buildMap();
+    });
+</script>

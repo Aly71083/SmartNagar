@@ -1,0 +1,529 @@
+﻿@model SmartNagar.ViewModels.AddCitizenVM
+@{
+    Layout = "~/Views/Officer/_OfficerLayout.cshtml";
+    ViewBag.PageTitle = "Add Citizen";
+    ViewBag.Active = "addcitizen";
+}
+
+@section Styles {
+    <style>
+        .pageWrap {
+            max-width: 980px;
+            margin: 0 auto;
+            padding: 6px 4px 24px;
+        }
+
+        .heroCard {
+            background: linear-gradient(135deg, #7c3aed, #a855f7);
+            border-radius: 24px;
+            padding: 26px 28px;
+            box-shadow: 0 18px 40px rgba(124, 58, 237, .22);
+            color: #fff;
+            margin-bottom: 18px;
+        }
+
+        .heroTitle {
+            margin: 0;
+            font-size: 30px;
+            font-weight: 1000;
+            line-height: 1.1;
+        }
+
+        .heroSub {
+            margin-top: 8px;
+            font-size: 14px;
+            font-weight: 700;
+            color: rgba(255,255,255,.92);
+        }
+
+        .addCitizenCard {
+            background: #fff;
+            border: 1px solid #ece7ff;
+            border-radius: 24px;
+            box-shadow: 0 14px 40px rgba(16,24,40,.08);
+            overflow: hidden;
+        }
+
+        .stepper {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            padding: 24px 26px 14px;
+            border-bottom: 1px solid #f1e9ff;
+            flex-wrap: wrap;
+        }
+
+        .step {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            min-width: 180px;
+        }
+
+        .stepCircle {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            border: 2px solid #ddd6fe;
+            background: #fff;
+            color: #7c3aed;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 1000;
+        }
+
+        .step.active .stepCircle {
+            background: linear-gradient(135deg, #7c3aed, #a855f7);
+            color: #fff;
+            border-color: transparent;
+            box-shadow: 0 12px 26px rgba(124,58,237,.22);
+        }
+
+        .step.done .stepCircle {
+            background: #ecfdf5;
+            color: #10b981;
+            border-color: #86efac;
+        }
+
+        .stepText small {
+            display: block;
+            font-size: 11px;
+            letter-spacing: 1.1px;
+            font-weight: 900;
+            color: #667085;
+        }
+
+        .stepText strong {
+            display: block;
+            margin-top: 2px;
+            font-size: 15px;
+            color: #101828;
+            font-weight: 900;
+        }
+
+        .stepLine {
+            flex: 1;
+            min-width: 40px;
+            height: 2px;
+            background: #eee7ff;
+        }
+
+        .content {
+            padding: 24px 26px 28px;
+        }
+
+        .panel {
+            display: none;
+        }
+
+            .panel.active {
+                display: block;
+            }
+
+        .formSectionTitle {
+            font-size: 22px;
+            font-weight: 1000;
+            color: #101828;
+            margin-bottom: 6px;
+        }
+
+        .formSectionSub {
+            color: #667085;
+            font-size: 14px;
+            font-weight: 700;
+            margin-bottom: 22px;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px 18px;
+        }
+
+        .full {
+            grid-column: 1 / -1;
+        }
+
+        .field {
+            margin-bottom: 2px;
+        }
+
+            .field label {
+                display: block;
+                margin-bottom: 8px;
+                font-size: 13px;
+                font-weight: 900;
+                color: #344054;
+            }
+
+        .inputWrap {
+            position: relative;
+        }
+
+        .icon {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #98a2b3;
+            font-size: 15px;
+            pointer-events: none;
+        }
+
+        .eyeBtn {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            color: #667085;
+            font-size: 15px;
+        }
+
+        .field input {
+            width: 100%;
+            height: 54px;
+            border: 1px solid #e4e7ec;
+            border-radius: 16px;
+            outline: none;
+            padding: 0 16px 0 44px;
+            font-size: 14px;
+            font-weight: 700;
+            color: #101828;
+            background: #fff;
+        }
+
+        .hasRightIcon {
+            padding-right: 44px !important;
+        }
+
+        .field input:focus {
+            border-color: #a855f7;
+            box-shadow: 0 0 0 4px rgba(168,85,247,.12);
+        }
+
+        .text-danger,
+        .field-validation-error {
+            display: block;
+            margin-top: 6px;
+            color: #dc2626;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .msgOk {
+            background: #dcfce7;
+            border: 1px solid #bbf7d0;
+            color: #166534;
+            padding: 12px 14px;
+            border-radius: 14px;
+            font-weight: 900;
+            margin-bottom: 14px;
+        }
+
+        .msgErr {
+            background: #fee2e2;
+            border: 1px solid #fecaca;
+            color: #991b1b;
+            padding: 12px 14px;
+            border-radius: 14px;
+            font-weight: 900;
+            margin-bottom: 14px;
+            font-size: 13px;
+        }
+
+        .hintBox {
+            margin-top: 8px;
+            padding: 14px 16px;
+            border-radius: 14px;
+            background: #f5f3ff;
+            color: #7c3aed;
+            border: 1px solid #ddd6fe;
+            font-size: 14px;
+            font-weight: 700;
+        }
+
+        .actions {
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            margin-top: 24px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            min-width: 150px;
+            height: 48px;
+            border: none;
+            border-radius: 14px;
+            font-weight: 1000;
+            font-size: 14px;
+            cursor: pointer;
+            transition: .2s ease;
+        }
+
+            .btn:hover {
+                transform: translateY(-1px);
+            }
+
+        .btnBack {
+            background: #fff;
+            border: 1px solid #e4e7ec;
+            color: #344054;
+        }
+
+        .btnNext {
+            background: linear-gradient(135deg, #7c3aed, #a855f7);
+            color: #fff;
+            box-shadow: 0 14px 30px rgba(124,58,237,.24);
+        }
+
+        @@media(max-width:900px) {
+            .grid {
+                grid-template-columns: 1fr;
+            }
+
+            .stepper {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .stepLine {
+                display: none;
+            }
+
+            .actions {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+            }
+        }
+    </style>
+}
+
+<div class="pageWrap">
+    <div class="heroCard">
+        <h1 class="heroTitle">Add Citizen</h1>
+        <div class="heroSub">Create a new citizen account using the same account structure as the registration page.</div>
+    </div>
+
+    <div class="addCitizenCard">
+        <div class="stepper">
+            <div class="step active" id="stepIndicator1">
+                <div class="stepCircle">1</div>
+                <div class="stepText">
+                    <small>STEP 1</small>
+                    <strong>Personal Info</strong>
+                </div>
+            </div>
+
+            <div class="stepLine"></div>
+
+            <div class="step" id="stepIndicator2">
+                <div class="stepCircle">2</div>
+                <div class="stepText">
+                    <small>STEP 2</small>
+                    <strong>Account Info</strong>
+                </div>
+            </div>
+
+            <div class="stepLine"></div>
+
+            <div class="step" id="stepIndicator3">
+                <div class="stepCircle">3</div>
+                <div class="stepText">
+                    <small>STEP 3</small>
+                    <strong>Security</strong>
+                </div>
+            </div>
+        </div>
+
+        <div class="content">
+            @if (TempData["ok"] != null)
+            {
+                <div class="msgOk">@TempData["ok"]</div>
+            }
+
+            @if (!ViewData.ModelState.IsValid)
+            {
+                <div asp-validation-summary="All" class="msgErr"></div>
+            }
+
+            <form asp-action="AddCitizen" asp-controller="Officer" method="post" id="addCitizenForm">
+                @Html.AntiForgeryToken()
+
+                <div class="panel active" id="panel1">
+                    <div class="formSectionTitle">Citizen Details</div>
+                    <div class="formSectionSub">Enter the citizen’s basic information first.</div>
+
+                    <div class="grid">
+                        <div class="field full">
+                            <label asp-for="FullName"></label>
+                            <div class="inputWrap">
+                                <span class="icon">👤</span>
+                                <input asp-for="FullName" placeholder="Enter full name" />
+                            </div>
+                            <span asp-validation-for="FullName" class="text-danger"></span>
+                        </div>
+
+                        <div class="field">
+                            <label asp-for="Email"></label>
+                            <div class="inputWrap">
+                                <span class="icon">✉️</span>
+                                <input asp-for="Email" placeholder="Enter email address" />
+                            </div>
+                            <span asp-validation-for="Email" class="text-danger"></span>
+                        </div>
+
+                        <div class="field">
+                            <label asp-for="PhoneNumber"></label>
+                            <div class="inputWrap">
+                                <span class="icon">📞</span>
+                                <input asp-for="PhoneNumber" placeholder="Enter phone number" />
+                            </div>
+                            <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="actions">
+                        <div></div>
+                        <button type="button" class="btn btnNext" onclick="goToStep(2)">Next →</button>
+                    </div>
+                </div>
+
+                <div class="panel" id="panel2">
+                    <div class="formSectionTitle">Account Setup</div>
+                    <div class="formSectionSub">Set the same account fields used in registration.</div>
+
+                    <div class="grid">
+                        <div class="field">
+                            <label asp-for="Username"></label>
+                            <div class="inputWrap">
+                                <span class="icon">🪪</span>
+                                <input asp-for="Username" placeholder="Choose username" />
+                            </div>
+                            <span asp-validation-for="Username" class="text-danger"></span>
+                        </div>
+
+                        <div class="field">
+                            <label asp-for="Address"></label>
+                            <div class="inputWrap">
+                                <span class="icon">📍</span>
+                                <input asp-for="Address" placeholder="Enter address" />
+                            </div>
+                            <span asp-validation-for="Address" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="actions">
+                        <button type="button" class="btn btnBack" onclick="goToStep(1)">← Back</button>
+                        <button type="button" class="btn btnNext" onclick="goToStep(3)">Next →</button>
+                    </div>
+                </div>
+
+                <div class="panel" id="panel3">
+                    <div class="formSectionTitle">Security</div>
+                    <div class="formSectionSub">Create a password for the citizen account.</div>
+
+                    <div class="grid">
+                        <div class="field">
+                            <label asp-for="Password"></label>
+                            <div class="inputWrap">
+                                <span class="icon">🔒</span>
+                                <input asp-for="Password" id="Password" type="password" class="hasRightIcon" placeholder="Create password" />
+                                <button type="button" class="eyeBtn" onclick="togglePassword('Password', this)">👁</button>
+                            </div>
+                            <span asp-validation-for="Password" class="text-danger"></span>
+                        </div>
+
+                        <div class="field">
+                            <label asp-for="ConfirmPassword"></label>
+                            <div class="inputWrap">
+                                <span class="icon">🔒</span>
+                                <input asp-for="ConfirmPassword" id="ConfirmPassword" type="password" class="hasRightIcon" placeholder="Confirm password" />
+                                <button type="button" class="eyeBtn" onclick="togglePassword('ConfirmPassword', this)">👁</button>
+                            </div>
+                            <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="hintBox">
+                        Use at least 6 characters for the password.
+                    </div>
+
+                    <div class="actions">
+                        <button type="button" class="btn btnBack" onclick="goToStep(2)">← Back</button>
+                        <button type="submit" class="btn btnNext">Create Citizen</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+
+    <script>
+        let currentStep = 1;
+
+        function goToStep(step) {
+            if (step > currentStep) {
+                if (!validateCurrentStep()) return;
+            }
+
+            currentStep = step;
+
+            for (let i = 1; i <= 3; i++) {
+                document.getElementById("panel" + i).classList.remove("active");
+                document.getElementById("stepIndicator" + i).classList.remove("active", "done");
+            }
+
+            document.getElementById("panel" + step).classList.add("active");
+
+            for (let i = 1; i <= 3; i++) {
+                if (i < step) {
+                    document.getElementById("stepIndicator" + i).classList.add("done");
+                } else if (i === step) {
+                    document.getElementById("stepIndicator" + i).classList.add("active");
+                }
+            }
+        }
+
+        function validateCurrentStep() {
+            if (currentStep === 1) {
+                const fullName = document.getElementById("FullName");
+                const email = document.getElementById("Email");
+                const phone = document.getElementById("PhoneNumber");
+
+                if (!fullName.value.trim()) { fullName.focus(); return false; }
+                if (!email.value.trim()) { email.focus(); return false; }
+                if (!phone.value.trim()) { phone.focus(); return false; }
+            }
+
+            if (currentStep === 2) {
+                const username = document.getElementById("Username");
+                if (!username.value.trim()) { username.focus(); return false; }
+            }
+
+            return true;
+        }
+
+        function togglePassword(id, btn) {
+            const input = document.getElementById(id);
+            if (input.type === "password") {
+                input.type = "text";
+                btn.textContent = "🙈";
+            } else {
+                input.type = "password";
+                btn.textContent = "👁";
+            }
+        }
+    </script>
+}

@@ -1,0 +1,278 @@
+﻿@{
+    Layout = "~/Views/Officer/_OfficerLayout.cshtml";
+    ViewBag.Title = "Export Data";
+}
+
+<style>
+    .wrap {
+        max-width: 1200px;
+        margin: auto;
+    }
+
+    .hero {
+        background: #fff;
+        border-radius: 20px;
+        padding: 20px;
+        box-shadow: 0 14px 40px rgba(0,0,0,.08);
+        margin-bottom: 18px;
+    }
+
+        .hero h2 {
+            margin: 0;
+            color: #7c3aed;
+            font-weight: 1000;
+        }
+
+        .hero p {
+            margin-top: 6px;
+            color: #667085;
+            font-weight: 800;
+            font-size: 13px;
+        }
+
+    .grid4 {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 14px;
+        margin-bottom: 16px;
+    }
+
+    @@media (max-width: 900px) {
+        .grid4
+
+    {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    }
+
+    .exportCard {
+        background: #fff;
+        padding: 18px;
+        border-radius: 18px;
+        box-shadow: 0 10px 25px rgba(0,0,0,.05);
+        border: 1px solid #eee;
+    }
+
+        .exportCard h4 {
+            margin: 10px 0 4px;
+            font-weight: 1000;
+        }
+
+        .exportCard p {
+            margin: 0;
+            color: #667085;
+            font-weight: 800;
+            font-size: 13px;
+        }
+
+    .btnExp {
+        margin-top: 10px;
+        width: 100%;
+        padding: 10px;
+        border: none;
+        border-radius: 12px;
+        background: linear-gradient(135deg,#7c3aed,#6d28d9);
+        color: #fff;
+        font-weight: 1000;
+        cursor: pointer;
+    }
+
+    .custom {
+        background: #fff;
+        padding: 18px;
+        border-radius: 18px;
+        box-shadow: 0 10px 25px rgba(0,0,0,.05);
+        margin-top: 16px;
+        border: 1px solid #eee;
+    }
+
+    .checks {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        margin: 10px 0 16px;
+    }
+
+        .checks label {
+            background: #f4f1ff;
+            padding: 8px 12px;
+            border-radius: 10px;
+            font-weight: 900;
+            cursor: pointer;
+        }
+
+    .filters {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 10px;
+        margin-bottom: 14px;
+    }
+
+    @@media (max-width: 900px) {
+        .filters
+
+    {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    }
+
+    .filters input, .filters select {
+        padding: 10px;
+        border-radius: 10px;
+        border: 1px solid #e5e7eb;
+        font-weight: 900;
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    .formats {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 10px;
+        margin-bottom: 12px;
+    }
+
+    .formatBox {
+        border: 2px solid #e5e7eb;
+        border-radius: 12px;
+        padding: 14px;
+        text-align: center;
+        font-weight: 900;
+        cursor: pointer;
+        user-select: none;
+    }
+
+        .formatBox.active {
+            border-color: #7c3aed;
+            background: #f5f3ff;
+        }
+
+    .btns {
+        display: flex;
+        justify-content: flex-end;
+        gap: 10px;
+    }
+
+    .reset {
+        border: 1px solid #7c3aed;
+        background: #fff;
+        padding: 10px 14px;
+        border-radius: 12px;
+        font-weight: 900;
+        cursor: pointer;
+    }
+
+    .gen {
+        border: none;
+        background: linear-gradient(135deg,#7c3aed,#6d28d9);
+        color: #fff;
+        padding: 10px 14px;
+        border-radius: 12px;
+        font-weight: 900;
+        cursor: pointer;
+    }
+</style>
+
+<div class="wrap">
+
+    <div class="hero">
+        <h2>Export Data</h2>
+        <p>Download and export municipal data in various formats</p>
+    </div>
+
+    <!-- QUICK CARDS -->
+    <div class="grid4">
+        <div class="exportCard">
+            <h4>All Complaints</h4>
+            <p>Export complete complaint list</p>
+            <button class="btnExp" type="button" onclick="quickExport('pdf')">Export Now</button>
+        </div>
+
+        <div class="exportCard">
+            <h4>Citizens Database</h4>
+            <p>Export citizen registry</p>
+            <button class="btnExp" type="button" onclick="quickExport('csv')">Export Now</button>
+        </div>
+
+        <div class="exportCard">
+            <h4>Analytics Report</h4>
+            <p>Export analytics data</p>
+            <button class="btnExp" type="button" onclick="quickExport('json')">Export Now</button>
+        </div>
+
+        <div class="exportCard">
+            <h4>Ward-wise Data</h4>
+            <p>Export ward performance</p>
+            <button class="btnExp" type="button" onclick="quickExport('excel')">Export Now</button>
+        </div>
+    </div>
+
+    <!-- CUSTOM EXPORT -->
+    <div class="custom">
+        <!-- ✅ IMPORTANT: action points to DownloadExport now -->
+        <form method="get" action="/Officer/DownloadExport">
+
+            <h4 style="margin:0 0 6px;font-weight:1000;">Select Data to Export</h4>
+            <div class="checks">
+                <label><input type="checkbox" checked /> Complaints</label>
+                <label><input type="checkbox" /> Citizens</label>
+                <label><input type="checkbox" /> Analytics</label>
+            </div>
+
+            <h4 style="margin:0 0 8px;font-weight:1000;">Filter Options</h4>
+            <div class="filters">
+                <input type="date" name="from" />
+                <input type="date" name="to" />
+
+                <select name="ward">
+                    <option value="">All Wards</option>
+                    <option>Ward 1</option>
+                    <option>Ward 2</option>
+                    <option>Ward 3</option>
+                    <option>Ward 4</option>
+                    <option>Ward 5</option>
+                </select>
+
+                <select name="status">
+                    <option value="">All Status</option>
+                    <option>Pending</option>
+                    <option>In Progress</option>
+                    <option>Resolved</option>
+                    <option>Rejected</option>
+                </select>
+            </div>
+
+            <h4 style="margin:0 0 8px;font-weight:1000;">Export Format</h4>
+            <input type="hidden" id="formatInput" name="format" value="pdf" />
+
+            <div class="formats">
+                <div class="formatBox active" onclick="setFormat('pdf',this)">PDF (.pdf)</div>
+                <div class="formatBox" onclick="setFormat('csv',this)">CSV (.csv)</div>
+                <div class="formatBox" onclick="setFormat('json',this)">JSON (.json)</div>
+                <div class="formatBox" onclick="setFormat('excel',this)">Excel (.xlsx)</div>
+            </div>
+
+            <div class="btns">
+                <button type="reset" class="reset">Reset Filters</button>
+                <button type="submit" class="gen">Generate & Download</button>
+            </div>
+
+        </form>
+    </div>
+
+</div>
+
+<script>
+    function setFormat(fmt, el) {
+        document.getElementById("formatInput").value = fmt;
+        document.querySelectorAll(".formatBox").forEach(x => x.classList.remove("active"));
+        el.classList.add("active");
+    }
+
+    // ✅ IMPORTANT: quick export uses DownloadExport endpoint
+    function quickExport(fmt) {
+        window.location = "/Officer/DownloadExport?format=" + fmt;
+    }
+</script>

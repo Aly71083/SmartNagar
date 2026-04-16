@@ -1,0 +1,1095 @@
+﻿@model SmartNagar.ViewModels.OfficerAnalyticsVM
+@using System.Text.Json
+
+@{
+    Layout = "~/Views/Officer/_OfficerLayout.cshtml";
+    ViewBag.Title = "Analytics";
+    ViewBag.PageTitle = "Smart Nagar Analytics";
+    ViewBag.Active = "analytics";
+
+    var totalCat = Model.CategoryStats?.Sum(x => x.Value) ?? 0;
+    if (totalCat <= 0) totalCat = 1;
+
+    var statusBreakdown = new List<KeyValuePair<string, int>>
+    {
+        new KeyValuePair<string, int>("Pending", Model.Pending),
+        new KeyValuePair<string, int>("In Progress", Model.InProgress),
+        new KeyValuePair<string, int>("Resolved", Model.Resolved),
+        new KeyValuePair<string, int>("Unassigned", Model.Unassigned)
+    };
+}
+
+@section Styles {
+    <style>
+        :root {
+            --pageBg: #f4effa;
+            --pageBg2: #efe8f8;
+            --card: #ffffff;
+            --cardSoft: #fcfaff;
+            --border: #eadfff;
+            --text: #241b48;
+            --muted: #6f6890;
+            --purple: #7c3aed;
+            --purple2: #9b6bff;
+            --purple3: #b794f6;
+            --purpleSoft: #f3eaff;
+            --purpleSoft2: #ede2ff;
+            --shadow: 0 14px 34px rgba(124, 58, 237, .10);
+        }
+
+        .analyticsShell {
+            display: grid;
+            gap: 18px;
+            color: var(--text);
+        }
+
+        .hero {
+            border-radius: 26px;
+            padding: 24px;
+            background: linear-gradient(135deg, #7c3aed, #9b6bff);
+            border: 1px solid #e6d7ff;
+            box-shadow: 0 18px 40px rgba(124, 58, 237, .18);
+            position: relative;
+            overflow: hidden;
+            color: #fff;
+        }
+
+            .hero::before {
+                content: "";
+                position: absolute;
+                inset: 0;
+                background: radial-gradient(circle at top right, rgba(255,255,255,.20), transparent 30%);
+                pointer-events: none;
+            }
+
+        .heroInner {
+            position: relative;
+            z-index: 1;
+            display: grid;
+            grid-template-columns: 1.3fr .95fr;
+            gap: 18px;
+            align-items: start;
+        }
+
+        .heroTitle {
+            margin: 0;
+            font-size: 34px;
+            font-weight: 1000;
+            line-height: 1.05;
+            color: #fff;
+        }
+
+        .heroSub {
+            margin-top: 10px;
+            color: rgba(255,255,255,.92);
+            font-size: 14px;
+            line-height: 1.7;
+            font-weight: 700;
+            max-width: 760px;
+        }
+
+        .heroPanel {
+            border-radius: 20px;
+            padding: 16px;
+            background: rgba(255,255,255,.14);
+            border: 1px solid rgba(255,255,255,.18);
+            backdrop-filter: blur(6px);
+        }
+
+        .heroPanelTitle {
+            font-size: 14px;
+            font-weight: 950;
+            margin-bottom: 12px;
+            color: #fff;
+        }
+
+        .rangeForm {
+            display: grid;
+            grid-template-columns: 1fr 1fr auto auto;
+            gap: 10px;
+        }
+
+            .rangeForm input,
+            .rangeForm button,
+            .rangeForm a {
+                border: none;
+                border-radius: 14px;
+                padding: 12px 14px;
+                font-weight: 900;
+                font-size: 13px;
+            }
+
+            .rangeForm input {
+                background: #fff;
+                color: #4c1d95;
+                outline: none;
+            }
+
+            .rangeForm button,
+            .rangeForm a {
+                text-decoration: none;
+                background: linear-gradient(135deg, #7c3aed, #9333ea);
+                color: white;
+                cursor: pointer;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                box-shadow: 0 10px 20px rgba(124,58,237,.20);
+            }
+
+                .rangeForm button:hover,
+                .rangeForm a:hover {
+                    transform: translateY(-1px);
+                }
+
+        .heroMiniStats {
+            margin-top: 14px;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+        }
+
+        .heroMini {
+            border-radius: 16px;
+            padding: 12px;
+            background: rgba(255,255,255,.12);
+            border: 1px solid rgba(255,255,255,.18);
+        }
+
+            .heroMini strong {
+                display: block;
+                font-size: 20px;
+                font-weight: 1000;
+                color: #fff;
+            }
+
+            .heroMini span {
+                display: block;
+                margin-top: 4px;
+                color: rgba(255,255,255,.92);
+                font-size: 12px;
+                font-weight: 700;
+            }
+
+        .kpiGrid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 14px;
+        }
+
+        .kpiCard {
+            border-radius: 24px;
+            padding: 18px;
+            background: linear-gradient(180deg, var(--card) 0%, var(--cardSoft) 100%);
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow);
+            position: relative;
+            overflow: hidden;
+        }
+
+            .kpiCard::after {
+                content: "";
+                position: absolute;
+                width: 92px;
+                height: 92px;
+                right: -20px;
+                top: -20px;
+                border-radius: 50%;
+                background: rgba(124,58,237,.08);
+            }
+
+        .kpiTop {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 10px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .kpiIcon {
+            width: 48px;
+            height: 48px;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 21px;
+            font-weight: 1000;
+            background: linear-gradient(135deg, #7c3aed, #a78bfa);
+            color: white;
+            box-shadow: 0 10px 22px rgba(124,58,237,.16);
+        }
+
+        .kpiChip {
+            padding: 6px 10px;
+            border-radius: 999px;
+            font-size: 12px;
+            font-weight: 950;
+        }
+
+            .kpiChip.good {
+                background: #ecfdf3;
+                color: #067647;
+            }
+
+            .kpiChip.warn {
+                background: #fff7ed;
+                color: #c2410c;
+            }
+
+            .kpiChip.bad {
+                background: #fee2e2;
+                color: #b91c1c;
+            }
+
+        .kpiValue {
+            margin-top: 18px;
+            font-size: 36px;
+            font-weight: 1000;
+            line-height: 1;
+            position: relative;
+            z-index: 1;
+            color: var(--text);
+        }
+
+        .kpiLabel {
+            margin-top: 8px;
+            font-size: 14px;
+            font-weight: 950;
+            color: var(--text);
+        }
+
+        .kpiNote {
+            margin-top: 6px;
+            color: var(--muted);
+            font-size: 12px;
+            font-weight: 700;
+            line-height: 1.5;
+        }
+
+        .grid2 {
+            display: grid;
+            grid-template-columns: 1.55fr .95fr;
+            gap: 14px;
+        }
+
+        .grid3 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 14px;
+        }
+
+        .card {
+            border-radius: 24px;
+            padding: 18px;
+            background: linear-gradient(180deg, var(--card) 0%, var(--cardSoft) 100%);
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow);
+        }
+
+        .cardHead {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 12px;
+            margin-bottom: 14px;
+        }
+
+        .cardTitle {
+            margin: 0;
+            font-size: 18px;
+            font-weight: 1000;
+            color: var(--text);
+        }
+
+        .cardSub {
+            margin-top: 4px;
+            color: var(--muted);
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .chartBox {
+            height: 320px;
+            border-radius: 18px;
+            border: 1px solid #ece2ff;
+            background: linear-gradient(180deg, #faf7ff 0%, #f4ecff 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+            .chartBox svg {
+                width: 100%;
+                height: 100%;
+                display: block;
+            }
+
+        .chartNote {
+            position: absolute;
+            left: 14px;
+            bottom: 12px;
+            color: #7c3aed;
+            font-size: 12px;
+            font-weight: 800;
+            opacity: .9;
+        }
+
+        .categoryWrap {
+            display: grid;
+            grid-template-columns: 180px 1fr;
+            gap: 14px;
+            align-items: center;
+        }
+
+        .donutWrap {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .donutCenter {
+            position: absolute;
+            text-align: center;
+        }
+
+            .donutCenter strong {
+                display: block;
+                font-size: 28px;
+                font-weight: 1000;
+                color: var(--text);
+            }
+
+            .donutCenter span {
+                font-size: 12px;
+                color: var(--muted);
+                font-weight: 800;
+            }
+
+        .catList {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .catItem {
+            display: grid;
+            grid-template-columns: auto 1fr auto;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .catDot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+        }
+
+        .catName {
+            font-weight: 900;
+            font-size: 13px;
+            color: var(--text);
+        }
+
+        .catBar {
+            height: 7px;
+            background: #e9ddff;
+            border-radius: 999px;
+            overflow: hidden;
+            margin-top: 6px;
+        }
+
+            .catBar i {
+                display: block;
+                height: 100%;
+                border-radius: 999px;
+            }
+
+        .catRight {
+            color: var(--text);
+            font-size: 13px;
+            font-weight: 1000;
+            min-width: 64px;
+            text-align: right;
+        }
+
+        .stripCard {
+            border-radius: 22px;
+            padding: 16px;
+            background: linear-gradient(180deg, var(--card) 0%, var(--cardSoft) 100%);
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow);
+        }
+
+        .stripTop {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 12px;
+        }
+
+        .stripBig {
+            font-size: 28px;
+            font-weight: 1000;
+            line-height: 1;
+            color: var(--text);
+        }
+
+        .stripSub {
+            margin-top: 7px;
+            font-size: 12px;
+            color: var(--muted);
+            font-weight: 800;
+        }
+
+        .stripBar {
+            margin-top: 14px;
+            height: 8px;
+            background: #ece2ff;
+            border-radius: 999px;
+            overflow: hidden;
+        }
+
+            .stripBar i {
+                display: block;
+                height: 100%;
+                background: linear-gradient(90deg, #7c3aed, #c084fc);
+                border-radius: 999px;
+            }
+
+        .tableWrap {
+            overflow: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        thead th {
+            text-align: left;
+            padding: 13px 12px;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: .08em;
+            color: #7e6aa7;
+            border-bottom: 1px solid #efe6ff;
+        }
+
+        tbody td {
+            padding: 14px 12px;
+            border-bottom: 1px solid #f2ebff;
+            font-size: 13px;
+            font-weight: 800;
+            color: var(--text);
+        }
+
+        tbody tr:hover {
+            background: #fbf9ff;
+        }
+
+        .perfTag {
+            display: inline-flex;
+            padding: 7px 11px;
+            border-radius: 999px;
+            font-size: 12px;
+            font-weight: 1000;
+        }
+
+            .perfTag.excellent {
+                background: #ecfdf3;
+                color: #067647;
+            }
+
+            .perfTag.good {
+                background: #eef2ff;
+                color: #3730a3;
+            }
+
+            .perfTag.average {
+                background: #fff7ed;
+                color: #c2410c;
+            }
+
+        @@media (max-width: 1200px) {
+            .heroInner,
+            .grid2,
+            .grid3 {
+                grid-template-columns: 1fr;
+            }
+
+            .kpiGrid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .categoryWrap {
+                grid-template-columns: 1fr;
+            }
+
+            .rangeForm {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @@media (max-width: 700px) {
+            .kpiGrid {
+                grid-template-columns: 1fr;
+            }
+
+            .heroMiniStats {
+                grid-template-columns: 1fr;
+            }
+
+            .rangeForm {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+}
+
+<div class="analyticsShell">
+
+    <div class="hero">
+        <div class="heroInner">
+           
+
+            <div class="heroPanel">
+                <div class="heroPanelTitle">Custom Date Range</div>
+
+                <form class="rangeForm" method="get" asp-controller="Officer" asp-action="Analytics">
+                    <input type="date" name="from" value="@Model.From.ToString("yyyy-MM-dd")" />
+                    <input type="date" name="to" value="@Model.To.ToString("yyyy-MM-dd")" />
+                    <button type="submit">Update</button>
+                    <a asp-controller="Officer"
+                       asp-action="DownloadExport"
+                       asp-route-from="@Model.From.ToString("yyyy-MM-dd")"
+                       asp-route-to="@Model.To.ToString("yyyy-MM-dd")"
+                       asp-route-format="pdf">
+                        Export PDF
+                    </a>
+                </form>
+
+                <div class="heroMiniStats">
+                    <div class="heroMini">
+                        <strong>@Model.TotalComplaints</strong>
+                        <span>Total complaints in selected period</span>
+                    </div>
+                    <div class="heroMini">
+                        <strong>@Model.ResolutionRateText</strong>
+                        <span>Current resolution rate</span>
+                    </div>
+                    <div class="heroMini">
+                        <strong>@Model.OverallPerformanceText</strong>
+                        <span>Overall performance score</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="kpiGrid">
+        <div class="kpiCard">
+            <div class="kpiTop">
+                <div class="kpiIcon">📄</div>
+                <div class="kpiChip good">▲ @Model.TotalComplaintsDeltaText</div>
+            </div>
+            <div class="kpiValue">@Model.TotalComplaints</div>
+            <div class="kpiLabel">Total Complaints</div>
+            <div class="kpiNote">@Model.TotalComplaintsDeltaNote</div>
+        </div>
+
+        <div class="kpiCard">
+            <div class="kpiTop">
+                <div class="kpiIcon">⏱</div>
+                <div class="kpiChip @(Model.AvgResponseDeltaIsBad ? "bad" : "good")">
+                    @(Model.AvgResponseDeltaIsBad ? "▲" : "▼") @Model.AvgResponseDeltaText
+                </div>
+            </div>
+            <div class="kpiValue">@Model.AvgResponseTimeText</div>
+            <div class="kpiLabel">Avg Response Time</div>
+            <div class="kpiNote">@Model.AvgResponseDeltaNote</div>
+        </div>
+
+        <div class="kpiCard">
+            <div class="kpiTop">
+                <div class="kpiIcon">✅</div>
+                <div class="kpiChip good">▲ @Model.ResolutionRateDeltaText</div>
+            </div>
+            <div class="kpiValue">@Model.ResolutionRateText</div>
+            <div class="kpiLabel">Resolution Rate</div>
+            <div class="kpiNote">@Model.ResolutionRateDeltaNote</div>
+        </div>
+
+        <div class="kpiCard">
+            <div class="kpiTop">
+                <div class="kpiIcon">⭐</div>
+                <div class="kpiChip warn">@Model.SatisfactionDeltaText</div>
+            </div>
+            <div class="kpiValue">@Model.SatisfactionScoreText</div>
+            <div class="kpiLabel">Satisfaction Score</div>
+            <div class="kpiNote">@Model.SatisfactionDeltaNote</div>
+        </div>
+    </div>
+
+    <div class="grid2">
+        <div class="card">
+            <div class="cardHead">
+                <div>
+                    <h3 class="cardTitle">Complaint Trend</h3>
+                    <div class="cardSub">Daily complaint volume from live Smart Nagar data</div>
+                </div>
+            </div>
+
+            <div class="chartBox">
+                <svg id="trendSvg" viewBox="0 0 900 320" preserveAspectRatio="none"></svg>
+                <div class="chartNote">Trend based on complaints created per day</div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="cardHead">
+                <div>
+                    <h3 class="cardTitle">Category Distribution</h3>
+                    <div class="cardSub">Most common complaint categories in selected range</div>
+                </div>
+            </div>
+
+            <div class="categoryWrap">
+                <div class="donutWrap">
+                    <svg id="donutSvg" width="180" height="180" viewBox="0 0 180 180"></svg>
+                    <div class="donutCenter">
+                        <strong>@Model.TotalComplaints</strong>
+                        <span>Total</span>
+                    </div>
+                </div>
+
+                <div class="catList">
+                    @{
+                        var categoryColors = new[] { "#7c3aed", "#9b6bff", "#b794f6", "#c084fc", "#a855f7", "#d8b4fe", "#8b5cf6", "#c4b5fd" };
+                        var i = 0;
+                    }
+
+                    @if (Model.CategoryStats != null && Model.CategoryStats.Any())
+                    {
+                        @foreach (var c in Model.CategoryStats.Take(6))
+                        {
+                            var pct = (c.Value * 100.0) / totalCat;
+                            var color = categoryColors[i % categoryColors.Length];
+                            i++;
+
+                            <div class="catItem">
+                                <div class="catDot" style="background:@color"></div>
+                                <div>
+                                    <div class="catName">@c.Key</div>
+                                    <div class="catBar">
+                                        <i style="width:@pct%; background:@color;"></i>
+                                    </div>
+                                </div>
+                                <div class="catRight">@pct.ToString("0.#")%</div>
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <div class="cardSub">No category data available.</div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="grid3">
+        <div class="stripCard">
+            <div class="stripTop">
+                <div>
+                    <div class="stripBig">@Model.ResolvedWithin48HoursText</div>
+                    <div class="stripSub">@Model.ResolvedWithin48HoursNote</div>
+                </div>
+            </div>
+            <div class="stripBar">
+                <i style="width:@Model.ResolvedWithin48HoursPercent%"></i>
+            </div>
+        </div>
+
+        <div class="stripCard">
+            <div class="stripTop">
+                <div>
+                    <div class="stripBig">@Model.ActiveUsersText</div>
+                    <div class="stripSub">@Model.ActiveUsersNote</div>
+                </div>
+            </div>
+            <div class="stripBar">
+                <i style="width:@Model.ActiveUsersBarPercent%"></i>
+            </div>
+        </div>
+
+        <div class="stripCard">
+            <div class="stripTop">
+                <div>
+                    <div class="stripBig">@Model.OverallPerformanceText</div>
+                    <div class="stripSub">@Model.OverallPerformanceNote</div>
+                </div>
+            </div>
+            <div class="stripBar">
+                <i style="width:@Model.OverallPerformanceBarPercent%"></i>
+            </div>
+        </div>
+    </div>
+
+    <div class="grid2">
+        <div class="card">
+            <div class="cardHead">
+                <div>
+                    <h3 class="cardTitle">Monthly Volume</h3>
+                    <div class="cardSub">Grouped complaint count by month for selected range</div>
+                </div>
+            </div>
+
+            <div class="catList">
+                @if (Model.MonthlyStats != null && Model.MonthlyStats.Any())
+                {
+                    var monthlyMax = Model.MonthlyStats.Max(x => x.Value);
+                    foreach (var item in Model.MonthlyStats)
+                    {
+                        var pct = monthlyMax > 0 ? (item.Value * 100.0 / monthlyMax) : 0;
+
+                        <div class="catItem">
+                            <div class="catDot" style="background:#7c3aed"></div>
+                            <div>
+                                <div class="catName">@item.Key</div>
+                                <div class="catBar">
+                                    <i style="width:@pct%; background:linear-gradient(90deg,#7c3aed,#c084fc);"></i>
+                                </div>
+                            </div>
+                            <div class="catRight">@item.Value</div>
+                        </div>
+                    }
+                }
+                else
+                {
+                    <div class="cardSub">No monthly data available.</div>
+                }
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="cardHead">
+                <div>
+                    <h3 class="cardTitle">Officer Load</h3>
+                    <div class="cardSub">Assigned complaint count by officer</div>
+                </div>
+            </div>
+
+            <div class="catList">
+                @if (Model.OfficerLoad != null && Model.OfficerLoad.Any())
+                {
+                    var officerMax = Model.OfficerLoad.Max(x => x.Value);
+                    foreach (var item in Model.OfficerLoad)
+                    {
+                        var pct = officerMax > 0 ? (item.Value * 100.0 / officerMax) : 0;
+
+                        <div class="catItem">
+                            <div class="catDot" style="background:#9b6bff"></div>
+                            <div>
+                                <div class="catName">@item.Key</div>
+                                <div class="catBar">
+                                    <i style="width:@pct%; background:linear-gradient(90deg,#7c3aed,#c084fc);"></i>
+                                </div>
+                            </div>
+                            <div class="catRight">@item.Value</div>
+                        </div>
+                    }
+                }
+                else
+                {
+                    <div class="cardSub">No officer assignment data available.</div>
+                }
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="cardHead">
+            <div>
+                <h3 class="cardTitle">Live Status Breakdown</h3>
+                <div class="cardSub">Current status counts for complaints in selected range</div>
+            </div>
+        </div>
+
+        <div class="catList">
+            @{
+                var totalForStatus = Math.Max(1, Model.TotalComplaints);
+                var statusColors = new Dictionary<string, string>
+                        {
+                        { "Pending", "#c084fc" },
+                        { "In Progress", "#a78bfa" },
+                        { "Resolved", "#7c3aed" },
+                        { "Unassigned", "#d8b4fe" }
+                        };
+            }
+
+            @foreach (var item in statusBreakdown)
+            {
+                var pct = item.Value * 100.0 / totalForStatus;
+                var color = statusColors[item.Key];
+
+                <div class="catItem">
+                    <div class="catDot" style="background:@color"></div>
+                    <div>
+                        <div class="catName">@item.Key</div>
+                        <div class="catBar">
+                            <i style="width:@pct%; background:@color;"></i>
+                        </div>
+                    </div>
+                    <div class="catRight">@item.Value</div>
+                </div>
+            }
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="cardHead">
+            <div>
+                <h3 class="cardTitle">Ward-wise Performance</h3>
+                <div class="cardSub">Performance based on complaints, resolution count, and average resolution time</div>
+            </div>
+        </div>
+
+        <div class="tableWrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Ward</th>
+                        <th>Total</th>
+                        <th>Resolved</th>
+                        <th>Pending/Open</th>
+                        <th>Avg Resolution Time</th>
+                        <th>Performance</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model.WardStats != null && Model.WardStats.Any())
+                    {
+                        @foreach (var w in Model.WardStats)
+                        {
+                            var perfClass = (w.PerformanceTag ?? "").ToLower() switch
+                            {
+                                "excellent" => "excellent",
+                                "good" => "good",
+                                _ => "average"
+                            };
+
+                            <tr>
+                                <td>@w.WardName</td>
+                                <td>@w.Total</td>
+                                <td>@w.Resolved</td>
+                                <td>@w.Pending</td>
+                                <td>@w.AvgResolutionTimeText</td>
+                                <td><span class="perfTag @perfClass">@w.PerformanceTag</span></td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="6">No ward data available.</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
+
+@section Scripts {
+    <script>
+        const trendData = @Html.Raw(JsonSerializer.Serialize(
+                    (Model.TrendPoints ?? new List<SmartNagar.ViewModels.TrendPointVM>())
+                    .Select(x => new { date = x.Date.ToString("yyyy-MM-dd"), count = x.Count })
+            ));
+
+    const categoryData = @Html.Raw(JsonSerializer.Serialize(
+                (Model.CategoryStats ?? new List<KeyValuePair<string, int>>())
+                .Take(6)
+                .Select(x => new { key = x.Key, value = x.Value })
+        ));
+
+    function drawTrend(points) {
+        const svg = document.getElementById('trendSvg');
+        svg.innerHTML = '';
+
+            const W = 900, H = 320;
+            const padL = 42, padR = 18, padT = 18, padB = 38;
+
+            if (!points || points.length === 0) {
+                const t = document.createElementNS("http://www.w3.org/2000/svg", "text");
+                t.setAttribute("x", W / 2);
+                t.setAttribute("y", H / 2);
+                t.setAttribute("text-anchor", "middle");
+                t.setAttribute("fill", "#7c3aed");
+                t.setAttribute("font-size", "15");
+                t.setAttribute("font-weight", "900");
+                t.textContent = "No trend data available";
+                svg.appendChild(t);
+                return;
+            }
+
+            const maxY = Math.max(...points.map(p => p.count), 1);
+
+            const scaleX = i => padL + (i * (W - padL - padR) / Math.max(points.length - 1, 1));
+            const scaleY = v => (H - padB) - (v * (H - padT - padB) / maxY);
+
+            for (let i = 0; i < 5; i++) {
+                const y = padT + i * ((H - padT - padB) / 4);
+
+                const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+                line.setAttribute("x1", padL);
+                line.setAttribute("x2", W - padR);
+                line.setAttribute("y1", y);
+                line.setAttribute("y2", y);
+                line.setAttribute("stroke", "rgba(124,58,237,.12)");
+                line.setAttribute("stroke-width", "1");
+                svg.appendChild(line);
+            }
+
+            const defs = document.createElementNS("http://www.w3.org/2000/svg", "defs");
+            const gradient = document.createElementNS("http://www.w3.org/2000/svg", "linearGradient");
+            gradient.setAttribute("id", "trendFill");
+            gradient.setAttribute("x1", "0");
+            gradient.setAttribute("y1", "0");
+            gradient.setAttribute("x2", "0");
+            gradient.setAttribute("y2", "1");
+
+            const stop1 = document.createElementNS("http://www.w3.org/2000/svg", "stop");
+            stop1.setAttribute("offset", "0%");
+            stop1.setAttribute("stop-color", "#c084fc");
+            stop1.setAttribute("stop-opacity", ".30");
+
+            const stop2 = document.createElementNS("http://www.w3.org/2000/svg", "stop");
+            stop2.setAttribute("offset", "100%");
+            stop2.setAttribute("stop-color", "#c084fc");
+            stop2.setAttribute("stop-opacity", "0");
+
+            gradient.appendChild(stop1);
+            gradient.appendChild(stop2);
+            defs.appendChild(gradient);
+            svg.appendChild(defs);
+
+            let areaD = `M ${scaleX(0)} ${H - padB} `;
+            points.forEach((p, i) => {
+                areaD += `L ${scaleX(i)} ${scaleY(p.count)} `;
+            });
+            areaD += `L ${scaleX(points.length - 1)} ${H - padB} Z`;
+
+            const area = document.createElementNS("http://www.w3.org/2000/svg", "path");
+            area.setAttribute("d", areaD);
+            area.setAttribute("fill", "url(#trendFill)");
+            svg.appendChild(area);
+
+            let lineD = `M ${scaleX(0)} ${scaleY(points[0].count)} `;
+            points.forEach((p, i) => {
+                lineD += `L ${scaleX(i)} ${scaleY(p.count)} `;
+            });
+
+            const linePath = document.createElementNS("http://www.w3.org/2000/svg", "path");
+            linePath.setAttribute("d", lineD);
+            linePath.setAttribute("fill", "none");
+            linePath.setAttribute("stroke", "#7c3aed");
+            linePath.setAttribute("stroke-width", "4");
+            linePath.setAttribute("stroke-linecap", "round");
+            linePath.setAttribute("stroke-linejoin", "round");
+            svg.appendChild(linePath);
+
+            points.forEach((p, i) => {
+                const dot = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+                dot.setAttribute("cx", scaleX(i));
+                dot.setAttribute("cy", scaleY(p.count));
+                dot.setAttribute("r", "4.5");
+                dot.setAttribute("fill", "#ffffff");
+                dot.setAttribute("stroke", "#7c3aed");
+                dot.setAttribute("stroke-width", "2");
+                svg.appendChild(dot);
+            });
+
+            const labelIndexes = [];
+            if (points.length <= 7) {
+                for (let i = 0; i < points.length; i++) labelIndexes.push(i);
+            } else {
+                const step = Math.ceil(points.length / 6);
+                for (let i = 0; i < points.length; i += step) labelIndexes.push(i);
+                if (labelIndexes[labelIndexes.length - 1] !== points.length - 1)
+                    labelIndexes.push(points.length - 1);
+            }
+
+            labelIndexes.forEach(i => {
+                const p = points[i];
+                const txt = document.createElementNS("http://www.w3.org/2000/svg", "text");
+                txt.setAttribute("x", scaleX(i));
+                txt.setAttribute("y", H - 12);
+                txt.setAttribute("text-anchor", "middle");
+                txt.setAttribute("fill", "#7c3aed");
+                txt.setAttribute("font-size", "11");
+                txt.setAttribute("font-weight", "800");
+
+                const d = new Date(p.date);
+                txt.textContent = d.toLocaleDateString(undefined, { day: '2-digit', month: 'short' });
+                svg.appendChild(txt);
+            });
+        }
+
+        function drawDonut(items) {
+            const svg = document.getElementById('donutSvg');
+            svg.innerHTML = '';
+
+            const colors = ["#7c3aed", "#9b6bff", "#c084fc", "#a855f7", "#d8b4fe", "#8b5cf6"];
+            const total = items.reduce((s, x) => s + x.value, 0);
+
+            if (!total) {
+                const circle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+                circle.setAttribute("cx", "90");
+                circle.setAttribute("cy", "90");
+                circle.setAttribute("r", "58");
+                circle.setAttribute("fill", "none");
+                circle.setAttribute("stroke", "#eadfff");
+                circle.setAttribute("stroke-width", "18");
+                svg.appendChild(circle);
+                return;
+            }
+
+            const r = 58;
+            const c = 2 * Math.PI * r;
+            let offset = 0;
+
+            items.forEach((item, idx) => {
+                const pct = item.value / total;
+
+                const seg = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+                seg.setAttribute("cx", "90");
+                seg.setAttribute("cy", "90");
+                seg.setAttribute("r", r.toString());
+                seg.setAttribute("fill", "none");
+                seg.setAttribute("stroke", colors[idx % colors.length]);
+                seg.setAttribute("stroke-width", "18");
+                seg.setAttribute("stroke-linecap", "round");
+                seg.setAttribute("transform", "rotate(-90 90 90)");
+                seg.setAttribute("stroke-dasharray", `${c * pct} ${c}`);
+                seg.setAttribute("stroke-dashoffset", `${-offset}`);
+                svg.appendChild(seg);
+
+                offset += c * pct;
+            });
+
+            const inner = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+            inner.setAttribute("cx", "90");
+            inner.setAttribute("cy", "90");
+            inner.setAttribute("r", "42");
+            inner.setAttribute("fill", "#ffffff");
+            svg.appendChild(inner);
+        }
+
+        drawTrend(trendData);
+        drawDonut(categoryData);
+    </script>
+}

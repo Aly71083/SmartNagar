@@ -1,0 +1,38 @@
+﻿@model List<SmartNagar.Models.CitizenNotification>
+@{
+    Layout = "~/Views/Officer/_OfficerLayout.cshtml";
+    ViewBag.Active = "Notifications";
+}
+
+<div style="font-size:22px;font-weight:1000;margin-bottom:10px;">Notifications</div>
+
+<div style="display:grid; gap:12px;">
+    @foreach (var n in Model)
+    {
+        <div style="background:#fff;border:1px solid #ece8ff;border-radius:18px;padding:14px;">
+            <div style="display:flex;justify-content:space-between;gap:10px;align-items:flex-start;">
+                <div>
+                    <div style="font-weight:1000;">@n.Title</div>
+                    <div style="color:#64748b;font-weight:800;font-size:13px;margin-top:6px;">@n.Message</div>
+                    <div style="margin-top:8px;color:#94a3b8;font-weight:900;font-size:12px;">
+                        @n.CreatedAt.ToString("MMM dd, yyyy hh:mm tt")
+                        @if (!n.IsRead)
+                        {
+                            <span style="margin-left:8px;color:#7c3aed;font-weight:1000;">• New</span>
+                        }
+                    </div>
+                </div>
+
+                @if (!n.IsRead)
+                {
+                    <form method="post" action="/Officer/MarkNotificationRead/@n.Id">
+                        @Html.AntiForgeryToken()
+                        <button style="border-radius:12px;border:1px solid #ddd6fe;background:#ede9fe;color:#4c1d95;font-weight:1000;padding:8px 10px;cursor:pointer;">
+                            Mark Read
+                        </button>
+                    </form>
+                }
+            </div>
+        </div>
+    }
+</div>
