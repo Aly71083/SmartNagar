@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SmartNagar.Data;
 
@@ -11,9 +12,11 @@ using SmartNagar.Data;
 namespace SmartNagar.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260212110856_AddGarbageReminders")]
+    partial class AddGarbageReminders
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -21,40 +24,6 @@ namespace SmartNagar.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
             MySqlModelBuilderExtensions.AutoIncrementColumns(modelBuilder);
-
-            modelBuilder.Entity("ComplaintMessage", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("ComplaintId")
-                        .HasColumnType("int");
-
-                    b.Property<bool>("IsRead")
-                        .HasColumnType("tinyint(1)");
-
-                    b.Property<string>("Message")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("SenderId")
-                        .IsRequired()
-                        .HasColumnType("varchar(255)");
-
-                    b.Property<DateTime>("SentAt")
-                        .HasColumnType("datetime(6)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ComplaintId");
-
-                    b.HasIndex("SenderId");
-
-                    b.ToTable("ComplaintMessages");
-                });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
                 {
@@ -245,10 +214,6 @@ namespace SmartNagar.Migrations
                         .HasMaxLength(400)
                         .HasColumnType("varchar(400)");
 
-                    b.Property<string>("TargetRole")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasMaxLength(120)
@@ -274,15 +239,14 @@ namespace SmartNagar.Migrations
 
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<DateTime?>("AssignedAt")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<string>("AssignedOfficerId")
-                        .HasColumnType("varchar(255)");
+                    b.Property<string>("Address")
+                        .HasMaxLength(300)
+                        .HasColumnType("varchar(300)");
 
                     b.Property<string>("Category")
-                        .HasMaxLength(50)
-                        .HasColumnType("varchar(50)");
+                        .IsRequired()
+                        .HasMaxLength(120)
+                        .HasColumnType("varchar(120)");
 
                     b.Property<string>("CitizenId")
                         .HasColumnType("varchar(255)");
@@ -291,12 +255,8 @@ namespace SmartNagar.Migrations
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("Description")
-                        .HasMaxLength(1000)
-                        .HasColumnType("varchar(1000)");
-
-                    b.Property<string>("OfficerRemarks")
-                        .HasMaxLength(2000)
-                        .HasColumnType("varchar(2000)");
+                        .IsRequired()
+                        .HasColumnType("longtext");
 
                     b.Property<DateTime?>("ResolvedAt")
                         .HasColumnType("datetime(6)");
@@ -308,111 +268,14 @@ namespace SmartNagar.Migrations
 
                     b.Property<string>("Title")
                         .IsRequired()
-                        .HasMaxLength(150)
-                        .HasColumnType("varchar(150)");
-
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<string>("Ward")
-                        .HasMaxLength(50)
-                        .HasColumnType("varchar(50)");
+                        .HasMaxLength(200)
+                        .HasColumnType("varchar(200)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("AssignedOfficerId");
 
                     b.HasIndex("CitizenId");
 
                     b.ToTable("Complaints");
-                });
-
-            modelBuilder.Entity("SmartNagar.Models.ComplaintPhoto", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("ComplaintId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("ContentType")
-                        .HasMaxLength(60)
-                        .HasColumnType("varchar(60)");
-
-                    b.Property<string>("FilePath")
-                        .IsRequired()
-                        .HasMaxLength(260)
-                        .HasColumnType("varchar(260)");
-
-                    b.Property<string>("OriginalName")
-                        .HasMaxLength(120)
-                        .HasColumnType("varchar(120)");
-
-                    b.Property<DateTime>("UploadedAt")
-                        .HasColumnType("datetime(6)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ComplaintId");
-
-                    b.ToTable("ComplaintPhotos");
-                });
-
-            modelBuilder.Entity("SmartNagar.Models.EmergencyAlert", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime?>("AcknowledgedAt")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<string>("AlertType")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("varchar(50)");
-
-                    b.Property<string>("CitizenId")
-                        .IsRequired()
-                        .HasColumnType("varchar(255)");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<double?>("Latitude")
-                        .HasColumnType("double");
-
-                    b.Property<double?>("Longitude")
-                        .HasColumnType("double");
-
-                    b.Property<string>("Message")
-                        .IsRequired()
-                        .HasMaxLength(500)
-                        .HasColumnType("varchar(500)");
-
-                    b.Property<string>("Priority")
-                        .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("varchar(20)");
-
-                    b.Property<DateTime?>("ResolvedAt")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("varchar(20)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CitizenId");
-
-                    b.ToTable("EmergencyAlerts");
                 });
 
             modelBuilder.Entity("SmartNagar.Models.GarbageReminder", b =>
@@ -425,75 +288,31 @@ namespace SmartNagar.Migrations
 
                     b.Property<string>("CitizenId")
                         .IsRequired()
-                        .HasColumnType("varchar(255)");
-
-                    b.Property<string>("CollectionDays")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("varchar(100)");
-
-                    b.Property<string>("CollectionTime")
-                        .IsRequired()
-                        .HasMaxLength(80)
-                        .HasColumnType("varchar(80)");
+                        .HasColumnType("longtext");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<DateTime?>("EmailSentAtUtc")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<bool>("IsEmailSent")
-                        .HasColumnType("tinyint(1)");
-
-                    b.Property<string>("Notes")
+                    b.Property<string>("Days")
+                        .IsRequired()
                         .HasMaxLength(200)
                         .HasColumnType("varchar(200)");
 
-                    b.Property<DateTime>("ReminderDateTimeUtc")
-                        .HasColumnType("datetime(6)");
+                    b.Property<string>("Notes")
+                        .HasMaxLength(250)
+                        .HasColumnType("varchar(250)");
+
+                    b.Property<string>("Time")
+                        .IsRequired()
+                        .HasMaxLength(80)
+                        .HasColumnType("varchar(80)");
 
                     b.Property<int>("WardNumber")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("CitizenId");
 
                     b.ToTable("GarbageReminders");
-                });
-
-            modelBuilder.Entity("SmartNagar.Models.GarbageSchedule", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("CollectionDays")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("varchar(100)");
-
-                    b.Property<string>("CollectionTime")
-                        .IsRequired()
-                        .HasMaxLength(80)
-                        .HasColumnType("varchar(80)");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<string>("Notes")
-                        .HasMaxLength(200)
-                        .HasColumnType("varchar(200)");
-
-                    b.Property<int>("WardNumber")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("GarbageSchedules");
                 });
 
             modelBuilder.Entity("SmartNagar.Models.Notice", b =>
@@ -507,16 +326,6 @@ namespace SmartNagar.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<string>("CreatedByName")
-                        .IsRequired()
-                        .HasMaxLength(120)
-                        .HasColumnType("varchar(120)");
-
-                    b.Property<string>("CreatedByRole")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("varchar(50)");
-
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("longtext");
@@ -528,50 +337,12 @@ namespace SmartNagar.Migrations
 
                     b.Property<string>("Title")
                         .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("varchar(200)");
+                        .HasMaxLength(150)
+                        .HasColumnType("varchar(150)");
 
                     b.HasKey("Id");
 
                     b.ToTable("Notices");
-                });
-
-            modelBuilder.Entity("SmartNagar.Models.Review", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("CitizenId")
-                        .IsRequired()
-                        .HasColumnType("varchar(255)");
-
-                    b.Property<string>("CitizenName")
-                        .IsRequired()
-                        .HasMaxLength(120)
-                        .HasColumnType("varchar(120)");
-
-                    b.Property<string>("Comment")
-                        .IsRequired()
-                        .HasMaxLength(600)
-                        .HasColumnType("varchar(600)");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<bool>("IsApproved")
-                        .HasColumnType("tinyint(1)");
-
-                    b.Property<int>("Rating")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CitizenId");
-
-                    b.ToTable("Reviews");
                 });
 
             modelBuilder.Entity("SmartNagar.Models.User", b =>
@@ -597,16 +368,6 @@ namespace SmartNagar.Migrations
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("tinyint(1)");
 
-                    b.Property<string>("EmailOtp")
-                        .HasMaxLength(6)
-                        .HasColumnType("varchar(6)");
-
-                    b.Property<DateTime?>("EmailOtpExpiryUtc")
-                        .HasColumnType("datetime(6)");
-
-                    b.Property<DateTime?>("EmailVerifiedAtUtc")
-                        .HasColumnType("datetime(6)");
-
                     b.Property<string>("FullName")
                         .IsRequired()
                         .HasMaxLength(100)
@@ -614,18 +375,6 @@ namespace SmartNagar.Migrations
 
                     b.Property<bool>("IsActive")
                         .HasColumnType("tinyint(1)");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("tinyint(1)");
-
-                    b.Property<double?>("LastLat")
-                        .HasColumnType("double");
-
-                    b.Property<double?>("LastLng")
-                        .HasColumnType("double");
-
-                    b.Property<DateTime?>("LastLocationAt")
-                        .HasColumnType("datetime(6)");
 
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("tinyint(1)");
@@ -674,25 +423,6 @@ namespace SmartNagar.Migrations
                         .HasDatabaseName("UserNameIndex");
 
                     b.ToTable("AspNetUsers", (string)null);
-                });
-
-            modelBuilder.Entity("ComplaintMessage", b =>
-                {
-                    b.HasOne("SmartNagar.Models.Complaint", "Complaint")
-                        .WithMany()
-                        .HasForeignKey("ComplaintId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("SmartNagar.Models.User", "Sender")
-                        .WithMany()
-                        .HasForeignKey("SenderId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Complaint");
-
-                    b.Navigation("Sender");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -759,66 +489,11 @@ namespace SmartNagar.Migrations
 
             modelBuilder.Entity("SmartNagar.Models.Complaint", b =>
                 {
-                    b.HasOne("SmartNagar.Models.User", "AssignedOfficer")
-                        .WithMany()
-                        .HasForeignKey("AssignedOfficerId");
-
                     b.HasOne("SmartNagar.Models.User", "Citizen")
                         .WithMany()
                         .HasForeignKey("CitizenId");
 
-                    b.Navigation("AssignedOfficer");
-
                     b.Navigation("Citizen");
-                });
-
-            modelBuilder.Entity("SmartNagar.Models.ComplaintPhoto", b =>
-                {
-                    b.HasOne("SmartNagar.Models.Complaint", "Complaint")
-                        .WithMany("Photos")
-                        .HasForeignKey("ComplaintId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Complaint");
-                });
-
-            modelBuilder.Entity("SmartNagar.Models.EmergencyAlert", b =>
-                {
-                    b.HasOne("SmartNagar.Models.User", "Citizen")
-                        .WithMany()
-                        .HasForeignKey("CitizenId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Citizen");
-                });
-
-            modelBuilder.Entity("SmartNagar.Models.GarbageReminder", b =>
-                {
-                    b.HasOne("SmartNagar.Models.User", "Citizen")
-                        .WithMany()
-                        .HasForeignKey("CitizenId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Citizen");
-                });
-
-            modelBuilder.Entity("SmartNagar.Models.Review", b =>
-                {
-                    b.HasOne("SmartNagar.Models.User", "Citizen")
-                        .WithMany()
-                        .HasForeignKey("CitizenId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Citizen");
-                });
-
-            modelBuilder.Entity("SmartNagar.Models.Complaint", b =>
-                {
-                    b.Navigation("Photos");
                 });
 #pragma warning restore 612, 618
         }
