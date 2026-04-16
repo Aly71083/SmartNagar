@@ -1,166 +1,2324 @@
-﻿@{
-    ViewData["Title"] = "Smart Nagar";
+﻿@model SmartNagar.ViewModels.HomeVM
+@{
+    Layout = null;
+    ViewBag.ChatbotMode = "guest";
+    var isLoggedIn = User?.Identity?.IsAuthenticated ?? false;
 }
 
-<style>
-    body {
-        font-family: Arial, sans-serif;
-        margin: 0;
-        padding: 0;
-        background-color: #e8f5f2; /* Light Fresh Green background */
-        color: #000; /* Black text */
-    }
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Smart Nagar</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
 
-    /* Navbar */
-    .navbar {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        background-color: #0077b6; /* Smart Civic Blue */
-        padding: 15px 30px;
-        color: #000;
-    }
+    <style>
+        * {
+            box-sizing: border-box;
+        }
 
-        .navbar h2 {
-            color: #fff; /* Logo in white */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
             margin: 0;
+            font-family: "Segoe UI", sans-serif;
+            background: #fcfbff;
+            color: #1f2a44;
+            overflow-x: hidden;
         }
 
-        .navbar a {
-            color: #000; /* Black text */
+        a {
             text-decoration: none;
-            margin-left: 20px;
-            font-weight: bold;
         }
 
-            .navbar a:hover {
-                color: #90be6d; /* Fresh Green hover */
-                text-decoration: underline;
+        .bgFloat {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: .22;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .bg1 {
+            width: 280px;
+            height: 280px;
+            background: #c084fc;
+            top: 90px;
+            left: -80px;
+        }
+
+        .bg2 {
+            width: 360px;
+            height: 360px;
+            background: #7c4dff;
+            top: 520px;
+            right: -120px;
+        }
+
+        .bg3 {
+            width: 260px;
+            height: 260px;
+            background: #ec4899;
+            bottom: 120px;
+            left: -90px;
+        }
+
+        .page {
+            position: relative;
+            z-index: 2;
+        }
+
+        .topbar {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            background: rgba(255,255,255,.88);
+            backdrop-filter: blur(14px);
+            border-bottom: 1px solid #efe7ff;
+        }
+
+        .navWrap {
+            width: min(1220px, 92%);
+            margin: 0 auto;
+            padding: 16px 0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: #7c4dff;
+            font-size: 20px;
+            font-weight: 1000;
+        }
+
+        .brandLogo {
+            width: 46px;
+            height: 46px;
+            border-radius: 14px;
+            background: linear-gradient(135deg,#7c4dff,#ec4899);
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 12px 28px rgba(124,77,255,.24);
+        }
+
+        .navLinks {
+            display: flex;
+            align-items: center;
+            gap: 30px;
+        }
+
+            .navLinks a {
+                color: #4f5d75;
+                font-size: 14px;
+                font-weight: 800;
+                position: relative;
             }
 
-    /* Hero Section */
-    .hero {
-        background: linear-gradient(rgba(0, 119, 182, 0.7), rgba(144, 190, 109, 0.7)), url('/images/city-bg.jpg') center/cover no-repeat;
-        height: 350px;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        text-align: center;
-        color: #000; /* Black text */
-    }
+                .navLinks a::after {
+                    content: "";
+                    position: absolute;
+                    left: 0;
+                    bottom: -7px;
+                    width: 0;
+                    height: 2px;
+                    background: #7c4dff;
+                    transition: .22s ease;
+                }
 
-        .hero h1 {
-            font-size: 2.8rem;
-            margin-bottom: 10px;
-            font-weight: bold;
+                .navLinks a:hover::after {
+                    width: 100%;
+                }
+
+        .navActions {
+            display: flex;
+            align-items: center;
+            gap: 14px;
         }
 
-        .hero p {
-            font-size: 1.2rem;
-            margin-bottom: 20px;
+        .btnOutline,
+        .btnGradient,
+        .heroBtnOutline,
+        .heroBtnGradient,
+        .ctaBtn,
+        .miniBtn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            border-radius: 999px;
+            font-weight: 900;
+            transition: .22s ease;
+            cursor: pointer;
         }
 
-    /* Cards Section */
-    .cards-container {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: center;
-        gap: 25px;
-        padding: 50px 20px;
-    }
-
-    .card {
-        background-color: #fff;
-        border-radius: 12px;
-        width: 300px; /* Slightly bigger */
-        height: 220px; /* Slightly bigger */
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        text-align: center;
-        box-shadow: 0 8px 20px rgba(0,0,0,0.1);
-        transition: transform 0.3s, box-shadow 0.3s;
-        cursor: pointer;
-        text-decoration: none;
-        color: #000; /* Black text */
-        padding: 15px;
-    }
-
-        .card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 15px 30px rgba(0,0,0,0.2);
-        }
-
-        .card i {
-            font-size: 3.5rem;
-            color: #0077b6; /* Blue icon */
-            margin-bottom: 15px;
-        }
-
-        .card h3 {
-            font-size: 1.3rem;
-            font-weight: bold;
-        }
-
-    /* Footer */
-    footer {
-        background-color: #0077b6; /* Smart Civic Blue */
-        color: #ffffff; /* White text for visibility */
-        text-align: center;
-        padding: 20px;
-    }
-
-        footer a {
-            color: #90be6d; /* Fresh Green links */
-            text-decoration: none;
-            font-weight: bold;
-        }
-
-            footer a:hover {
-                text-decoration: underline;
+            .btnOutline:hover,
+            .btnGradient:hover,
+            .heroBtnOutline:hover,
+            .heroBtnGradient:hover,
+            .ctaBtn:hover,
+            .miniBtn:hover {
+                transform: translateY(-2px);
             }
-</style>
 
-<!-- Navbar -->
-<div class="navbar">
-    <div class="logo">
-        <h2>SmartNagar</h2>
+        .btnOutline {
+            padding: 12px 22px;
+            border: 1.6px solid #7c4dff;
+            color: #7c4dff;
+            background: white;
+        }
+
+        .btnGradient {
+            padding: 12px 24px;
+            color: white;
+            background: linear-gradient(135deg,#7c4dff,#ec4899);
+            box-shadow: 0 12px 28px rgba(124,77,255,.20);
+        }
+
+        .hero {
+            position: relative;
+            overflow: hidden;
+            padding: 88px 0 82px;
+            background: radial-gradient(circle at top left, rgba(168,85,247,.12), transparent 26%), radial-gradient(circle at top right, rgba(236,72,153,.10), transparent 24%), linear-gradient(180deg,#faf7ff 0%, #fcfbff 100%);
+        }
+
+        .heroWrap {
+            width: min(1220px, 92%);
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 44px;
+            align-items: center;
+        }
+
+        .heroBadge {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: white;
+            border: 1px solid #efe7ff;
+            border-radius: 999px;
+            padding: 11px 18px;
+            color: #7c4dff;
+            font-weight: 900;
+            font-size: 14px;
+            box-shadow: 0 10px 24px rgba(124,77,255,.08);
+        }
+
+        .heroTitle {
+            margin: 22px 0 16px;
+            font-size: 64px;
+            line-height: 1.02;
+            font-weight: 1000;
+            letter-spacing: -.9px;
+            color: #28344c;
+        }
+
+            .heroTitle span {
+                color: #a855f7;
+            }
+
+        .heroSub {
+            max-width: 620px;
+            font-size: 18px;
+            line-height: 1.95;
+            color: #66748f;
+        }
+
+        .heroActions {
+            margin-top: 28px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 14px;
+        }
+
+        .heroBtnGradient {
+            padding: 17px 30px;
+            color: white;
+            background: linear-gradient(135deg,#7c4dff,#ec4899);
+            box-shadow: 0 16px 34px rgba(124,77,255,.20);
+        }
+
+        .heroBtnOutline {
+            padding: 17px 30px;
+            color: #7c4dff;
+            background: white;
+            border: 1.5px solid #7c4dff;
+        }
+
+        .heroStats {
+            margin-top: 34px;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            max-width: 760px;
+        }
+
+        .heroStat {
+            background: white;
+            border: 1px solid #efe7ff;
+            border-radius: 22px;
+            padding: 22px 18px;
+            text-align: center;
+            box-shadow: 0 16px 36px rgba(124,77,255,.07);
+            transition: .2s ease;
+        }
+
+            .heroStat:hover {
+                transform: translateY(-4px);
+            }
+
+            .heroStat strong {
+                display: block;
+                font-size: 28px;
+                color: #a855f7;
+                font-weight: 1000;
+                margin-bottom: 6px;
+            }
+
+            .heroStat span {
+                color: #7b88a0;
+                font-weight: 800;
+                font-size: 13px;
+            }
+
+        .heroVisual {
+            display: flex;
+            justify-content: center;
+        }
+
+        .heroPreview {
+            width: 100%;
+            max-width: 520px;
+            background: rgba(255,255,255,.92);
+            border: 1px solid #efe7ff;
+            border-radius: 34px;
+            padding: 22px;
+            box-shadow: 0 24px 60px rgba(124,77,255,.10);
+            animation: bob 5s ease-in-out infinite;
+        }
+
+        .previewTop {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 14px;
+        }
+
+        .previewDot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #e2d6ff;
+        }
+
+        .previewHero {
+            border-radius: 24px;
+            background: linear-gradient(135deg,#7c4dff,#ec4899);
+            color: white;
+            padding: 20px;
+            margin-bottom: 16px;
+        }
+
+            .previewHero h3 {
+                margin: 0 0 8px;
+                font-size: 24px;
+                font-weight: 1000;
+            }
+
+            .previewHero p {
+                margin: 0;
+                font-size: 14px;
+                line-height: 1.8;
+                opacity: .97;
+            }
+
+        .previewGrid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+
+        .previewCard {
+            background: #fcfbff;
+            border: 1px solid #f1e8ff;
+            border-radius: 18px;
+            padding: 16px;
+        }
+
+            .previewCard strong {
+                display: block;
+                color: #24324d;
+                font-size: 14px;
+                margin-top: 8px;
+            }
+
+            .previewCard span {
+                display: block;
+                color: #7b88a0;
+                font-size: 12px;
+                margin-top: 4px;
+                line-height: 1.6;
+            }
+
+        .previewIcon {
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
+            background: #a855f7;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .flowFeatures {
+            padding: 96px 0;
+            background: #fcfbff;
+            position: relative;
+            overflow: hidden;
+        }
+
+            .flowFeatures::before {
+                content: "";
+                position: absolute;
+                inset: 0;
+                background: radial-gradient(circle at 20% 20%, rgba(168,85,247,.08), transparent 18%), radial-gradient(circle at 80% 30%, rgba(236,72,153,.07), transparent 18%), radial-gradient(circle at 30% 80%, rgba(124,77,255,.06), transparent 18%);
+                pointer-events: none;
+            }
+
+        .wrap {
+            width: min(1220px, 92%);
+            margin: auto;
+            position: relative;
+            z-index: 2;
+        }
+
+        .title {
+            text-align: center;
+            font-size: 52px;
+            font-weight: 1000;
+            margin: 0 0 14px;
+            color: #24324d;
+        }
+
+            .title span {
+                color: #7c4dff;
+            }
+
+        .sub {
+            max-width: 760px;
+            margin: 0 auto 60px;
+            text-align: center;
+            color: #73819a;
+            line-height: 1.9;
+            font-size: 18px;
+        }
+
+        .flowContainer {
+            display: grid;
+            grid-template-columns: 1fr 380px 1fr;
+            align-items: center;
+            gap: 24px;
+        }
+
+        .flowSide {
+            display: flex;
+            flex-direction: column;
+            gap: 28px;
+            position: relative;
+        }
+
+            .flowSide.left .flowItem:nth-child(1) {
+                animation: bob 4.6s ease-in-out infinite;
+            }
+
+            .flowSide.left .flowItem:nth-child(2) {
+                animation: bob 5.2s ease-in-out infinite;
+            }
+
+            .flowSide.left .flowItem:nth-child(3) {
+                animation: bob 4.8s ease-in-out infinite;
+            }
+
+            .flowSide.right .flowItem:nth-child(1) {
+                animation: bob 5.1s ease-in-out infinite;
+            }
+
+            .flowSide.right .flowItem:nth-child(2) {
+                animation: bob 4.7s ease-in-out infinite;
+            }
+
+            .flowSide.right .flowItem:nth-child(3) {
+                animation: bob 5.4s ease-in-out infinite;
+            }
+
+        .flowItem {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 16px 20px;
+            border-radius: 999px;
+            background: rgba(255,255,255,.95);
+            cursor: pointer;
+            transition: .25s ease;
+            box-shadow: 0 14px 30px rgba(124,77,255,.08);
+            border: 1px solid #efe7ff;
+            position: relative;
+        }
+
+            .flowItem:hover {
+                transform: translateY(-5px) scale(1.01);
+            }
+
+            .flowItem.active {
+                background: linear-gradient(135deg,#7c4dff,#ec4899);
+                color: white;
+                border-color: transparent;
+                box-shadow: 0 18px 34px rgba(124,77,255,.24);
+            }
+
+            .flowItem i {
+                width: 42px;
+                height: 42px;
+                border-radius: 50%;
+                background: #a855f7;
+                color: white;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 16px;
+                flex-shrink: 0;
+            }
+
+            .flowItem.active i {
+                background: rgba(255,255,255,.20);
+            }
+
+        .flowItemText strong {
+            display: block;
+            font-size: 16px;
+            font-weight: 900;
+            margin-bottom: 4px;
+        }
+
+        .flowItemText span {
+            display: block;
+            font-size: 13px;
+            line-height: 1.5;
+            color: #7b88a0;
+            font-weight: 700;
+        }
+
+        .flowItem.active .flowItemText span {
+            color: rgba(255,255,255,.92);
+        }
+
+        .flowCenter {
+            display: flex;
+            justify-content: center;
+            position: relative;
+        }
+
+        .screenGlow {
+            position: absolute;
+            width: 420px;
+            height: 420px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(168,85,247,.26) 0%, rgba(236,72,153,.12) 45%, rgba(255,255,255,0) 78%);
+            filter: blur(10px);
+        }
+
+        .screen {
+            width: 340px;
+            min-height: 560px;
+            background: white;
+            border-radius: 34px;
+            padding: 14px;
+            box-shadow: 0 30px 70px rgba(0,0,0,.16);
+            position: relative;
+            z-index: 2;
+            border: 1px solid #efe7ff;
+            animation: bob 5.8s ease-in-out infinite;
+        }
+
+        .phoneNotch {
+            width: 110px;
+            height: 20px;
+            background: #121212;
+            border-radius: 999px;
+            margin: 0 auto 14px;
+        }
+
+        .screenFrame {
+            background: #fcfbff;
+            border-radius: 26px;
+            min-height: 500px;
+            padding: 18px;
+            border: 1px solid #f4edff;
+        }
+
+        .screenContent {
+            animation: fade .35s ease;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .screenHeroBox {
+            border-radius: 22px;
+            background: linear-gradient(135deg,#f5eeff,#ffffff);
+            border: 1px solid #f1e8ff;
+            padding: 18px;
+            margin-bottom: 16px;
+        }
+
+            .screenHeroBox h3 {
+                margin: 0 0 8px;
+                font-size: 22px;
+                font-weight: 1000;
+                color: #24324d;
+            }
+
+            .screenHeroBox p {
+                margin: 0;
+                color: #73819a;
+                line-height: 1.8;
+                font-size: 14px;
+            }
+
+        .screenActionBtn {
+            margin-top: 14px;
+            border: none;
+            border-radius: 12px;
+            padding: 12px 16px;
+            font-weight: 900;
+            color: white;
+            cursor: pointer;
+        }
+
+        .btnRed {
+            background: #dc2626;
+        }
+
+        .btnPurple {
+            background: #7c4dff;
+        }
+
+        .screenMiniCards {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 14px;
+        }
+
+        .screenMiniCard {
+            background: white;
+            border: 1px solid #efe7ff;
+            border-radius: 16px;
+            padding: 14px;
+            text-align: center;
+        }
+
+            .screenMiniCard strong {
+                display: block;
+                font-size: 20px;
+                color: #a855f7;
+                margin-bottom: 4px;
+            }
+
+            .screenMiniCard span {
+                font-size: 12px;
+                color: #7b88a0;
+                font-weight: 800;
+            }
+
+        .screenList {
+            display: grid;
+            gap: 10px;
+        }
+
+        .screenRow {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: white;
+            border: 1px solid #efe7ff;
+            border-radius: 16px;
+            padding: 12px;
+        }
+
+            .screenRow i {
+                width: 38px;
+                height: 38px;
+                border-radius: 12px;
+                background: #a855f7;
+                color: white;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                flex-shrink: 0;
+            }
+
+        .screenRowText strong {
+            display: block;
+            font-size: 13px;
+            color: #24324d;
+        }
+
+        .screenRowText span {
+            display: block;
+            font-size: 12px;
+            color: #7b88a0;
+            margin-top: 2px;
+        }
+
+        .platformSection {
+            padding: 96px 0;
+            background: #faf7ff;
+        }
+
+        .howGrid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: center;
+        }
+
+        .howText h2 {
+            margin: 0 0 18px;
+            font-size: 54px;
+            line-height: 1.08;
+            font-weight: 1000;
+            color: #24324d;
+        }
+
+            .howText h2 span {
+                color: #7c4dff;
+            }
+
+        .howText p {
+            color: #73819a;
+            font-size: 18px;
+            line-height: 1.9;
+            margin: 0 0 30px;
+        }
+
+        .howPoints {
+            display: grid;
+            gap: 24px;
+        }
+
+        .howPoint {
+            display: flex;
+            align-items: flex-start;
+            gap: 16px;
+            background: rgba(255,255,255,.82);
+            border: 1px solid #efe7ff;
+            border-radius: 22px;
+            padding: 18px;
+            box-shadow: 0 16px 34px rgba(124,77,255,.06);
+            transition: .2s ease;
+        }
+
+            .howPoint:hover {
+                transform: translateY(-4px);
+            }
+
+        .howCheck {
+            width: 34px;
+            height: 34px;
+            min-width: 34px;
+            border-radius: 50%;
+            background: #7c4dff;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 4px;
+            font-size: 14px;
+        }
+
+        .howPoint h4 {
+            margin: 0 0 8px;
+            color: #24324d;
+            font-size: 20px;
+            font-weight: 900;
+        }
+
+        .howPoint p {
+            margin: 0;
+            color: #7b88a0;
+            font-size: 16px;
+            line-height: 1.85;
+        }
+
+        .howVisual {
+            position: relative;
+            min-height: 540px;
+        }
+
+        .howBgCircle {
+            position: absolute;
+            width: 440px;
+            height: 440px;
+            border-radius: 50%;
+            background: rgba(255,255,255,.65);
+            left: 40px;
+            top: 10px;
+        }
+
+        .webCardLarge,
+        .webCardSmall {
+            position: absolute;
+            background: rgba(255,255,255,.90);
+            border: 1px solid #efe7ff;
+            border-radius: 28px;
+            box-shadow: 0 20px 50px rgba(124,77,255,.10);
+            overflow: hidden;
+            animation: bob 5.2s ease-in-out infinite;
+        }
+
+        .webCardLarge {
+            width: 360px;
+            left: 30px;
+            top: 40px;
+            padding: 16px;
+        }
+
+        .webCardSmall {
+            width: 300px;
+            right: 0;
+            bottom: 20px;
+            padding: 14px;
+            animation-duration: 6s;
+        }
+
+        .webTopBar {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        .webDot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #e2d6ff;
+        }
+
+        .webHeader {
+            border-radius: 18px;
+            background: linear-gradient(135deg,#f4edff,#ffffff);
+            padding: 16px;
+            margin-bottom: 14px;
+        }
+
+            .webHeader h4 {
+                margin: 0 0 6px;
+                color: #24324d;
+                font-size: 18px;
+                font-weight: 900;
+            }
+
+            .webHeader p {
+                margin: 0;
+                font-size: 13px;
+                color: #7b88a0;
+                line-height: 1.7;
+            }
+
+        .webStats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .webStat {
+            background: #fcfbff;
+            border: 1px solid #f1e8ff;
+            border-radius: 18px;
+            padding: 14px;
+            text-align: center;
+        }
+
+            .webStat strong {
+                display: block;
+                color: #a855f7;
+                font-size: 22px;
+                font-weight: 1000;
+                margin-bottom: 4px;
+            }
+
+            .webStat span {
+                color: #7b88a0;
+                font-size: 12px;
+                font-weight: 800;
+            }
+
+        .webList {
+            display: grid;
+            gap: 10px;
+        }
+
+        .webRow {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            border: 1px solid #efe7ff;
+            border-radius: 16px;
+            padding: 12px;
+            background: #fcfbff;
+        }
+
+        .webRowLeft {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .webRowIcon {
+            width: 38px;
+            height: 38px;
+            border-radius: 12px;
+            background: #a855f7;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .webRowText strong {
+            display: block;
+            font-size: 13px;
+            color: #24324d;
+        }
+
+        .webRowText span {
+            display: block;
+            font-size: 12px;
+            color: #7b88a0;
+            margin-top: 2px;
+        }
+
+        .webTag {
+            padding: 8px 10px;
+            border-radius: 999px;
+            background: #f3ebff;
+            color: #7c4dff;
+            font-size: 11px;
+            font-weight: 900;
+            white-space: nowrap;
+        }
+
+        .reviewSection {
+            padding: 90px 0;
+            background: #fcfbff;
+        }
+
+        .pill {
+            width: max-content;
+            margin: 0 auto 20px;
+            padding: 10px 20px;
+            border-radius: 999px;
+            background: #f3ebff;
+            color: #7c4dff;
+            font-size: 13px;
+            font-weight: 900;
+            letter-spacing: .8px;
+            text-transform: uppercase;
+        }
+
+        .sectionTitle {
+            text-align: center;
+            font-size: 52px;
+            font-weight: 1000;
+            color: #24324d;
+            margin: 0 0 14px;
+        }
+
+        .sectionSub {
+            text-align: center;
+            color: #73819a;
+            font-size: 18px;
+            line-height: 1.8;
+            margin: 0 auto 48px;
+            max-width: 760px;
+        }
+
+        .reviewGrid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 28px;
+            margin-top: 34px;
+        }
+
+        .reviewCard {
+            background: rgba(255,255,255,.9);
+            border: 1px solid #efe7ff;
+            border-radius: 28px;
+            padding: 28px 24px;
+            box-shadow: 0 18px 40px rgba(124,77,255,.07);
+            transition: .2s ease;
+        }
+
+            .reviewCard:hover {
+                transform: translateY(-5px);
+            }
+
+        .stars {
+            color: #f59e0b;
+            letter-spacing: 4px;
+            font-size: 18px;
+            margin-bottom: 18px;
+        }
+
+        .reviewText {
+            font-size: 17px;
+            line-height: 1.9;
+            color: #44506b;
+            min-height: 150px;
+            margin-bottom: 24px;
+            font-style: italic;
+        }
+
+        .reviewUser {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .avatar {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: linear-gradient(135deg,#7c4dff,#ec4899);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 1000;
+            font-size: 22px;
+        }
+
+        .reviewUser strong {
+            display: block;
+            color: #24324d;
+            font-size: 18px;
+            margin-bottom: 4px;
+        }
+
+        .reviewUser span {
+            color: #7b88a0;
+            font-size: 14px;
+            font-weight: 700;
+        }
+
+        .cta {
+            background: linear-gradient(135deg,#7c4dff,#ec4899);
+            color: white;
+            padding: 100px 0 90px;
+            position: relative;
+            overflow: hidden;
+        }
+
+            .cta::before {
+                content: "";
+                position: absolute;
+                width: 320px;
+                height: 320px;
+                border-radius: 50%;
+                background: rgba(255,255,255,.10);
+                top: -100px;
+                right: -80px;
+            }
+
+        .ctaWrap {
+            width: min(1180px, 92%);
+            margin: 0 auto;
+            text-align: center;
+            position: relative;
+            z-index: 2;
+        }
+
+        .cta h2 {
+            font-size: 58px;
+            margin: 0 0 20px;
+            font-weight: 1000;
+        }
+
+        .cta p {
+            font-size: 19px;
+            opacity: .97;
+            margin: 0 0 34px;
+        }
+
+        .ctaBtn {
+            padding: 18px 42px;
+            background: white;
+            color: #7c4dff;
+            font-size: 18px;
+            box-shadow: 0 18px 34px rgba(0,0,0,.10);
+        }
+
+        .footer {
+            background: #1a1633;
+            color: white;
+            padding: 76px 0 24px;
+        }
+
+        .footerWrap {
+            width: min(1220px, 92%);
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1.4fr 1fr 1fr 1fr;
+            gap: 40px;
+        }
+
+        .footerBrand {
+            color: #c084fc;
+            font-size: 24px;
+            font-weight: 1000;
+            margin-bottom: 24px;
+        }
+
+        .footer p,
+        .footer a {
+            color: #d8d6ef;
+            line-height: 2;
+            font-size: 16px;
+            display: block;
+        }
+
+        .footer h4 {
+            margin: 0 0 18px;
+            font-size: 18px;
+            font-weight: 900;
+            color: white;
+        }
+
+        .socials {
+            display: flex;
+            gap: 12px;
+            margin-top: 18px;
+        }
+
+            .socials span {
+                width: 42px;
+                height: 42px;
+                border-radius: 14px;
+                background: #2a214d;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: white;
+            }
+
+        .copy {
+            width: min(1220px, 92%);
+            margin: 28px auto 0;
+            border-top: 1px solid rgba(255,255,255,.12);
+            padding-top: 20px;
+            text-align: center;
+            color: #d8d6ef;
+            font-size: 15px;
+        }
+
+        /* CHATBOT */
+        .chatFab {
+            position: fixed;
+            right: 24px;
+            bottom: 24px;
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            border: none;
+            background: linear-gradient(135deg,#7c4dff,#ec4899);
+            color: #fff;
+            font-size: 24px;
+            cursor: pointer;
+            box-shadow: 0 20px 40px rgba(124,77,255,.28);
+            z-index: 2000;
+        }
+
+        .chatWindow {
+            position: fixed;
+            right: 24px;
+            bottom: 100px;
+            width: 370px;
+            max-width: calc(100vw - 28px);
+            height: 560px;
+            background: #fff;
+            border: 1px solid #efe7ff;
+            border-radius: 26px;
+            box-shadow: 0 24px 60px rgba(25, 22, 51, .18);
+            overflow: hidden;
+            z-index: 2000;
+            display: none;
+            flex-direction: column;
+        }
+
+            .chatWindow.open {
+                display: flex;
+            }
+
+        .chatHeader {
+            padding: 16px 18px;
+            background: linear-gradient(135deg,#7c4dff,#ec4899);
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+        }
+
+        .chatHeaderLeft {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .chatBotIcon {
+            width: 42px;
+            height: 42px;
+            border-radius: 14px;
+            background: rgba(255,255,255,.18);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+        }
+
+        .chatHeaderTitle strong {
+            display: block;
+            font-size: 15px;
+            font-weight: 1000;
+        }
+
+        .chatHeaderTitle span {
+            display: block;
+            font-size: 12px;
+            opacity: .92;
+            margin-top: 2px;
+        }
+
+        .chatClose {
+            width: 38px;
+            height: 38px;
+            border-radius: 12px;
+            border: none;
+            background: rgba(255,255,255,.18);
+            color: #fff;
+            cursor: pointer;
+            font-size: 15px;
+        }
+
+        .chatBody {
+            flex: 1;
+            padding: 16px;
+            background: #fcfbff;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .chatMsg {
+            max-width: 85%;
+            padding: 12px 14px;
+            border-radius: 18px;
+            font-size: 14px;
+            line-height: 1.7;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+
+            .chatMsg.bot {
+                background: #fff;
+                border: 1px solid #efe7ff;
+                color: #334155;
+                align-self: flex-start;
+            }
+
+            .chatMsg.user {
+                background: linear-gradient(135deg,#7c4dff,#ec4899);
+                color: #fff;
+                align-self: flex-end;
+            }
+
+        .chatQuickRow {
+            padding: 0 16px 14px;
+            background: #fcfbff;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            border-top: 1px solid #f4edff;
+        }
+
+        .chatQuickBtn {
+            border: 1px solid #e8ddff;
+            background: #fff;
+            color: #7c4dff;
+            border-radius: 999px;
+            padding: 9px 12px;
+            font-size: 12px;
+            font-weight: 900;
+            cursor: pointer;
+        }
+
+        .chatForm {
+            padding: 14px;
+            border-top: 1px solid #efe7ff;
+            background: #fff;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .chatInput {
+            flex: 1;
+            height: 50px;
+            border-radius: 16px;
+            border: 1px solid #e5e7eb;
+            outline: none;
+            padding: 0 16px;
+            font-size: 14px;
+        }
+
+            .chatInput:focus {
+                border-color: #a855f7;
+                box-shadow: 0 0 0 4px rgba(168,85,247,.12);
+            }
+
+        .chatSend {
+            width: 50px;
+            height: 50px;
+            border-radius: 16px;
+            border: none;
+            background: linear-gradient(135deg,#7c4dff,#ec4899);
+            color: #fff;
+            cursor: pointer;
+            font-size: 16px;
+            flex-shrink: 0;
+        }
+
+        .chatTyping {
+            display: none;
+            align-self: flex-start;
+            background: #fff;
+            border: 1px solid #efe7ff;
+            color: #64748b;
+        }
+
+            .chatTyping.show {
+                display: block;
+            }
+
+        @@keyframes fade {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @@keyframes bob {
+            0%, 100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-9px);
+            }
+        }
+
+        @@media (max-width: 1100px) {
+            .heroWrap,
+            .howGrid,
+            .reviewGrid,
+            .footerWrap {
+                grid-template-columns: 1fr;
+            }
+
+            .flowContainer {
+                grid-template-columns: 1fr;
+                gap: 32px;
+            }
+
+            .flowSide.left,
+            .flowSide.right {
+                order: 2;
+            }
+
+            .flowCenter {
+                order: 1;
+            }
+
+            .heroTitle,
+            .title,
+            .howText h2,
+            .sectionTitle,
+            .cta h2 {
+                font-size: 40px;
+            }
+
+            .navLinks {
+                display: none;
+            }
+
+            .heroStats {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .howVisual {
+                min-height: 650px;
+            }
+        }
+
+        @@media (max-width: 700px) {
+            .heroStats,
+            .previewGrid,
+            .screenMiniCards {
+                grid-template-columns: 1fr;
+            }
+
+            .navWrap {
+                flex-wrap: wrap;
+            }
+
+            .navActions {
+                width: 100%;
+            }
+
+            .btnOutline,
+            .btnGradient {
+                flex: 1;
+            }
+
+            .heroTitle,
+            .title,
+            .howText h2,
+            .sectionTitle,
+            .cta h2 {
+                font-size: 32px;
+            }
+
+            .screen {
+                width: 100%;
+                max-width: 340px;
+            }
+
+            .webCardLarge,
+            .webCardSmall {
+                position: static;
+                width: 100%;
+                margin-bottom: 18px;
+            }
+
+            .howVisual {
+                min-height: auto;
+            }
+
+            .howBgCircle {
+                display: none;
+            }
+
+            .chatWindow {
+                right: 12px;
+                bottom: 88px;
+                left: 12px;
+                width: auto;
+                max-width: none;
+                height: 72vh;
+            }
+
+            .chatFab {
+                right: 16px;
+                bottom: 16px;
+            }
+        }
+
+        @@media (max-width: 560px) {
+            .heroStats {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    @Html.AntiForgeryToken()
+
+    <div class="bgFloat bg1"></div>
+    <div class="bgFloat bg2"></div>
+    <div class="bgFloat bg3"></div>
+
+    <div class="page">
+        <div class="topbar">
+            <div class="navWrap">
+                <div class="brand">
+                    <div class="brandLogo">
+                        <i class="fa-solid fa-city"></i>
+                    </div>
+                    <div>Smart Nagar</div>
+                </div>
+
+                <div class="navLinks">
+                    <a href="#home">Home</a>
+                    <a href="#features">Features</a>
+                    <a href="#platform">Platform</a>
+                    <a href="#reviews">Reviews</a>
+                </div>
+
+                <div class="navActions">
+                    @if (!isLoggedIn)
+                    {
+                        <a href="/Account/Login" class="btnOutline"><i class="fa-regular fa-user"></i> Login</a>
+                        <a href="/Account/Register" class="btnGradient"><i class="fa-regular fa-star"></i> Sign Up Free</a>
+                    }
+                    else
+                    {
+                        <a href="/Citizen/Dashboard" class="btnGradient"><i class="fa-solid fa-arrow-right"></i> Go to Portal</a>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <section class="hero" id="home">
+            <div class="heroWrap">
+                <div>
+                    <div class="heroBadge">
+                        <i class="fa-solid fa-shield-heart"></i>
+                        Trusted by @Model.ActiveCitizens+ active citizens
+                    </div>
+
+                    <h1 class="heroTitle">
+                        Smart municipal services in <span>one place</span>
+                    </h1>
+
+                    <p class="heroSub">
+                        Smart Nagar is a web-based municipal platform where citizens can submit complaints,
+                        track progress, view notices, access garbage schedules, and report emergencies while
+                        officers and admins manage everything through connected dashboards.
+                    </p>
+
+                    <div class="heroActions">
+                        @if (!isLoggedIn)
+                        {
+                            <a href="/Account/Register" class="heroBtnGradient"><i class="fa-regular fa-star"></i> Get Started Free</a>
+                            <a href="/Account/Login" class="heroBtnOutline"><i class="fa-regular fa-user"></i> Login Now</a>
+                        }
+                        else
+                        {
+                            <a href="/Citizen/Dashboard" class="heroBtnGradient"><i class="fa-solid fa-gauge-high"></i> Open Citizen Portal</a>
+                        }
+                    </div>
+
+                    <div class="heroStats">
+                        <div class="heroStat">
+                            <strong>@Model.ActiveCitizens+</strong>
+                            <span>Active Citizens</span>
+                        </div>
+                        <div class="heroStat">
+                            <strong>@Model.ResolvedComplaints+</strong>
+                            <span>Resolved Complaints</span>
+                        </div>
+                        <div class="heroStat">
+                            <strong>@Model.SatisfactionRate%</strong>
+                            <span>Satisfaction Rate</span>
+                        </div>
+                        <div class="heroStat">
+                            <strong>@Model.ServiceAvailability</strong>
+                            <span>Service Support</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="heroVisual">
+                    <div class="heroPreview">
+                        <div class="previewTop">
+                            <div class="previewDot"></div>
+                            <div class="previewDot"></div>
+                            <div class="previewDot"></div>
+                        </div>
+
+                        <div class="previewHero">
+                            <h3>Smart Nagar Portal</h3>
+                            <p>Connected citizen, officer, and admin services with transparent complaint handling and emergency reporting.</p>
+                        </div>
+
+                        <div class="previewGrid">
+                            <div class="previewCard">
+                                <div class="previewIcon"><i class="fa-solid fa-bullhorn"></i></div>
+                                <strong>Emergency</strong>
+                                <span>Quick alert reporting to admin and officers</span>
+                            </div>
+
+                            <div class="previewCard">
+                                <div class="previewIcon"><i class="fa-solid fa-file-circle-plus"></i></div>
+                                <strong>Complaint</strong>
+                                <span>Submit categorized complaints with details</span>
+                            </div>
+
+                            <div class="previewCard">
+                                <div class="previewIcon"><i class="fa-solid fa-location-dot"></i></div>
+                                <strong>Tracking</strong>
+                                <span>Check complaint progress in real time</span>
+                            </div>
+
+                            <div class="previewCard">
+                                <div class="previewIcon"><i class="fa-solid fa-chart-line"></i></div>
+                                <strong>Analytics</strong>
+                                <span>Officer and admin performance visibility</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="flowFeatures" id="features">
+            <div class="wrap">
+                <h2 class="title">
+                    Features that make <span>Smart Nagar</span> different
+                </h2>
+
+                <p class="sub">
+                    Smart Nagar combines emergency response, complaint tracking, analytics, garbage services,
+                    notices, and real-time communication into one powerful municipal platform.
+                </p>
+
+                <div class="flowContainer">
+                    <div class="flowSide left">
+                        <div class="flowItem active" data-target="alert">
+                            <i class="fa-solid fa-bullhorn"></i>
+                            <div class="flowItemText">
+                                <strong>Send Alert</strong>
+                                <span>Instant emergency reporting for quick municipal response.</span>
+                            </div>
+                        </div>
+
+                        <div class="flowItem" data-target="photo">
+                            <i class="fa-solid fa-image"></i>
+                            <div class="flowItemText">
+                                <strong>Upload Photo</strong>
+                                <span>Attach issue images for clearer complaint evidence.</span>
+                            </div>
+                        </div>
+
+                        <div class="flowItem" data-target="garbage">
+                            <i class="fa-solid fa-truck"></i>
+                            <div class="flowItemText">
+                                <strong>Garbage Schedule</strong>
+                                <span>Residents can check collection dates and reminders.</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flowCenter">
+                        <div class="screenGlow"></div>
+
+                        <div class="screen">
+                            <div class="phoneNotch"></div>
+
+                            <div class="screenFrame">
+                                <div class="screenContent" id="alert">
+                                    <div class="screenHeroBox">
+                                        <h3>Emergency Alert</h3>
+                                        <p>Instantly notify admin and municipal officers when urgent problems happen in your area.</p>
+                                        <button class="screenActionBtn btnRed">Send Alert</button>
+                                    </div>
+
+                                    <div class="screenMiniCards">
+                                        <div class="screenMiniCard">
+                                            <strong>@Model.ActiveCitizens+</strong>
+                                            <span>Citizens Connected</span>
+                                        </div>
+                                        <div class="screenMiniCard">
+                                            <strong>@Model.ServiceAvailability</strong>
+                                            <span>Support Access</span>
+                                        </div>
+                                    </div>
+
+                                    <div class="screenList">
+                                        <div class="screenRow">
+                                            <i class="fa-solid fa-shield-halved"></i>
+                                            <div class="screenRowText">
+                                                <strong>Alert to Admin</strong>
+                                                <span>Immediate notification flow</span>
+                                            </div>
+                                        </div>
+
+                                        <div class="screenRow">
+                                            <i class="fa-solid fa-user-shield"></i>
+                                            <div class="screenRowText">
+                                                <strong>Alert to Officer</strong>
+                                                <span>Operational team gets updates fast</span>
+                                            </div>
+                                        </div>
+
+                                        <div class="screenRow">
+                                            <i class="fa-solid fa-clock"></i>
+                                            <div class="screenRowText">
+                                                <strong>Quick Action</strong>
+                                                <span>Designed for urgent reporting flow</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="screenContent hidden" id="photo">
+                                    <div class="screenHeroBox">
+                                        <h3>Upload Complaint Picture</h3>
+                                        <p>Attach photo proof so officers can understand the issue more clearly before taking action.</p>
+                                        <button class="screenActionBtn btnPurple">Upload Picture</button>
+                                    </div>
+
+                                    <div class="screenList">
+                                        <div class="screenRow">
+                                            <i class="fa-solid fa-camera"></i>
+                                            <div class="screenRowText">
+                                                <strong>Visual Evidence</strong>
+                                                <span>Helps identify the problem faster</span>
+                                            </div>
+                                        </div>
+
+                                        <div class="screenRow">
+                                            <i class="fa-solid fa-file-circle-check"></i>
+                                            <div class="screenRowText">
+                                                <strong>Better Accuracy</strong>
+                                                <span>Improves complaint quality and clarity</span>
+                                            </div>
+                                        </div>
+
+                                        <div class="screenRow">
+                                            <i class="fa-solid fa-bolt"></i>
+                                            <div class="screenRowText">
+                                                <strong>Faster Resolution</strong>
+                                                <span>Useful for municipal verification</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="screenContent hidden" id="garbage">
+                                    <div class="screenHeroBox">
+                                        <h3>Garbage Schedule</h3>
+                                        <p>Citizens can quickly check collection schedules and keep track of local waste services.</p>
+                                        <button class="screenActionBtn btnPurple">View Schedule</button>
+                                    </div>
+
+                                    <div class="screenList">
+                                        <div class="screenRow">
+                                            <i class="fa-solid fa-calendar-days"></i>
+                                            <div class="screenRowText">
+                                                <strong>Collection Dates</strong>
+                                                <span>See upcoming schedule details</span>
+                                            </div>
+                                        </div>
+
+                                        <div class="screenRow">
+                                            <i class="fa-solid fa-bell"></i>
+                                            <div class="screenRowText">
+                                                <strong>Reminders</strong>
+                                                <span>Improves service visibility for residents</span>
+                                            </div>
+                                        </div>
+
+                                        <div class="screenRow">
+                                            <i class="fa-solid fa-recycle"></i>
+                                            <div class="screenRowText">
+                                                <strong>Clean Local Areas</strong>
+                                                <span>Better waste service communication</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="screenContent hidden" id="tracking">
+                                    <div class="screenHeroBox">
+                                        <h3>Status Tracking</h3>
+                                        <p>Track every complaint from pending to in progress to resolved with clear live updates.</p>
+                                    </div>
+
+                                    <div class="screenList">
+                                        <div class="screenRow">
+                                            <i class="fa-solid fa-hourglass-start"></i>
+                                            <div class="screenRowText">
+                                                <strong>Pending</strong>
+                                                <span>Complaint received and logged</span>
+                                            </div>
+                                        </div>
+
+                                        <div class="screenRow">
+                                            <i class="fa-solid fa-gears"></i>
+                                            <div class="screenRowText">
+                                                <strong>In Progress</strong>
+                                                <span>Officers are handling the issue</span>
+                                            </div>
+                                        </div>
+
+                                        <div class="screenRow">
+                                            <i class="fa-solid fa-circle-check"></i>
+                                            <div class="screenRowText">
+                                                <strong>Resolved</strong>
+                                                <span>Citizen can see final status clearly</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="screenContent hidden" id="analytics">
+                                    <div class="screenHeroBox">
+                                        <h3>Analytics Dashboard</h3>
+                                        <p>Admins and officers can monitor trends, workload, and municipal performance through one system.</p>
+                                    </div>
+
+                                    <div class="screenMiniCards">
+                                        <div class="screenMiniCard">
+                                            <strong>@Model.ResolvedComplaints+</strong>
+                                            <span>Resolved Cases</span>
+                                        </div>
+                                        <div class="screenMiniCard">
+                                            <strong>@Model.SatisfactionRate%</strong>
+                                            <span>Satisfaction</span>
+                                        </div>
+                                    </div>
+
+                                    <div class="screenList">
+                                        <div class="screenRow">
+                                            <i class="fa-solid fa-chart-column"></i>
+                                            <div class="screenRowText">
+                                                <strong>Performance Insights</strong>
+                                                <span>View trends and service outcomes</span>
+                                            </div>
+                                        </div>
+
+                                        <div class="screenRow">
+                                            <i class="fa-solid fa-users"></i>
+                                            <div class="screenRowText">
+                                                <strong>Workload Monitoring</strong>
+                                                <span>Track officer assignments better</span>
+                                            </div>
+                                        </div>
+
+                                        <div class="screenRow">
+                                            <i class="fa-solid fa-file-pdf"></i>
+                                            <div class="screenRowText">
+                                                <strong>Reports</strong>
+                                                <span>Useful for municipal evaluation</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="screenContent hidden" id="language">
+                                    <div class="screenHeroBox">
+                                        <h3>Bilingual Access</h3>
+                                        <p>Smart Nagar supports English and Nepali so more citizens can access public services easily.</p>
+                                    </div>
+
+                                    <div class="screenList">
+                                        <div class="screenRow">
+                                            <i class="fa-solid fa-globe"></i>
+                                            <div class="screenRowText">
+                                                <strong>Accessible Interface</strong>
+                                                <span>Designed for local usability</span>
+                                            </div>
+                                        </div>
+
+                                        <div class="screenRow">
+                                            <i class="fa-solid fa-language"></i>
+                                            <div class="screenRowText">
+                                                <strong>English / Nepali</strong>
+                                                <span>Simple language switching support</span>
+                                            </div>
+                                        </div>
+
+                                        <div class="screenRow">
+                                            <i class="fa-solid fa-people-group"></i>
+                                            <div class="screenRowText">
+                                                <strong>Broader Reach</strong>
+                                                <span>Better for communities and municipalities</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flowSide right">
+                        <div class="flowItem" data-target="tracking">
+                            <i class="fa-solid fa-location-dot"></i>
+                            <div class="flowItemText">
+                                <strong>Track Status</strong>
+                                <span>Real-time visibility from complaint to resolution.</span>
+                            </div>
+                        </div>
+
+                        <div class="flowItem" data-target="analytics">
+                            <i class="fa-solid fa-chart-line"></i>
+                            <div class="flowItemText">
+                                <strong>Analytics</strong>
+                                <span>Smart insights for admin and officer dashboards.</span>
+                            </div>
+                        </div>
+
+                        <div class="flowItem" data-target="language">
+                            <i class="fa-solid fa-language"></i>
+                            <div class="flowItemText">
+                                <strong>Multi Language</strong>
+                                <span>Supports English and Nepali for accessibility.</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="platformSection" id="platform">
+            <div class="wrap">
+                <div class="howGrid">
+                    <div class="howText">
+                        <h2>How does this <span>platform</span> work?</h2>
+                        <p>
+                            After opening Smart Nagar, citizens can access emergency reporting,
+                            complaint submission, status tracking, notices, and garbage schedules.
+                            Officers and admins then manage, update, assign, and monitor the requests through connected dashboards.
+                        </p>
+
+                        <div class="howPoints">
+                            <div class="howPoint">
+                                <div class="howCheck">
+                                    <i class="fa-solid fa-check"></i>
+                                </div>
+                                <div>
+                                    <h4>Provide issue details clearly</h4>
+                                    <p>
+                                        Users enter the complaint title, description, category, and optional photo so the municipality receives useful information.
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div class="howPoint">
+                                <div class="howCheck">
+                                    <i class="fa-solid fa-check"></i>
+                                </div>
+                                <div>
+                                    <h4>Track the complaint progress</h4>
+                                    <p>
+                                        Once submitted, the system updates the issue through pending, in progress, and resolved stages with smart notifications.
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div class="howPoint">
+                                <div class="howCheck">
+                                    <i class="fa-solid fa-check"></i>
+                                </div>
+                                <div>
+                                    <h4>Connected dashboards for officers and admin</h4>
+                                    <p>
+                                        Officers handle assignments and updates, while the admin monitors notices, users, analytics, and service performance.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="howVisual">
+                        <div class="howBgCircle"></div>
+
+                        <div class="webCardLarge">
+                            <div class="webTopBar">
+                                <div class="webDot"></div>
+                                <div class="webDot"></div>
+                                <div class="webDot"></div>
+                            </div>
+
+                            <div class="webHeader">
+                                <h4>Citizen Dashboard</h4>
+                                <p>Quickly access public services, send reports, and stay updated with transparent municipal communication.</p>
+                            </div>
+
+                            <div class="webStats">
+                                <div class="webStat">
+                                    <strong>@Model.ActiveCitizens+</strong>
+                                    <span>Active Citizens</span>
+                                </div>
+                                <div class="webStat">
+                                    <strong>@Model.ResolvedComplaints+</strong>
+                                    <span>Resolved Cases</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="webCardSmall">
+                            <div class="webTopBar">
+                                <div class="webDot"></div>
+                                <div class="webDot"></div>
+                                <div class="webDot"></div>
+                            </div>
+
+                            <div class="webList">
+                                <div class="webRow">
+                                    <div class="webRowLeft">
+                                        <div class="webRowIcon"><i class="fa-solid fa-bell"></i></div>
+                                        <div class="webRowText">
+                                            <strong>Smart Notifications</strong>
+                                            <span>Citizen and officer updates</span>
+                                        </div>
+                                    </div>
+                                    <div class="webTag">Live</div>
+                                </div>
+
+                                <div class="webRow">
+                                    <div class="webRowLeft">
+                                        <div class="webRowIcon"><i class="fa-solid fa-clipboard-check"></i></div>
+                                        <div class="webRowText">
+                                            <strong>Status Tracking</strong>
+                                            <span>Clear workflow updates</span>
+                                        </div>
+                                    </div>
+                                    <div class="webTag">Active</div>
+                                </div>
+
+                                <div class="webRow">
+                                    <div class="webRowLeft">
+                                        <div class="webRowIcon"><i class="fa-solid fa-chart-column"></i></div>
+                                        <div class="webRowText">
+                                            <strong>Analytics</strong>
+                                            <span>Performance and workload insights</span>
+                                        </div>
+                                    </div>
+                                    <div class="webTag">24/7</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="reviewSection" id="reviews">
+            <div class="wrap">
+                <div class="pill">Testimonials</div>
+                <h2 class="sectionTitle">Loved by citizens</h2>
+                <p class="sectionSub">See what community members are saying about Smart Nagar</p>
+
+                <div class="reviewGrid">
+                    @if (Model.Reviews != null && Model.Reviews.Count > 0)
+                    {
+                        foreach (var r in Model.Reviews)
+                        {
+                            var initials = string.IsNullOrWhiteSpace(r.CitizenName)
+                            ? "C"
+                            : string.Concat(r.CitizenName
+                            .Split(' ', StringSplitOptions.RemoveEmptyEntries)
+                            .Take(2)
+                            .Select(x => x[0]))
+                            .ToUpper();
+
+                            <div class="reviewCard">
+                                <div class="stars">
+                                    @for (int i = 1; i <= 5; i++)
+                                    {
+                                        if (i <= r.Rating)
+                                        {
+                                            <span>★</span>
+                                        }
+                                        else
+                                        {
+                                            <span style="opacity:.25;">★</span>
+                                        }
+                                    }
+                                </div>
+
+                                <div class="reviewText">"@r.Comment"</div>
+
+                                <div class="reviewUser">
+                                    <div class="avatar">@initials</div>
+                                    <div>
+                                        <strong>@r.CitizenName</strong>
+                                        <span>Citizen Review</span>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <div class="reviewCard">
+                            <div class="stars">★★★★★</div>
+                            <div class="reviewText">"Smart Nagar made issue reporting much easier and I could actually follow the updates."</div>
+                            <div class="reviewUser">
+                                <div class="avatar">SN</div>
+                                <div>
+                                    <strong>Smart Nagar User</strong>
+                                    <span>Citizen</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="reviewCard">
+                            <div class="stars">★★★★★</div>
+                            <div class="reviewText">"The platform feels modern and transparent. I like seeing progress instead of wondering what happened."</div>
+                            <div class="reviewUser">
+                                <div class="avatar">CM</div>
+                                <div>
+                                    <strong>Community Member</strong>
+                                    <span>Citizen</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="reviewCard">
+                            <div class="stars">★★★★★</div>
+                            <div class="reviewText">"Emergency, notices, complaint tracking, and updates in one place makes this much more useful."</div>
+                            <div class="reviewUser">
+                                <div class="avatar">HC</div>
+                                <div>
+                                    <strong>Happy Citizen</strong>
+                                    <span>Citizen</span>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </section>
+
+        <section class="cta">
+            <div class="ctaWrap">
+                <h2>Ready to improve your city?</h2>
+                <p>Join citizens and municipal teams using Smart Nagar for faster, clearer, and more transparent services.</p>
+
+                @if (!isLoggedIn)
+                {
+                    <a href="/Account/Register" class="ctaBtn"><i class="fa-regular fa-star"></i> Get Started Free Today</a>
+                }
+                else
+                {
+                    <a href="/Citizen/Dashboard" class="ctaBtn"><i class="fa-solid fa-gauge-high"></i> Go to Citizen Portal</a>
+                }
+            </div>
+        </section>
+
+        <footer class="footer">
+            <div class="footerWrap">
+                <div>
+                    <div class="footerBrand">SMART NAGAR</div>
+                    <p>Empowering citizens and municipalities through technology, transparency, and better communication.</p>
+                    <div class="socials">
+                        <span><i class="fa-brands fa-facebook-f"></i></span>
+                        <span><i class="fa-brands fa-instagram"></i></span>
+                        <span><i class="fa-brands fa-twitter"></i></span>
+                        <span><i class="fa-brands fa-linkedin-in"></i></span>
+                    </div>
+                </div>
+
+                <div>
+                    <h4>Quick Links</h4>
+                    <a href="#home">Home</a>
+                    <a href="#features">Features</a>
+                    <a href="#platform">Platform</a>
+                    <a href="#reviews">Reviews</a>
+                </div>
+
+                <div>
+                    <h4>Services</h4>
+                    <a href="/Citizen/SubmitComplaint">Submit Complaint</a>
+                    <a href="/Citizen/TrackStatus">Track Status</a>
+                    <a href="/Citizen/Emergency">Emergency</a>
+                    <a href="/Citizen/AddReview">Add Review</a>
+                </div>
+
+                <div>
+                    <h4>Support</h4>
+                    <a href="/Home/Privacy">Privacy Policy</a>
+                    <a href="#">Terms of Service</a>
+                    <a href="#">FAQ</a>
+                    <a href="#">Help Center</a>
+                </div>
+            </div>
+
+            <div class="copy">
+                © 2026 Smart Nagar. All rights reserved. Made with 💜 for better communities.
+            </div>
+        </footer>
     </div>
-</div>
 
-<!-- Hero Section -->
-<div class="hero">
-    <h1>Welcome to SmartNagar</h1>
-    <p>Connect with your city and report civic issues easily</p>
-</div>
+    <!-- CHATBOT BUTTON -->
+    <button type="button" class="chatFab" id="chatFab" title="Open Smart Nagar Assistant">
+        <i class="fa-solid fa-comment-dots"></i>
+    </button>
 
-<!-- Cards Section -->
-<div class="cards-container">
-    <a class="card" asp-action="ReportIssue" asp-controller="Issues">
-        <i class="fas fa-map-marker-alt"></i>
-        <h3>Report Issue</h3>
-    </a>
-    <a class="card" asp-action="TrackStatus" asp-controller="Issues">
-        <i class="fas fa-tasks"></i>
-        <h3>Track Status</h3>
-    </a>
-    <a class="card" asp-action="About" asp-controller="Home">
-        <i class="fas fa-info-circle"></i>
-        <h3>About</h3>
-    </a>
-    <a class="card" asp-action="Contact" asp-controller="Home">
-        <i class="fas fa-envelope"></i>
-        <h3>Contact</h3>
-    </a>
-</div>
+    <!-- CHATBOT WINDOW -->
+    <div class="chatWindow" id="chatWindow">
+        <div class="chatHeader">
+            <div class="chatHeaderLeft">
+                <div class="chatBotIcon">
+                    <i class="fa-solid fa-robot"></i>
+                </div>
+                <div class="chatHeaderTitle">
+                    <strong>Smart Nagar Assistant</strong>
+                    <span>Ask about complaints, reminders, notices, and account help</span>
+                </div>
+            </div>
 
-<!-- Footer -->
-<footer>
-    &copy; 2025 SmartNagar. All rights reserved.
-</footer>
+            <button type="button" class="chatClose" id="chatClose">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </div>
 
-@section Scripts {
-    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
-}
+        <div class="chatBody" id="chatBody">
+            <div class="chatMsg bot">
+                Hello 👋 I am Smart Nagar Assistant. I can help with complaint submission, tracking status, garbage reminders, notices, emergency help, and account support.
+            </div>
+            <div class="chatMsg bot">
+                Try asking: “How do I submit a complaint?” or “How do garbage reminders work?”
+            </div>
+            <div class="chatMsg bot chatTyping" id="chatTyping">Typing...</div>
+        </div>
+
+        <div class="chatQuickRow">
+            <button type="button" class="chatQuickBtn" data-message="How do I submit a complaint?">Submit Complaint</button>
+            <button type="button" class="chatQuickBtn" data-message="How do I track my complaint status?">Track Status</button>
+            <button type="button" class="chatQuickBtn" data-message="How do garbage reminders work?">Garbage Reminder</button>
+            <button type="button" class="chatQuickBtn" data-message="How do I reset my password?">Reset Password</button>
+        </div>
+
+        <form class="chatForm" id="chatForm">
+            <input type="text" id="chatInput" class="chatInput" placeholder="Ask Smart Nagar Assistant..." autocomplete="off" />
+            <button type="submit" class="chatSend">
+                <i class="fa-solid fa-paper-plane"></i>
+            </button>
+        </form>
+    </div>
+
+    <script>
+        const flowItems = document.querySelectorAll(".flowItem");
+        const screenContents = document.querySelectorAll(".screenContent");
+
+        flowItems.forEach(item => {
+            item.addEventListener("click", () => {
+                flowItems.forEach(i => i.classList.remove("active"));
+                item.classList.add("active");
+
+                const target = item.getAttribute("data-target");
+
+                screenContents.forEach(screen => {
+                    screen.classList.add("hidden");
+                });
+
+                const activeScreen = document.getElementById(target);
+                if (activeScreen) {
+                    activeScreen.classList.remove("hidden");
+                }
+            });
+        });
+
+        const autoOrder = ["alert", "photo", "garbage", "tracking", "analytics", "language"];
+        let autoIndex = 0;
+
+        setInterval(() => {
+            autoIndex = (autoIndex + 1) % autoOrder.length;
+            const nextTarget = autoOrder[autoIndex];
+            const nextItem = document.querySelector(`.flowItem[data-target="${nextTarget}"]`);
+
+            if (nextItem) {
+                nextItem.click();
+            }
+        }, 4500);
+
+        // CHATBOT
+        const chatFab = document.getElementById("chatFab");
+        const chatWindow = document.getElementById("chatWindow");
+        const chatClose = document.getElementById("chatClose");
+        const chatBody = document.getElementById("chatBody");
+        const chatForm = document.getElementById("chatForm");
+        const chatInput = document.getElementById("chatInput");
+        const chatTyping = document.getElementById("chatTyping");
+        const quickButtons = document.querySelectorAll(".chatQuickBtn");
+        const antiForgeryToken = document.querySelector('input[name="__RequestVerificationToken"]')?.value ?? "";
+
+        chatFab.addEventListener("click", () => {
+            chatWindow.classList.toggle("open");
+        });
+
+        chatClose.addEventListener("click", () => {
+            chatWindow.classList.remove("open");
+        });
+
+        quickButtons.forEach(btn => {
+            btn.addEventListener("click", () => {
+                chatInput.value = btn.getAttribute("data-message") || "";
+                chatForm.requestSubmit();
+            });
+        });
+
+        function appendMessage(text, type) {
+            const msg = document.createElement("div");
+            msg.className = `chatMsg ${type}`;
+            msg.textContent = text;
+            chatBody.insertBefore(msg, chatTyping);
+            chatBody.scrollTop = chatBody.scrollHeight;
+        }
+
+        async function sendChatMessage(message) {
+            appendMessage(message, "user");
+            chatTyping.classList.add("show");
+            chatBody.scrollTop = chatBody.scrollHeight;
+
+            try {
+                const response = await fetch("/Chatbot/Ask", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "RequestVerificationToken": antiForgeryToken
+                    },
+                    body: JSON.stringify({ message: message })
+                });
+
+                if (!response.ok) {
+                    throw new Error("Request failed.");
+                }
+
+                const data = await response.json();
+                const reply = data.reply || "Sorry, I could not generate a response right now.";
+
+                chatTyping.classList.remove("show");
+                appendMessage(reply, "bot");
+            } catch (error) {
+                chatTyping.classList.remove("show");
+                appendMessage("Sorry, the chatbot is unavailable right now. Please try again.", "bot");
+            }
+        }
+
+        chatForm.addEventListener("submit", async function (e) {
+            e.preventDefault();
+
+            const message = chatInput.value.trim();
+            if (!message) return;
+
+            chatInput.value = "";
+            await sendChatMessage(message);
+        });
+    </script>
+</body>
+</html> 
