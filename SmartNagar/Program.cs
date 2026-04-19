@@ -88,8 +88,8 @@ var app = builder.Build();
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
-    await DbSeeder.SeedAsync(services);
-}
+    await DbSeeder.SeedAsync(services);            // await DbSeeder.SeedAsync(...)
+} 
 
 if (!app.Environment.IsDevelopment())
 {
