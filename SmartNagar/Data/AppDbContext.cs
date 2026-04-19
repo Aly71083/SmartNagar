@@ -10,7 +10,7 @@ namespace SmartNagar.Data
             : base(options)
         {
         }
-        public DbSet<Issue> Issues { get; set; }
+       
         // Future Smart Nagar tables will go here
         // Example:
         // public DbSet<Complaint> Complaints { get; set; }
