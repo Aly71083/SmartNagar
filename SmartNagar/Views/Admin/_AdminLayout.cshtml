@@ -14,6 +14,7 @@
     var isNepali = culture.StartsWith("ne", StringComparison.OrdinalIgnoreCase);
 
     var returnUrl = Context.Request.Path + Context.Request.QueryString;
+    var adminInitial = !string.IsNullOrWhiteSpace(adminName) ? adminName.Substring(0, 1).ToUpper() : "A";
 }
 
 <!DOCTYPE html>
@@ -36,8 +37,8 @@
             --border: #e6dcf7;
             --text: #33214d;
             --muted: #7c6f98;
-            --sidebar1: #b79cff;
-            --sidebar2: #8b5cf6;
+            --sidebar1: #8f7aea;
+            --sidebar2: #6f5bd3;
             --white: #fffefe;
             --shadow: 0 10px 24px rgba(95, 85, 160, .12);
             --danger: #ef4444;
@@ -129,32 +130,85 @@
                     background: rgba(255,255,255,.28);
                 }
 
-        .sideFooter {
+        .sidebarBottom {
             margin-top: auto;
-            background: rgba(255,255,255,.16);
-            border: 1px solid rgba(255,255,255,.18);
-            border-radius: 16px;
-            padding: 12px;
+            padding-top: 14px;
+            border-top: 1px solid rgba(255,255,255,.14);
         }
 
-        .userCard {
+        .adminProfileCard {
             display: flex;
             align-items: center;
             gap: 10px;
-            margin-bottom: 10px;
+            background: rgba(255,255,255,.16);
+            border: 1px solid rgba(255,255,255,.16);
+            border-radius: 16px;
+            padding: 12px 12px;
+            margin-bottom: 12px;
+            backdrop-filter: blur(2px);
         }
 
-        .avatar {
-            width: 42px;
-            height: 42px;
-            border-radius: 12px;
-            background: rgba(255,255,255,.24);
+        .adminAvatar {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            background: #f4f0ff;
+            color: #6d28d9;
             display: flex;
             align-items: center;
             justify-content: center;
+            font-size: 13px;
             font-weight: 900;
-            color: #fff;
+            flex-shrink: 0;
         }
+
+        .adminMeta {
+            min-width: 0;
+            line-height: 1.2;
+        }
+
+            .adminMeta .name {
+                font-weight: 900;
+                font-size: 13px;
+                color: #fff;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+
+            .adminMeta .role {
+                font-size: 11px;
+                color: rgba(255,255,255,.88);
+                margin-top: 3px;
+                font-weight: 700;
+            }
+
+        .logoutForm {
+            margin: 0;
+        }
+
+        .logoutBtn {
+            width: 100%;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 11px 14px;
+            border-radius: 14px;
+            background: rgba(255,255,255,.18);
+            color: #fff;
+            font-weight: 900;
+            cursor: pointer;
+            transition: .2s ease;
+            border: 1px solid rgba(255,255,255,.14);
+            box-shadow: inset 0 1px 0 rgba(255,255,255,.08);
+        }
+
+            .logoutBtn:hover {
+                background: rgba(255,255,255,.26);
+                transform: translateY(-1px);
+            }
 
         .main {
             margin-left: 260px;
@@ -389,20 +443,6 @@
             font-size: 13px;
         }
 
-        .logoutBtn {
-            border: none;
-            padding: 10px 12px;
-            border-radius: 12px;
-            background: #ede4ff;
-            color: var(--text);
-            font-weight: 900;
-            cursor: pointer;
-        }
-
-            .logoutBtn:hover {
-                background: #e3d6ff;
-            }
-
         .pageBody {
             margin-top: 16px;
         }
@@ -464,22 +504,25 @@
                 </a>
 
                 <a class="@isActive("garbage")" href="/Admin/GarbageSchedules">
-                    <i class="fa-solid fa-trash-can"></i> Garbage Schedules
+                    <i class="fa-solid fa-trash-can"></i> @Localizer["Garbage Schedules"]
                 </a>
             </nav>
 
-            <div class="sideFooter">
-                <div class="userCard">
-                    <div class="avatar">A</div>
-                    <div>
-                        <div style="font-weight:900;">@adminName</div>
-                        <div style="font-size:12px;opacity:.95;">@Localizer["System Admin"]</div>
+            <div class="sidebarBottom">
+                <div class="adminProfileCard">
+                    <div class="adminAvatar">@adminInitial</div>
+                    <div class="adminMeta">
+                        <div class="name">@adminName</div>
+                        <div class="role">@Localizer["System Admin"]</div>
                     </div>
                 </div>
 
-                <form method="post" action="/Account/Logout">
+                <form method="post" action="/Account/Logout" class="logoutForm">
                     @Html.AntiForgeryToken()
-                    <button class="logoutBtn" type="submit">@Localizer["Logout"]</button>
+                    <button class="logoutBtn" type="submit">
+                        <i class="fa-solid fa-right-from-bracket"></i>
+                        <span>@Localizer["Logout"]</span>
+                    </button>
                 </form>
             </div>
         </aside>

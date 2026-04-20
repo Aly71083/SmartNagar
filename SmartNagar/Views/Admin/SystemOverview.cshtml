@@ -3,7 +3,7 @@
 @{
     Layout = "~/Views/Admin/_AdminLayout.cshtml";
     ViewBag.Active = "overview";
-    ViewBag.PageTitle = "System Overview";
+    ViewBag.PageTitle = "Admin Portal";
 
     var trendLabelsJson = JsonSerializer.Serialize(Model.TrendLabels ?? new List<string>());
     var trendValuesJson = JsonSerializer.Serialize(Model.TrendValues ?? new List<int>());
