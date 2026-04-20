@@ -4,7 +4,7 @@
 @{
     Layout = "~/Views/Admin/_AdminLayout.cshtml";
     ViewBag.Active = "dashboard";
-    ViewBag.PageTitle = "Admin Dashboard";
+    ViewBag.PageTitle = "Admin Portal";
 
     var notifCount = Model?.RecentActivities?.Count(a => a.IsRead == false) ?? 0;
     var adminName = User?.Identity?.Name ?? "Admin";
