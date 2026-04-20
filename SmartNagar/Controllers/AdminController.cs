@@ -352,6 +352,7 @@ namespace SmartNagar.Controllers
                     Message = $"Your complaint #{complaint.Id} is now '{complaint.Status}'.",
                     Type = "ComplaintUpdate",
                     ComplaintId = complaint.Id,
+                    TargetRole = "Citizen",
                     IsRead = false,
                     CreatedAt = DateTime.UtcNow
                 });
@@ -544,6 +545,14 @@ namespace SmartNagar.Controllers
                     CreatedAt = DateTime.UtcNow
                 });
 
+                await _db.SaveChangesAsync();
+
+                await NotifyCitizensGarbage(
+                    "Garbage Schedule Added",
+                    $"New garbage schedule added for Ward {schedule.WardNumber}. Collection Days: {schedule.CollectionDays}, Time: {schedule.CollectionTime}."
+                    + (string.IsNullOrWhiteSpace(schedule.Notes) ? "" : $" Notes: {schedule.Notes}")
+                );
+
                 TempData["Msg"] = "✅ Garbage schedule added successfully!";
             }
             else
@@ -566,10 +575,17 @@ namespace SmartNagar.Controllers
                     CreatedAt = DateTime.UtcNow
                 });
 
+                await _db.SaveChangesAsync();
+
+                await NotifyCitizensGarbage(
+                    "Garbage Schedule Updated",
+                    $"Garbage schedule updated for Ward {schedule.WardNumber}. Collection Days: {schedule.CollectionDays}, Time: {schedule.CollectionTime}."
+                    + (string.IsNullOrWhiteSpace(schedule.Notes) ? "" : $" Notes: {schedule.Notes}")
+                );
+
                 TempData["Msg"] = "✅ Garbage schedule updated successfully!";
             }
 
-            await _db.SaveChangesAsync();
             return RedirectToAction(nameof(GarbageSchedules));
         }
 
@@ -580,6 +596,10 @@ namespace SmartNagar.Controllers
             var item = await _db.GarbageSchedules.FirstOrDefaultAsync(x => x.Id == id);
             if (item == null)
                 return RedirectToAction(nameof(GarbageSchedules));
+
+            var wardNumber = item.WardNumber;
+            var collectionDays = item.CollectionDays;
+            var collectionTime = item.CollectionTime;
 
             _db.GarbageSchedules.Remove(item);
 
@@ -594,6 +614,11 @@ namespace SmartNagar.Controllers
 
             await _db.SaveChangesAsync();
 
+            await NotifyCitizensGarbage(
+                "Garbage Schedule Removed",
+                $"Garbage schedule removed for Ward {wardNumber}. Previous schedule: {collectionDays}, {collectionTime}."
+            );
+
             TempData["Msg"] = "✅ Garbage schedule deleted successfully!";
             return RedirectToAction(nameof(GarbageSchedules));
         }
@@ -602,6 +627,37 @@ namespace SmartNagar.Controllers
         public IActionResult CancelGarbageEdit()
         {
             return RedirectToAction(nameof(GarbageSchedules));
+        }
+
+        // HELPER: CITIZEN GARBAGE NOTIFICATIONS
+        private async Task NotifyCitizensGarbage(string title, string message)
+        {
+            var citizens = await _db.Users
+                .Where(u => u.IsActive && !u.IsDeleted && u.Role == "Citizen")
+                .ToListAsync();
+
+            if (citizens.Count == 0)
+                return;
+
+            var list = new List<CitizenNotification>();
+
+            foreach (var citizen in citizens)
+            {
+                list.Add(new CitizenNotification
+                {
+                    CitizenId = citizen.Id,
+                    Title = title,
+                    Message = message,
+                    Type = "Garbage",
+                    ComplaintId = null,
+                    TargetRole = "Citizen",
+                    IsRead = false,
+                    CreatedAt = DateTime.UtcNow
+                });
+            }
+
+            _db.CitizenNotifications.AddRange(list);
+            await _db.SaveChangesAsync();
         }
 
         // PDF EXPORT
