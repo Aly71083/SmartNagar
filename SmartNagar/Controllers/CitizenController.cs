@@ -583,6 +583,75 @@ namespace SmartNagar.Controllers
             return View(notices);
         }
 
+        // FULL NOTIFICATIONS PAGE
+        [HttpGet]
+        public async Task<IActionResult> Notifications()
+        {
+            var user = await CurrentUser();
+            ViewBag.FullName = user.FullName ?? "Citizen";
+            ViewBag.Active = "notifications";
+
+            var list = await _db.CitizenNotifications
+                .Where(n => n.CitizenId == user.Id && n.TargetRole == "Citizen")
+                .OrderByDescending(n => n.CreatedAt)
+                .ToListAsync();
+
+            return View(list);
+        }
+
+        // BELL DROPDOWN NOTIFICATIONS
+        [HttpGet]
+        public async Task<IActionResult> RecentNotifications()
+        {
+            var user = await CurrentUser();
+
+            var list = await _db.CitizenNotifications
+                .Where(n => n.CitizenId == user.Id && n.TargetRole == "Citizen")
+                .OrderByDescending(n => n.CreatedAt)
+                .Take(20)
+                .Select(n => new
+                {
+                    id = n.Id,
+                    title = n.Title,
+                    message = n.Message,
+                    type = n.Type,
+                    isRead = n.IsRead,
+                    complaintId = n.ComplaintId,
+                    createdAtText = n.CreatedAt.ToLocalTime().ToString("dd MMM yyyy, hh:mm tt")
+                })
+                .ToListAsync();
+
+            return Json(list);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> UnreadNotificationCount()
+        {
+            var user = await CurrentUser();
+
+            var count = await _db.CitizenNotifications
+                .CountAsync(n => n.CitizenId == user.Id && n.TargetRole == "Citizen" && !n.IsRead);
+
+            return Json(new { count });
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> MarkAllNotificationsRead()
+        {
+            var user = await CurrentUser();
+
+            var list = await _db.CitizenNotifications
+                .Where(n => n.CitizenId == user.Id && n.TargetRole == "Citizen" && !n.IsRead)
+                .ToListAsync();
+
+            foreach (var n in list)
+                n.IsRead = true;
+
+            await _db.SaveChangesAsync();
+
+            return Ok(new { ok = true });
+        }
+
         // MY PROFILE (GET)
         [HttpGet]
         public async Task<IActionResult> MyProfile()
