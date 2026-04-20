@@ -350,6 +350,10 @@
             font-size: 12px;
             font-weight: 800;
             cursor: pointer;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
         }
 
             .miniBtn:hover {
@@ -465,7 +469,7 @@
     <div class="layout">
         <aside class="sidebar">
             <div class="brand">
-                <div class="logo"><i class="fa-solid fa-landmark"></i></div>
+                <div class="brandIcon"><i class="fa-solid fa-landmark"></i></div>
                 <div>
                     <h2>Smart Nagar</h2>
                     <small>@Localizer["Citizen Portal"]</small>
@@ -560,6 +564,7 @@
                                 <strong>Notifications</strong>
                                 <div class="notifActions">
                                     <button type="button" class="miniBtn" onclick="markAllCitizenRead()">Mark all read</button>
+                                    <a href="/Citizen/Notifications" class="miniBtn">View all</a>
                                 </div>
                             </div>
 
