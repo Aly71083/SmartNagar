@@ -9,66 +9,90 @@
 }
 
 <style>
-    .profileShell {
-        background: linear-gradient(135deg,#6a7cff,#6e4bb6);
-        border-radius: 22px;
-        padding: 22px;
-        box-shadow: 0 22px 60px rgba(15,23,42,.18);
+    .mp-shell {
+        padding: 0;
+        background: transparent;
+        border: none;
+        box-shadow: none;
     }
 
-    .pTop {
+    .mp-top {
+        background: #fff;
+        border: 1px solid #eadffd;
+        border-radius: 16px;
+        padding: 22px;
         display: flex;
         justify-content: space-between;
         align-items: flex-start;
         gap: 16px;
-        color: #fff;
-        padding: 6px 6px 18px;
+        margin-bottom: 16px;
+        box-shadow: 0 10px 22px rgba(124,77,255,.08);
     }
 
-        .pTop h1 {
+        .mp-top h1 {
             margin: 0;
-            font-size: 40px;
+            font-size: 22px;
             font-weight: 1000;
+            color: #312e81;
         }
 
-        .pTop p {
-            margin: 8px 0 0;
-            opacity: .92;
+        .mp-top p {
+            margin: 6px 0 0;
+            color: #64748b;
+            font-size: 13px;
             font-weight: 750;
         }
 
-    .pTopBtns {
+    .mp-top-btns {
         display: flex;
         gap: 10px;
         flex-wrap: wrap;
-        justify-content: flex-end;
     }
 
-    .pBtn {
-        border: none;
-        cursor: pointer;
-        font-weight: 1000;
+    .mp-btn,
+    .mp-edit-btn,
+    .mp-ghost-btn {
         border-radius: 12px;
-        padding: 10px 14px;
+        font-weight: 900;
+        cursor: pointer;
+        transition: .15s ease;
+        text-decoration: none;
         display: inline-flex;
         align-items: center;
-        gap: 10px;
-        text-decoration: none;
+        justify-content: center;
+        gap: 8px;
     }
 
-    .pBtnWhite {
-        background: rgba(255,255,255,.92);
-        color: #0f172a;
-        border: 1px solid rgba(255,255,255,.55);
+    .mp-btn {
+        padding: 10px 14px;
+        border: 1px solid #eadffd;
+        background: #fff;
+        color: #7c4dff;
+        box-shadow: 0 8px 18px rgba(124,77,255,.06);
     }
 
-    .pBtnRed {
-        background: linear-gradient(135deg,#ff5a62,#ef4444);
+    .mp-edit-btn {
+        border: none;
+        padding: 10px 14px;
+        background: linear-gradient(90deg,#7c4dff,#a78bfa);
         color: #fff;
-        box-shadow: 0 18px 40px rgba(239,68,68,.22);
+        box-shadow: 0 12px 24px rgba(124,77,255,.16);
     }
 
-    .msg {
+    .mp-ghost-btn {
+        border: 1px solid #eadffd;
+        background: #fff;
+        color: #7c4dff;
+        padding: 12px 16px;
+    }
+
+        .mp-btn:hover,
+        .mp-edit-btn:hover,
+        .mp-ghost-btn:hover {
+            transform: translateY(-1px);
+        }
+
+    .mp-msg {
         margin: 0 0 14px;
         padding: 12px 14px;
         border-radius: 14px;
@@ -78,169 +102,140 @@
         font-weight: 900;
     }
 
-    .grid {
+    .mp-grid {
         display: grid;
-        grid-template-columns: 340px 1fr;
-        gap: 18px;
+        grid-template-columns: 320px 1fr;
+        gap: 16px;
         align-items: start;
     }
 
-    .leftCard {
+    .mp-left-card,
+    .mp-right-card {
         background: #fff;
-        border: 1px solid #eef2f7;
-        border-radius: 20px;
-        overflow: hidden;
-        box-shadow: 0 16px 40px rgba(15,23,42,.10);
+        border-radius: 16px;
+        border: 1px solid #eadffd;
+        box-shadow: 0 10px 22px rgba(124,77,255,.08);
     }
 
-    .leftHero {
-        background: linear-gradient(135deg, rgba(106,124,255,.95), rgba(110,75,182,.95));
+    .mp-left-card {
+        overflow: hidden;
+    }
+
+    .mp-left-hero {
+        padding: 22px 18px;
+        background: linear-gradient(90deg,#7c4dff,#a78bfa);
         color: #fff;
-        padding: 18px 18px 22px;
         text-align: center;
         position: relative;
-        min-height: 260px;
-        display: grid;
-        place-items: center;
     }
 
-    .pill {
+    .mp-pill {
         position: absolute;
         top: 14px;
         left: 14px;
-        background: rgba(255,255,255,.22);
+        background: rgba(255,255,255,.18);
         border: 1px solid rgba(255,255,255,.22);
-        padding: 8px 12px;
+        color: #fff;
+        padding: 7px 12px;
         border-radius: 999px;
-        font-weight: 1000;
         font-size: 12px;
+        font-weight: 900;
         display: inline-flex;
         align-items: center;
         gap: 8px;
     }
 
-    .avatar {
-        width: 62px;
-        height: 62px;
-        border-radius: 999px;
-        background: rgba(255,255,255,.22);
-        border: 2px solid rgba(255,255,255,.55);
+    .mp-avatar {
+        width: 72px;
+        height: 72px;
+        border-radius: 50%;
+        margin: 10px auto 12px;
         display: grid;
         place-items: center;
+        font-size: 28px;
         font-weight: 1000;
-        font-size: 22px;
-        box-shadow: 0 12px 30px rgba(0,0,0,.12);
+        color: #7c4dff;
+        background: #fff;
+        border: 2px solid rgba(255,255,255,.7);
+        box-shadow: 0 12px 24px rgba(0,0,0,.10);
     }
 
-    .leftName {
-        margin-top: 10px;
-        font-size: 26px;
+    .mp-name {
+        margin-top: 4px;
+        font-size: 24px;
         font-weight: 1000;
-        letter-spacing: .2px;
+        line-height: 1.2;
     }
 
-    .leftSub {
+    .mp-sub {
         margin-top: 6px;
-        opacity: .92;
-        font-weight: 850;
         font-size: 12px;
+        font-weight: 750;
+        opacity: .96;
+        word-break: break-word;
     }
 
-    .verified {
+    .mp-verified {
         margin-top: 12px;
         display: inline-flex;
         align-items: center;
         gap: 8px;
         padding: 8px 12px;
         border-radius: 999px;
-        background: rgba(255,255,255,.20);
-        border: 1px solid rgba(255,255,255,.20);
-        font-weight: 1000;
+        background: rgba(255,255,255,.18);
+        border: 1px solid rgba(255,255,255,.22);
         font-size: 12px;
+        font-weight: 900;
     }
 
-    .statsRow {
-        display: grid;
-        grid-template-columns: repeat(3,1fr);
-        background: #fff;
-        border-top: 1px solid #eef2f7;
-    }
-
-    .stat {
-        padding: 16px 10px;
-        text-align: center;
-        border-right: 1px solid #eef2f7;
-    }
-
-        .stat:last-child {
-            border-right: none;
-        }
-
-        .stat b {
-            display: block;
-            font-size: 20px;
-            font-weight: 1000;
-            color: #4f46e5;
-        }
-
-        .stat span {
-            display: block;
-            margin-top: 4px;
-            font-size: 11px;
-            font-weight: 900;
-            color: #64748b;
-            letter-spacing: .6px;
-            text-transform: uppercase;
-        }
-
-    .leftMenu {
+    .mp-left-menu {
         padding: 12px;
         display: grid;
         gap: 8px;
     }
 
-    .tab {
+    .mp-tab {
         width: 100%;
-        border: 1px solid #eef2f7;
+        border: 1px solid #eadffd;
         background: #fff;
         border-radius: 14px;
-        padding: 12px 12px;
+        padding: 12px;
         cursor: pointer;
         font-weight: 900;
         display: flex;
         align-items: center;
         gap: 10px;
-        color: #0f172a;
+        color: #111827;
+        transition: .15s ease;
     }
 
-        .tab.active {
-            background: #f4f7ff;
-            border-color: #dbe3ff;
-            box-shadow: inset 4px 0 0 #6a7cff;
-            color: #1f2a66;
+        .mp-tab:hover {
+            background: #faf8ff;
         }
 
-    .rightCard {
-        background: #fff;
-        border: 1px solid #eef2f7;
-        border-radius: 20px;
+        .mp-tab.active {
+            background: #f7f3ff;
+            border-color: #d9c8ff;
+            box-shadow: inset 4px 0 0 #7c4dff;
+            color: #312e81;
+        }
+
+    .mp-right-card {
         padding: 18px;
-        box-shadow: 0 16px 40px rgba(15,23,42,.10);
-        min-height: 520px;
     }
 
-    .section {
-        padding: 8px 8px 16px;
-        border-bottom: 1px solid #eef2f7;
+    .mp-section {
+        padding: 6px 4px 16px;
+        border-bottom: 1px solid #f1ebff;
         margin-bottom: 16px;
     }
 
-        .section:last-child {
+        .mp-section:last-child {
             border-bottom: none;
             margin-bottom: 0;
         }
 
-    .secHead {
+    .mp-sec-head {
         display: flex;
         align-items: center;
         justify-content: space-between;
@@ -248,158 +243,129 @@
         margin-bottom: 14px;
     }
 
-        .secHead h3 {
+        .mp-sec-head h3 {
             margin: 0;
             font-size: 20px;
             font-weight: 1000;
+            color: #312e81;
             display: flex;
             align-items: center;
             gap: 10px;
-            color: #0f172a;
         }
 
-    .editBtn {
-        border: none;
-        cursor: pointer;
-        font-weight: 1000;
-        border-radius: 12px;
-        padding: 10px 14px;
-        background: linear-gradient(135deg,#6a7cff,#6e4bb6);
-        color: #fff;
-        box-shadow: 0 16px 35px rgba(106,124,255,.18);
-    }
-
-    .fields {
+    .mp-fields {
         display: grid;
         grid-template-columns: 1fr 1fr;
         gap: 14px;
     }
 
-    .fieldBox {
-        background: #f8fafc;
-        border: 1px solid #eef2f7;
+    .mp-field-box {
+        background: #fff;
+        border: 1px solid #eadffd;
         border-radius: 16px;
         padding: 14px;
         position: relative;
     }
 
-        .fieldBox:before {
+        .mp-field-box:before {
             content: "";
             position: absolute;
             left: 0;
-            top: 12px;
-            bottom: 12px;
+            top: 10px;
+            bottom: 10px;
             width: 4px;
             border-radius: 999px;
-            background: #6a7cff;
-            opacity: .9;
+            background: #7c4dff;
         }
 
-        .fieldBox small {
+        .mp-field-box small {
             display: block;
             font-size: 11px;
             letter-spacing: .7px;
             text-transform: uppercase;
-            font-weight: 1000;
+            font-weight: 800;
             color: #64748b;
-            padding-left: 10px;
+            padding-left: 12px;
+            margin-bottom: 6px;
         }
 
-        .fieldBox input {
+        .mp-field-box input {
             width: 100%;
             border: none;
             outline: none;
             background: transparent;
-            font-weight: 950;
-            color: #0f172a;
-            margin-top: 6px;
-            padding-left: 10px;
+            font-size: 15px;
+            font-weight: 900;
+            color: #111827;
             font-family: inherit;
+            padding-left: 12px;
         }
 
-            .fieldBox input[readonly] {
-                opacity: .92;
-            }
-
-    .full {
+    .mp-full {
         grid-column: 1 / -1;
     }
 
-    .hint {
+    .mp-hint {
         margin-top: 12px;
-        background: #f4f7ff;
-        border: 1px solid #dbe3ff;
-        color: #1f2a66;
-        border-radius: 16px;
+        background: #f8f5ff;
+        border: 1px solid #eadffd;
+        color: #5b21b6;
+        border-radius: 14px;
         padding: 12px 14px;
         font-weight: 800;
         line-height: 1.6;
     }
 
-    .fieldError {
+    .mp-field-error {
         color: #ef4444;
         font-weight: 800;
         font-size: 12px;
         margin-top: 6px;
         display: block;
-        padding-left: 10px;
+        padding-left: 12px;
     }
 
-    .dangerZone {
-        background: #fff7f7;
+    .mp-danger-zone {
+        background: #fff;
         border: 1px solid #fecaca;
-        border-radius: 18px;
+        border-radius: 16px;
         padding: 14px;
     }
 
-        .dangerZone h4 {
+        .mp-danger-zone h4 {
             margin: 0 0 10px;
             font-size: 16px;
             font-weight: 1000;
-            color: #7f1d1d;
+            color: #991b1b;
         }
 
-    .dangerActions {
+    .mp-danger-actions {
         display: flex;
         gap: 12px;
         flex-wrap: wrap;
     }
 
-    .btnWarn {
+    .mp-btn-warn {
         border: none;
         cursor: pointer;
         font-weight: 1000;
-        border-radius: 14px;
+        border-radius: 12px;
         padding: 12px 16px;
-        background: #f59e0b;
+        background: #fbbf24;
         color: #111827;
     }
 
-    .btnDanger {
+    .mp-btn-danger {
         border: none;
         cursor: pointer;
         font-weight: 1000;
-        border-radius: 14px;
+        border-radius: 12px;
         padding: 12px 16px;
         background: #ef4444;
         color: #fff;
     }
 
-    .btnGhost {
-        border: 1px solid #e2e8f0;
-        background: #fff;
-        color: #0f172a;
-        font-weight: 1000;
-        border-radius: 14px;
-        padding: 12px 16px;
-        cursor: pointer;
-        text-decoration: none;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-    }
-
-    .modalBg {
+    .mp-modal-bg {
         position: fixed;
         inset: 0;
         background: rgba(15,23,42,.55);
@@ -410,171 +376,157 @@
         padding: 18px;
     }
 
-    .modal {
+    .mp-modal {
         width: min(520px, 96vw);
         background: #fff;
         border-radius: 18px;
-        border: 1px solid #eef2f7;
+        border: 1px solid #eadffd;
         box-shadow: 0 30px 80px rgba(15,23,42,.30);
         overflow: hidden;
     }
 
-    .modalHead {
+    .mp-modal-head {
         padding: 14px 16px;
-        background: #f8fafc;
-        border-bottom: 1px solid #eef2f7;
+        background: #faf8ff;
+        border-bottom: 1px solid #eadffd;
         display: flex;
         justify-content: space-between;
         align-items: center;
-        gap: 10px;
     }
 
-        .modalHead b {
+        .mp-modal-head b {
             font-weight: 1000;
+            color: #312e81;
         }
 
-    .xbtn {
+    .mp-xbtn {
         border: none;
         background: transparent;
         font-size: 18px;
         cursor: pointer;
         font-weight: 1000;
-        color: #0f172a;
+        color: #111827;
     }
 
-    .modalBody {
+    .mp-modal-body {
         padding: 16px;
-        color: #0f172a;
+        color: #334155;
         font-weight: 750;
         line-height: 1.6;
     }
 
-    .modalActions {
+    .mp-modal-actions {
         padding: 14px 16px;
         display: flex;
         gap: 10px;
         justify-content: flex-end;
-        border-top: 1px solid #eef2f7;
+        border-top: 1px solid #eadffd;
     }
 
     @@media (max-width: 980px) {
-        .grid {
+        .mp-grid {
             grid-template-columns: 1fr;
         }
 
-        .fields {
+        .mp-fields {
             grid-template-columns: 1fr;
         }
 
-        .pTop {
+        .mp-top {
             flex-direction: column;
         }
 
-        .pTopBtns {
+        .mp-top-btns {
             width: 100%;
             justify-content: flex-start;
         }
     }
 </style>
 
-<div class="profileShell">
+<div class="mp-shell">
 
-    <div class="pTop">
+    <div class="mp-top">
         <div>
             <h1>@Localizer["MyProfile"]</h1>
             <p>@Localizer["ManageAccountAndUpdateDetails"]</p>
         </div>
 
-        <div class="pTopBtns">
-            <button type="button" class="pBtn pBtnWhite" id="btnEditTop">✎ @Localizer["Edit"]</button>
-
-            <form method="post" action="/Account/Logout" style="margin:0;">
-                @Html.AntiForgeryToken()
-                <button type="submit" class="pBtn pBtnRed">⎋ @Localizer["Logout"]</button>
-            </form>
+        <div class="mp-top-btns">
+            <button type="button" class="mp-btn" id="btnEditTop">✎ @Localizer["Edit"]</button>
         </div>
     </div>
 
     @if (TempData["Msg"] != null)
     {
-        <div class="msg">@TempData["Msg"]</div>
+        <div class="mp-msg">@TempData["Msg"]</div>
     }
 
-    <div class="grid">
+    <div class="mp-grid">
 
-        <aside class="leftCard">
-            <div class="leftHero">
-                <div class="pill">● @Localizer["Profile"]</div>
+        <aside class="mp-left-card">
+            <div class="mp-left-hero">
+                <div class="mp-pill">● @Localizer["Profile"]</div>
 
                 <div>
-                    <div class="avatar">@((Model?.FullName ?? "C").Substring(0, 1).ToUpper())</div>
-                    <div class="leftName">@Model.FullName</div>
-                    <div class="leftSub">@Model.Email</div>
-                    <div class="verified">✓ @Localizer["VerifiedUser"]</div>
+                    <div class="mp-avatar">@((Model?.FullName ?? "C").Substring(0, 1).ToUpper())</div>
+                    <div class="mp-name">@Model.FullName</div>
+                    <div class="mp-sub">@Model.Email</div>
+                    <div class="mp-verified">✓ @Localizer["VerifiedUser"]</div>
                 </div>
             </div>
 
-            <div class="statsRow">
-                <div class="stat">
-                    <b>@(Model.TotalComplaints)</b>
-                    <span>@Localizer["Complaints"]</span>
-                </div>
-                <div class="stat">
-                    <b>@(Model.ResolvedComplaints)</b>
-                    <span>@Localizer["Resolved"]</span>
-                </div>
-                <div class="stat">
-                    <b>@(Model.MemberYears)</b>
-                    <span>@Localizer["Member"]</span>
-                </div>
-            </div>
-
-            <div class="leftMenu">
-                <button type="button" class="tab active" data-tab="personal">▢ @Localizer["PersonalInfo"]</button>
-                <button type="button" class="tab" data-tab="security">▢ @Localizer["Security"]</button>
-                <button type="button" class="tab" data-tab="help">▢ @Localizer["Help"]</button>
+            <div class="mp-left-menu">
+                <button type="button" class="mp-tab active" data-tab="personal">▢ @Localizer["PersonalInfo"]</button>
+                <button type="button" class="mp-tab" data-tab="security">▢ @Localizer["Security"]</button>
+                <button type="button" class="mp-tab" data-tab="help">▢ @Localizer["Help"]</button>
             </div>
         </aside>
 
-        <section class="rightCard">
+        <section class="mp-right-card">
 
             <div id="tab-personal">
                 <form method="post" action="/Citizen/MyProfile" id="profileForm">
                     @Html.AntiForgeryToken()
 
-                    <div class="section">
-                        <div class="secHead">
+                    <div class="mp-section">
+                        <div class="mp-sec-head">
                             <h3>▢ @Localizer["PersonalInformation"]</h3>
-                            <button type="button" class="editBtn" id="btnEdit">✎ @Localizer["Edit"]</button>
+                            <button type="button" class="mp-edit-btn" id="btnEdit">✎ @Localizer["Edit"]</button>
                         </div>
 
-                        <div class="fields">
-                            <div class="fieldBox">
+                        <div class="mp-fields">
+                            <div class="mp-field-box">
                                 <small>@Localizer["FullName"]</small>
-                                <input asp-for="FullName" id="FullName" readonly />
-                                <span class="fieldError" asp-validation-for="FullName"></span>
+                                <input asp-for="FullName"
+                                       id="FullName"
+                                       readonly
+                                       maxlength="100"
+                                       autocomplete="off"
+                                       inputmode="text"
+                                       pattern="[A-Za-z\s]+" />
+                                <span class="mp-field-error" asp-validation-for="FullName"></span>
                             </div>
 
-                            <div class="fieldBox">
+                            <div class="mp-field-box">
                                 <small>@Localizer["EmailLocked"]</small>
                                 <input asp-for="Email" id="Email" readonly />
-                                <span class="fieldError" asp-validation-for="Email"></span>
+                                <span class="mp-field-error" asp-validation-for="Email"></span>
                             </div>
 
-                            <div class="fieldBox full">
+                            <div class="mp-field-box mp-full">
                                 <small>@Localizer["Address"]</small>
                                 <input asp-for="Address" id="Address" readonly placeholder="@Localizer["EnterAddressOptional"]" />
-                                <span class="fieldError" asp-validation-for="Address"></span>
+                                <span class="mp-field-error" asp-validation-for="Address"></span>
 
-                                <div class="hint">
+                                <div class="mp-hint">
                                     @Localizer["AddressTip"]
                                 </div>
                             </div>
                         </div>
 
                         <div style="margin-top:14px; display:none;" id="saveRow">
-                            <button type="submit" class="editBtn">@Localizer["SaveChanges"] ✅</button>
-                            <button type="button" class="btnGhost" id="btnCancelEdit" style="margin-left:10px;">@Localizer["Cancel"]</button>
+                            <button type="submit" class="mp-edit-btn">@Localizer["SaveChanges"]</button>
+                            <button type="button" class="mp-ghost-btn" id="btnCancelEdit" style="margin-left:10px;">@Localizer["Cancel"]</button>
                         </div>
 
                         @if (!ViewData.ModelState.IsValid)
@@ -588,24 +540,24 @@
             </div>
 
             <div id="tab-security" style="display:none;">
-                <div class="section">
-                    <div class="secHead">
+                <div class="mp-section">
+                    <div class="mp-sec-head">
                         <h3>▢ @Localizer["Security"]</h3>
                     </div>
 
-                    <div class="dangerZone">
+                    <div class="mp-danger-zone">
                         <h4>@Localizer["DangerZone"]</h4>
-                        <div style="color:#7f1d1d; font-weight:850; margin-bottom:12px;">
+                        <div style="color:#991b1b; font-weight:850; margin-bottom:12px;">
                             @Localizer["DeactivateOrDelete"]
                         </div>
 
-                        <div class="dangerActions">
-                            <button type="button" class="btnWarn" id="btnDeactivate">@Localizer["DeactivateAccount"]</button>
-                            <button type="button" class="btnDanger" id="btnDelete">@Localizer["DeleteAccount"]</button>
-                            <a class="btnGhost" href="/Citizen/Dashboard">@Localizer["BackToDashboard"]</a>
+                        <div class="mp-danger-actions">
+                            <button type="button" class="mp-btn-warn" id="btnDeactivate">@Localizer["DeactivateAccount"]</button>
+                            <button type="button" class="mp-btn-danger" id="btnDelete">@Localizer["DeleteAccount"]</button>
+                            <a class="mp-ghost-btn" href="/Citizen/Dashboard">@Localizer["BackToDashboard"]</a>
                         </div>
 
-                        <div style="margin-top:10px; color:#7f1d1d; font-weight:800; font-size:12px;">
+                        <div style="margin-top:10px; color:#991b1b; font-weight:800; font-size:12px;">
                             @Localizer["DeleteIrreversible"]
                         </div>
                     </div>
@@ -613,21 +565,21 @@
             </div>
 
             <div id="tab-help" style="display:none;">
-                <div class="section">
-                    <div class="secHead">
+                <div class="mp-section">
+                    <div class="mp-sec-head">
                         <h3>▢ @Localizer["HelpSupport"]</h3>
                     </div>
 
-                    <div style="background:#f8fafc;border:1px solid #eef2f7;border-radius:18px;padding:14px;font-weight:850;color:#334155;line-height:1.7;">
+                    <div style="background:#fff;border:1px solid #eadffd;border-radius:16px;padding:14px;font-weight:850;color:#475569;line-height:1.7;">
                         • @Localizer["HelpTip1"]<br />
                         • @Localizer["HelpTip2"]<br />
                         • @Localizer["HelpTip3"]
                     </div>
 
                     <div style="margin-top:12px; display:flex; gap:12px; flex-wrap:wrap;">
-                        <a class="btnGhost" href="/Citizen/Notices">@Localizer["ViewNotices"]</a>
-                        <a class="btnGhost" href="/Citizen/MyComplaints">@Localizer["MyComplaints"]</a>
-                        <a class="btnGhost" href="/Citizen/TrackStatus">@Localizer["TrackStatus"]</a>
+                        <a class="mp-ghost-btn" href="/Citizen/Notices">@Localizer["ViewNotices"]</a>
+                        <a class="mp-ghost-btn" href="/Citizen/MyComplaints">@Localizer["MyComplaints"]</a>
+                        <a class="mp-ghost-btn" href="/Citizen/TrackStatus">@Localizer["TrackStatus"]</a>
                     </div>
                 </div>
             </div>
@@ -636,19 +588,19 @@
     </div>
 </div>
 
-<div class="modalBg" id="modalBg">
-    <div class="modal">
-        <div class="modalHead">
+<div class="mp-modal-bg" id="modalBg">
+    <div class="mp-modal">
+        <div class="mp-modal-head">
             <b id="modalTitle">@Localizer["Confirm"]</b>
-            <button class="xbtn" type="button" id="modalClose">✕</button>
+            <button class="mp-xbtn" type="button" id="modalClose">✕</button>
         </div>
-        <div class="modalBody" id="modalBody">@Localizer["AreYouSure"]</div>
-        <div class="modalActions">
-            <button type="button" class="btnGhost" id="modalCancel">@Localizer["Cancel"]</button>
+        <div class="mp-modal-body" id="modalBody">@Localizer["AreYouSure"]</div>
+        <div class="mp-modal-actions">
+            <button type="button" class="mp-ghost-btn" id="modalCancel">@Localizer["Cancel"]</button>
 
             <form method="post" id="modalForm" style="margin:0;">
                 @Html.AntiForgeryToken()
-                <button type="submit" class="editBtn" id="modalOk">@Localizer["YesContinue"]</button>
+                <button type="submit" class="mp-edit-btn" id="modalOk">@Localizer["YesContinue"]</button>
             </form>
         </div>
     </div>
@@ -663,7 +615,7 @@
     const txtDeleteMessage = '@Localizer["DeleteMessage"]';
     const txtDeletePermanently = '@Localizer["DeletePermanently"]';
 
-    const tabs = document.querySelectorAll('.tab');
+    const tabs = document.querySelectorAll('.mp-tab');
     const personal = document.getElementById('tab-personal');
     const security = document.getElementById('tab-security');
     const help = document.getElementById('tab-help');
@@ -687,23 +639,55 @@
 
     const fullName = document.getElementById('FullName');
     const address = document.getElementById('Address');
+    const profileForm = document.getElementById('profileForm');
+
+    let originalFullName = fullName.value;
+    let originalAddress = address.value;
 
     function enableEdit(on) {
         if (on) {
             fullName.removeAttribute('readonly');
             address.removeAttribute('readonly');
             saveRow.style.display = '';
-            document.querySelector('.tab[data-tab="personal"]').click();
+            document.querySelector('.mp-tab[data-tab="personal"]').click();
+            fullName.focus();
         } else {
             fullName.setAttribute('readonly', 'readonly');
             address.setAttribute('readonly', 'readonly');
             saveRow.style.display = 'none';
+            fullName.value = originalFullName;
+            address.value = originalAddress;
         }
     }
 
     btnEdit.addEventListener('click', () => enableEdit(true));
     btnEditTop.addEventListener('click', () => enableEdit(true));
     btnCancelEdit.addEventListener('click', () => enableEdit(false));
+
+    fullName.addEventListener('input', function () {
+        this.value = this.value.replace(/[^A-Za-z\s]/g, '');
+    });
+
+    fullName.addEventListener('keypress', function (e) {
+        const char = String.fromCharCode(e.which);
+        if (!/[A-Za-z\s]/.test(char)) {
+            e.preventDefault();
+        }
+    });
+
+    profileForm.addEventListener('submit', function (e) {
+        const value = fullName.value.trim();
+        const valid = /^[A-Za-z\s]+$/.test(value);
+
+        if (!valid) {
+            e.preventDefault();
+            alert('Full name can contain only letters and spaces.');
+            fullName.focus();
+        } else {
+            originalFullName = fullName.value;
+            originalAddress = address.value;
+        }
+    });
 
     const modalBg = document.getElementById('modalBg');
     const modalTitle = document.getElementById('modalTitle');
@@ -730,11 +714,15 @@
         modalBg.style.display = 'flex';
     }
 
-    function closeModal() { modalBg.style.display = 'none'; }
+    function closeModal() {
+        modalBg.style.display = 'none';
+    }
 
     modalClose.addEventListener('click', closeModal);
     modalCancel.addEventListener('click', closeModal);
-    modalBg.addEventListener('click', (e) => { if (e.target === modalBg) closeModal(); });
+    modalBg.addEventListener('click', (e) => {
+        if (e.target === modalBg) closeModal();
+    });
 
     document.getElementById('btnDeactivate').addEventListener('click', () => {
         openModal(
@@ -759,6 +747,5 @@
 
 @section Scripts {
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation-unobtrusive/4.0.0/jquery.validate.unobtrusive.min.js"></script>
 }
