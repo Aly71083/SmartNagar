@@ -4,8 +4,8 @@
 @{
     Layout = "~/Views/Officer/_OfficerLayout.cshtml";
     ViewBag.Title = "Analytics";
-    ViewBag.PageTitle = "Smart Nagar Analytics";
-    ViewBag.Active = "analytics";
+    ViewBag.PageTitle = "Officer Portal";
+    ViewBag.Active = " Analytics";
 
     var totalCat = Model.CategoryStats?.Sum(x => x.Value) ?? 0;
     if (totalCat <= 0) totalCat = 1;
